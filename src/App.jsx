@@ -1,10 +1,10 @@
-import { Button } from '@mui/material';
+import MainLayout from "./components/layouts/MainLayout";
 
 function App() {
   return (
-    <div style={{ padding: 40 }}>
-      <Button variant="outlined">Test MUI</Button>
-    </div>
+    <MainLayout>
+      <h1>Dashboard Page</h1>
+    </MainLayout>
   );
 }
 
