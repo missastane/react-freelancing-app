@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { buildTheme, defaultThemeSettings } from "./theme";
-
+import { RouterProvider } from "react-router-dom";
+import { Router } from "./app/Router.jsx";
 function Root() {
   const [settings] = useState(defaultThemeSettings);
 
@@ -12,7 +13,7 @@ function Root() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App />
+       <RouterProvider router={Router} />
     </ThemeProvider>
   );
 }
