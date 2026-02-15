@@ -4,8 +4,11 @@ import { Box, Container, Paper, Stack, Typography } from "@mui/material";
 export default function AuthLayout({ title, subtitle, children }) {
   return (
     <Box
+    
       sx={{
         minHeight: "100vh",
+        width:"100%",
+        overflow:"hidden",
         display: "grid",
         placeItems: "center",
         py: 4,

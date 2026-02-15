@@ -48,7 +48,14 @@ export default function MainLayout() {
 
 
       {/* Content */}
-      <Box component="main" sx={{ p: 3 }}>
+      <Box component="main" sx={{
+        xs:{
+           p: 0
+        },
+        md:{
+          p:3
+        }
+       }}>
         <Toolbar />
         <Outlet />
       </Box>
