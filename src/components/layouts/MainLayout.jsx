@@ -38,13 +38,15 @@ export default function MainLayout() {
       >
         <Toolbar sx={{ gap: 1 }}>
           {!isDesktop && (
-            <IconButton color="inherit" edge="start" onClick={openMobile}>
+            <IconButton color="inherit" sx={{
+                color:"primary.main"
+              }} edge="start" onClick={openMobile}>
               <MenuIcon />
             </IconButton>
           )}
 
           <Typography sx={{ fontWeight: 800 }}>
-            Dashboard
+            Header
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
