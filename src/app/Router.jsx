@@ -16,16 +16,23 @@ export const Router = createBrowserRouter([
     ],
   },
   {
-    path: "/",
-    element: <MainLayout />,
-    children: [
-      { index: true, element: <Navigate to="dashboard" replace /> },
-      { path: "dashboard", element: <Placeholder title="Dashboard" /> },
-      { path: "projects", element: <ProjectsPage /> },
-      { path: "proposals", element: <Placeholder title="My Proposals" /> },
-      { path: "messages", element: <Placeholder title="Messages" /> },
-      { path: "settings", element: <Placeholder title="Settings" /> },
-    ],
-  },
+  path: "/",
+  element: <MainLayout />,
+  children: [
+    { index: true, element: <Navigate to="dashboard" replace /> },
+    { path: "dashboard", element: <Placeholder title="Dashboard" /> },
+
+    // freelancer
+    { path: "projects", element: <ProjectsPage /> },
+    { path: "proposals", element: <Placeholder title="My Proposals" /> },
+
+    // employer
+    { path: "my-projects", element: <Placeholder title="My Projects" /> },
+    { path: "my-projects/:id/proposals", element: <Placeholder title="Project Proposals" /> },
+
+    { path: "messages", element: <Placeholder title="Messages" /> },
+    { path: "settings", element: <Placeholder title="Settings" /> },
+  ],
+}
 ]);
 

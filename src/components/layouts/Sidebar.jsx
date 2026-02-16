@@ -15,6 +15,7 @@ const linkStyle = ({ isActive }) => ({
 });
 
 export default function Sidebar({ width = 280, onNavigate }) {
+    const items = navItemsByRole[user.activeRole] ?? navItemsByRole.freelancer;
     return (
         <Box sx={{ width, height: "100%", display: "flex", flexDirection: "column",overflowX:"hidden" }}>
             <Box sx={{ px: 2.5, py: 2 }}>
@@ -30,7 +31,7 @@ export default function Sidebar({ width = 280, onNavigate }) {
 
             <Box sx={{ p: 1.5, flexGrow: 1 }}>
                 <List sx={{ display: "grid", gap: 0.8 }}>
-                    {navItems.map((item) => {
+                    {items.map((item) => {
                         const Icon = item.icon;
 
                         return (
