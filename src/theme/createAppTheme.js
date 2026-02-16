@@ -8,11 +8,9 @@ export function createAppTheme({ mode = "dark", brand }) {
       secondary: { main: brand.secondary },
       background: {
         default: mode === "dark" ? "#0B0F14" : "#F6F7FB",
-        paper:
-          mode === "dark"
-            ? "rgba(255,255,255,0.06)"
-            : "rgba(255,255,255,0.9)",
+        paper: mode === "dark" ? "#121821" : "#FFFFFF",
       },
+
       text: {
         primary: mode === "dark" ? "#E8EDF3" : "#0B1220",
         secondary:
@@ -28,6 +26,33 @@ export function createAppTheme({ mode = "dark", brand }) {
     components: {
       MuiPaper: {
         styleOverrides: {
+          MuiOutlinedInput: {
+            styleOverrides: {
+              root: ({ theme }) => ({
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? "#0F141B"
+                    : "#FFFFFF",
+                borderRadius: 12,
+
+                "& fieldset": {
+                  borderColor:
+                    theme.palette.mode === "dark"
+                      ? "rgba(255,255,255,0.08)"
+                      : "rgba(0,0,0,0.15)",
+                },
+
+                "&:hover fieldset": {
+                  borderColor: theme.palette.primary.main,
+                },
+
+                "&.Mui-focused fieldset": {
+                  borderColor: theme.palette.primary.main,
+                  borderWidth: 1.5,
+                },
+              }),
+            },
+          },
           root: {
             border: "1px solid rgba(255,255,255,0.08)",
             backdropFilter: "blur(14px)",
