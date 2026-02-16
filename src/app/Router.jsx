@@ -4,6 +4,8 @@ import LoginPage from "../components/pages/auth/LoginPage";
 import RegisterPage from "../components/pages/auth/RegisterPage";
 import ProjectsPage from "../components/projects/freelancer/ProjectsPage";
 import MyProjectsPage from "../components/projects/employer/MyProjectsPage";
+import MessagesPage from "../components/messages/MessagesPage";
+import ProjectDetailsPage from "../components/projects/ProjectDetailsPage";
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
 );
@@ -30,8 +32,9 @@ export const Router = createBrowserRouter([
       // employer
       { path: "my-projects", element: <MyProjectsPage /> },
       { path: "my-projects/:id/proposals", element: <Placeholder title="Project Proposals" /> },
+      { path: "projects/:id/:slug", element: <ProjectDetailsPage /> },
 
-      { path: "messages", element: <Placeholder title="Messages" /> },
+      { path: "messages", element: <MessagesPage /> },
       { path: "settings", element: <Placeholder title="Settings" /> },
     ],
   }
