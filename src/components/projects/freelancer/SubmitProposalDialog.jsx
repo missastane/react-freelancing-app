@@ -22,7 +22,7 @@ import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 
-import { getSkillChipSx, getSkillKey } from "../../utils/skillColors";
+import { getSkillChipSx, getSkillKey } from "../../../utils/skillColors";
 
 const FEE_PERCENT = 10; // بعداً از API هم میتونی بگیری
 

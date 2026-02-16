@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
-import ProjectCard from "../../components/projects/ProjectCard";
-import ProjectDetailsModal from "../../components/projects/ProjectDetailsModal";
-import SubmitProposalDialog from "../../components/projects/SubmitProposalDialog";
+import ProjectCard from "../ProjectCard";
+import ProjectDetailsModal from "./ProjectDetailsModal";
+import SubmitProposalDialog from "./SubmitProposalDialog";
 
 export default function ProjectsPage() {
    const projects = useMemo(

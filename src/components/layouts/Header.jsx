@@ -20,11 +20,13 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import { useTheme } from "@mui/material/styles";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { navItems } from "../../app/navConfig";
+import { navItemsByRole } from "../../app/navConfig";
 import { palettes } from "../../theme/palettes";
 import { useThemeSettings } from "../../theme/ThemeSettingsContext";
+import RoleSwitch from "./RoleSwitch";
+import useActiveRole from "../../hooks/useActiveRole";
 
 export default function Header({ onOpenDrawer }) {
     const theme = useTheme();
@@ -32,13 +34,16 @@ export default function Header({ onOpenDrawer }) {
     const { pathname } = useLocation();
 
     const { settings, toggleMode, setPaletteKey } = useThemeSettings();
+    const navigate = useNavigate();
+    const { activeRole, setActiveRole } = useActiveRole("freelancer");
 
     const pageTitle = useMemo(() => {
-        // match exact first segment (e.g. /messages/123 -> /messages)
         const first = "/" + (pathname.split("/")[1] || "");
-        const match = navItems.find((x) => x.path === first);
+        const items = navItemsByRole?.[activeRole] || [];
+        const match = items.find((x) => x.path === first);
         return match?.label || "Dashboard";
-    }, [pathname]);
+    }, [pathname, activeRole]);
+
 
     const [anchorPalette, setAnchorPalette] = useState(null);
     const [anchorUser, setAnchorUser] = useState(null);
@@ -133,6 +138,13 @@ export default function Header({ onOpenDrawer }) {
                         </MenuItem>
                     ))}
                 </Menu>
+                <RoleSwitch
+                    value={activeRole}
+                    onChange={(role) => {
+                        setActiveRole(role);
+                        navigate(role === "employer" ? "/my-projects" : "/projects");
+                    }}
+                />
 
                 <Tooltip title="Notifications">
                     <IconButton sx={{ color: "text.primary" }}>

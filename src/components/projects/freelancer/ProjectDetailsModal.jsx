@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
-import { getSkillChipSx, getSkillKey } from "../../utils/skillColors";
+import { getSkillChipSx, getSkillKey } from "../../../utils/skillColors";
 
 export default function ProjectDetailsModal({ open, onClose, project, onSubmitProposal }) {
     const theme = useTheme();
