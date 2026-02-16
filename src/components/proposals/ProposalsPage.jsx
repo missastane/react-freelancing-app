@@ -20,12 +20,17 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
-const BRAND = {
-    primary: "#7C5CFF",
-    activeBg: "rgba(124,92,255,0.14)",
-    border: "rgba(255,255,255,0.08)",
-};
+function slugify(s = "") {
+    return String(s)
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+}
+
 
 const STATUS = {
     pending: { label: "Pending", icon: <AccessTimeIcon fontSize="small" /> },
@@ -80,7 +85,7 @@ function a11yProps(index) {
 
 function StatusChip({ status }) {
     const meta = STATUS[status] ?? { label: status, icon: null };
-
+    const theme = useTheme();
     const colorMap = {
         accepted: "success",
         rejected: "error",
@@ -95,13 +100,14 @@ function StatusChip({ status }) {
             label={meta.label}
             color={colorMap[status] ?? "default"}
             variant="outlined"
-            sx={{ borderColor: BRAND.border }}
+            sx={{ borderColor: theme.palette.divider }}
         />
     );
 }
 
 function ProposalCard({ proposal }) {
     const theme = useTheme();
+    const navigate = useNavigate();
     return (
         <Card
             variant="outlined"
@@ -126,7 +132,7 @@ function ProposalCard({ proposal }) {
                                 variant="outlined"
                                 icon={<WorkOutlineIcon fontSize="small" />}
                                 label={proposal.employerName}
-                                sx={{ borderColor:theme.palette.divider }}
+                                sx={{ borderColor: theme.palette.divider }}
                             />
                             <Chip
                                 size="small"
@@ -151,11 +157,10 @@ function ProposalCard({ proposal }) {
                         <Button
                             size="small"
                             variant="outlined"
-                            sx={{
-                                borderColor: theme.palette.divider,
-                                borderRadius: 2,
-                            }}
-                            onClick={() => console.log("View proposal:", proposal.id)}
+                            sx={{ borderColor: "divider", borderRadius: 2 }}
+                            onClick={() =>
+                                navigate(`/proposals/${proposal.id}/${slugify(proposal.jobTitle)}`)
+                            }
                         >
                             View
                         </Button>

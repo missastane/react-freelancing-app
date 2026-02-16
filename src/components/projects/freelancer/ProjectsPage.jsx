@@ -2,10 +2,10 @@ import React, { useMemo, useState } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import ProjectCard from "../ProjectCard";
 import ProjectDetailsModal from "./ProjectDetailsModal";
-import SubmitProposalDialog from "./SubmitProposalDialog";
+import ProposalDialog from "./ProposalDialog";
 
 export default function ProjectsPage() {
-   const projects = useMemo(
+  const projects = useMemo(
     () => [
       {
         id: 1,
@@ -68,11 +68,12 @@ export default function ProjectsPage() {
   const openDetails = (p) => setSelected(p);
   const closeDetails = () => setSelected(null);
 
-  const openProposal = (p) => {
+    const openProposal = (p) => {
     // ✅ مودال جزئیات بسته بشه و پیشنهاد باز بشه
     setSelected(null);
-    setProposalProject(p);
+    setProposalProject(p); // همین باعث open شدن دیالوگ میشه
   };
+
   const closeProposal = () => setProposalProject(null);
 
   return (
@@ -100,11 +101,14 @@ export default function ProjectsPage() {
           onSubmitProposal={openProposal}
         />
 
-        <SubmitProposalDialog
+        <ProposalDialog
           open={Boolean(proposalProject)}
-          project={proposalProject}
           onClose={closeProposal}
+          mode="create"
+          project={proposalProject}
+          onSubmit={(payload) => proposalService.submit(payload)}
         />
+
       </Container>
     </Box>
   );

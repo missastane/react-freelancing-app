@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Button,
+  Collapse,
   Container,
   Dialog,
   Divider,
@@ -13,7 +14,6 @@ import {
   Toolbar,
   Typography,
   useTheme,
-  Collapse,
   Chip,
 } from "@mui/material";
 
@@ -24,19 +24,49 @@ import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 
 import { getSkillChipSx, getSkillKey } from "../../../utils/skillColors";
 
-const FEE_PERCENT = 10; // بعداً از API هم میتونی بگیری
+const FEE_PERCENT = 10;
 
 function emptyMilestone() {
-  return {
-    title: "",
-    description: "",
-    budget: "",
-    durationDays: "",
-  };
+  return { title: "", description: "", budget: "", durationDays: "" };
 }
 
-export default function SubmitProposalDialog({ open, onClose, project }) {
+function normalizeMilestones(raw) {
+  if (!Array.isArray(raw) || raw.length === 0) return [emptyMilestone()];
+  return raw.map((m) => ({
+    title: m?.title ?? "",
+    description: m?.description ?? "",
+    budget: String(m?.budget ?? ""),
+    durationDays: String(m?.durationDays ?? m?.duration_days ?? ""),
+  }));
+}
+
+/**
+ * ProposalDialog
+ * - mode="create": فرم خالی + project لازم‌تره
+ * - mode="edit": فرم از initialValues پر میشه
+ *
+ * Props:
+ * open: boolean
+ * onClose: () => void
+ * mode?: "create" | "edit"
+ * project?: object (برای نمایش summary)
+ * initialValues?: {
+ *   project_id?, milestones?, overall_deadline?, details?
+ * }
+ * onSubmit?: (payload) => void | Promise<void>
+ * submitLabel?: string
+ */
+export default function ProposalDialog({
+  open,
+  onClose,
+  mode = "create",
+  project,
+  initialValues,
+  onSubmit,
+  submitLabel,
+}) {
   const theme = useTheme();
+
   const [showSummary, setShowSummary] = useState(true);
 
   // form state
@@ -44,28 +74,36 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
   const [overallDeadline, setOverallDeadline] = useState(""); // yyyy-mm-dd
   const [details, setDetails] = useState("");
 
-  // reset when project changes / dialog opens
+  // reset/fill when dialog opens
   useEffect(() => {
-    if (open) {
-      setShowSummary(true);
-      setMilestones([emptyMilestone()]);
-      setOverallDeadline("");
-      setDetails("");
+    if (!open) return;
+
+    setShowSummary(true);
+
+    if (mode === "edit" && initialValues) {
+      setMilestones(normalizeMilestones(initialValues.milestones));
+      setOverallDeadline(initialValues.overall_deadline || "");
+      setDetails(initialValues.details || "");
+      return;
     }
-  }, [open, project?.id]);
+
+    // create mode
+    setMilestones([emptyMilestone()]);
+    setOverallDeadline("");
+    setDetails("");
+  }, [open, mode, project?.id, initialValues]);
 
   const totals = useMemo(() => {
     const total = milestones.reduce((sum, m) => sum + (Number(m.budget) || 0), 0);
-    const fee = Math.round((total * FEE_PERCENT) / 100 * 100) / 100;
+    const fee = Math.round(((total * FEE_PERCENT) / 100) * 100) / 100;
     const earn = Math.round((total - fee) * 100) / 100;
     return { total, fee, earn };
   }, [milestones]);
 
   const canSubmit = useMemo(() => {
-    // حداقل 1 مرحله + حداقل یک مرحله معتبر
     if (!milestones.length) return false;
 
-    const anyFilled = milestones.some(
+    const anyValid = milestones.some(
       (m) =>
         m.title.trim() &&
         m.description.trim() &&
@@ -73,36 +111,60 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
         Number(m.durationDays) > 0
     );
 
-    return anyFilled && details.trim().length >= 10 && overallDeadline;
+    return anyValid && details.trim().length >= 10 && !!overallDeadline;
   }, [milestones, details, overallDeadline]);
 
   const addMilestone = () => setMilestones((prev) => [...prev, emptyMilestone()]);
+
   const removeMilestone = (idx) =>
     setMilestones((prev) => (prev.length === 1 ? prev : prev.filter((_, i) => i !== idx)));
 
   const updateMilestone = (idx, patch) =>
     setMilestones((prev) => prev.map((m, i) => (i === idx ? { ...m, ...patch } : m)));
 
-  const handleSubmit = () => {
-    // فعلاً فقط لاگ. بعداً API call
+  const titleText = mode === "edit" ? "Proposal" : "Submit Proposal";
+  const actionText = submitLabel || (mode === "edit" ? "Save changes" : "Submit Proposal");
+
+  const summarySubtitle = useMemo(() => {
+    if (project) return `For ${project?.client?.name || "Client"}`;
+    if (initialValues?.project?.client?.name) return `For ${initialValues.project.client.name}`;
+    return "—";
+  }, [project, initialValues]);
+
+  const handleSubmit = async () => {
     const payload = {
-      project_id: project?.id,
-      milestones,
+      project_id: project?.id ?? initialValues?.project_id ?? initialValues?.project?.id,
+      milestones: milestones.map((m) => ({
+        title: m.title.trim(),
+        description: m.description.trim(),
+        budget: Number(m.budget) || 0,
+        durationDays: Number(m.durationDays) || 0,
+      })),
       overall_deadline: overallDeadline,
-      details,
+      details: details.trim(),
       totals,
       fee_percent: FEE_PERCENT,
     };
 
-    console.log("SUBMIT PROPOSAL", payload);
-
+    await onSubmit?.(payload);
     onClose?.();
   };
+
+  const softCardBg =
+    theme.palette.mode === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
 
   return (
     <Dialog fullScreen open={open} onClose={onClose}>
       {/* Top bar */}
-      <AppBar position="sticky" elevation={0} sx={{ bgcolor: "background.paper", borderBottom: "1px solid", borderColor: "divider" }}>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{
+          bgcolor: "background.paper",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
         <Toolbar sx={{ gap: 1 }}>
           <IconButton edge="start" onClick={onClose} aria-label="close">
             <CloseRoundedIcon />
@@ -110,10 +172,10 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography variant="h6" sx={{ fontWeight: 900 }} noWrap>
-              Submit Proposal
+              {titleText}
             </Typography>
             <Typography variant="body2" color="text.secondary" noWrap>
-              {project ? `Submitting proposal to ${project?.client?.name || "Client"}` : "—"}
+              {summarySubtitle}
             </Typography>
           </Box>
 
@@ -123,7 +185,7 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
             onClick={handleSubmit}
             sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
           >
-            Submit Proposal
+            {actionText}
           </Button>
         </Toolbar>
       </AppBar>
@@ -132,21 +194,22 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
         <Container maxWidth="lg">
           <Stack spacing={2}>
             {/* Project summary FULL WIDTH */}
-            <Paper
-              variant="outlined"
-              sx={{
-                p: { xs: 2, sm: 2.5 },
-                borderRadius: 3,
-                bgcolor: "background.paper",
-              }}
-            >
+            <Paper variant="outlined" sx={{ p: { xs: 2, sm: 2.5 }, borderRadius: 3 }}>
               <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
                 <Box sx={{ minWidth: 0 }}>
                   <Typography sx={{ fontWeight: 900 }} noWrap>
-                    {project?.title || "Project"}
+                    {project?.title || initialValues?.project?.title || "Project"}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" noWrap>
-                    {project ? `${project.postedAt} • ${project.level} • $${project.budgetMin}–$${project.budgetMax}` : "—"}
+                    {project
+                      ? `${project.postedAt} • ${project.level} • $${project.budgetMin}–$${project.budgetMax}`
+                      : initialValues?.project
+                      ? `${initialValues.project.postedAt || "—"} • ${initialValues.project.level || "—"} • ${
+                          initialValues.project.budgetMin != null && initialValues.project.budgetMax != null
+                            ? `$${initialValues.project.budgetMin}–$${initialValues.project.budgetMax}`
+                            : "—"
+                        }`
+                      : "—"}
                   </Typography>
                 </Box>
 
@@ -165,7 +228,7 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
 
                 <Stack spacing={1.25}>
                   <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                    {(project?.skills || []).map((skill) => (
+                    {(project?.skills || initialValues?.project?.skills || []).map((skill) => (
                       <Chip
                         key={getSkillKey(skill)}
                         label={
@@ -179,7 +242,11 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
                   </Stack>
 
                   <Typography color="text.secondary" sx={{ lineHeight: 1.9 }}>
-                    {project?.longDescription || project?.description || "—"}
+                    {project?.longDescription ||
+                      project?.description ||
+                      initialValues?.project?.longDescription ||
+                      initialValues?.project?.description ||
+                      "—"}
                   </Typography>
                 </Stack>
               </Collapse>
@@ -196,7 +263,13 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
             >
               {/* LEFT: Milestones */}
               <Paper variant="outlined" sx={{ p: { xs: 2, sm: 2.5 }, borderRadius: 3 }}>
-                <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} sx={{ mb: 1.5 }}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  gap={2}
+                  sx={{ mb: 1.5 }}
+                >
                   <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>
                     Milestones
                   </Typography>
@@ -223,16 +296,17 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
                       sx={{
                         p: 2,
                         borderRadius: 3,
-                        bgcolor:
-                          theme.palette.mode === "dark"
-                            ? "rgba(255,255,255,0.03)"
-                            : "rgba(0,0,0,0.02)",
+                        bgcolor: softCardBg,
                       }}
                     >
-                      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1.5} sx={{ mb: 1.5 }}>
-                        <Typography sx={{ fontWeight: 900 }}>
-                          Milestone {idx + 1}
-                        </Typography>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        gap={1.5}
+                        sx={{ mb: 1.5 }}
+                      >
+                        <Typography sx={{ fontWeight: 900 }}>Milestone {idx + 1}</Typography>
 
                         <IconButton
                           onClick={() => removeMilestone(idx)}
@@ -348,7 +422,12 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
               </Typography>
 
               {/* bottom actions for mobile convenience */}
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.2} justifyContent="flex-end" sx={{ mt: 2 }}>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={1.2}
+                justifyContent="flex-end"
+                sx={{ mt: 2 }}
+              >
                 <Button
                   variant="outlined"
                   onClick={onClose}
@@ -362,7 +441,7 @@ export default function SubmitProposalDialog({ open, onClose, project }) {
                   onClick={handleSubmit}
                   sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
                 >
-                  Submit Proposal
+                  {actionText}
                 </Button>
               </Stack>
             </Paper>

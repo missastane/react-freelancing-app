@@ -7,6 +7,7 @@ import MyProjectsPage from "../components/projects/employer/MyProjectsPage";
 import MessagesPage from "../components/messages/MessagesPage";
 import ProjectDetailsPage from "../components/projects/ProjectDetailsPage";
 import ProposalsPage from "../components/proposals/ProposalsPage";
+import ProposalDetailsPage from "../components/proposals/ProposalDetailsPage";
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
 );
@@ -29,6 +30,11 @@ export const Router = createBrowserRouter([
       // freelancer
       { path: "projects", element: <ProjectsPage /> },
       { path: "proposals", element: <ProposalsPage /> },
+      {
+        path: "/proposals/:id/:slug",
+        element: <ProposalDetailsPage />,
+      },
+
 
       // employer
       { path: "my-projects", element: <MyProjectsPage /> },
