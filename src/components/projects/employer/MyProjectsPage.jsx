@@ -21,6 +21,8 @@ import { Drawer, IconButton, useMediaQuery } from "@mui/material";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 import ProposalDetailsDialog from "./ProposalDetailsDialog";
+import { getSkillChipSx } from "../../../utils/skillColors";
+import CreateProjectDialog from "./CreateProjectDialog";
 
 const statusChipSx = (theme, status) => {
   const isDark = theme.palette.mode === "dark";
@@ -144,17 +146,30 @@ export default function MyProjectsPage() {
 
   const [mobileProposalsOpen, setMobileProposalsOpen] = useState(false);
 
-  const onCreateProject = () => {
-    // بعداً: navigate به صفحه create یا باز کردن modal create
-    console.log("Create new project");
-  };
-
-  const onEditProject = (projectId) => console.log("Edit project", projectId);
+    const onEditProject = (projectId) => console.log("Edit project", projectId);
   const onDeleteProject = (projectId) => console.log("Delete project", projectId);
   const onViewProjectProposals = (projectId) => console.log("Go to proposals list", projectId);
 
   const onApprove = (proposalId) => console.log("Approve proposal", proposalId);
   const onReject = (proposalId) => console.log("Reject proposal", proposalId);
+const [createOpen, setCreateOpen] = useState(false);
+
+const categories = useMemo(
+  () => [
+    { id: "web", name: "Web Development" },
+    { id: "mobile", name: "Mobile Apps" },
+    { id: "design", name: "Design" },
+    { id: "content", name: "Content Writing" },
+  ],
+  []
+);
+
+const onCreateProject = () => setCreateOpen(true);
+
+const handleCreateProject = (payload) => {
+  console.log("CREATE PROJECT payload:", payload);
+  // بعداً: API call
+};
 
   return (
     <Box sx={{ py: { xs: 3, sm: 4 }, overflowX: "hidden" }}>
@@ -244,14 +259,7 @@ export default function MyProjectsPage() {
                             <Chip
                               key={t}
                               label={t}
-                              sx={{
-                                borderRadius: 999,
-                                fontWeight: 800,
-                                bgcolor:
-                                  theme.palette.mode === "dark"
-                                    ? "rgba(255,255,255,0.06)"
-                                    : "rgba(0,0,0,0.05)",
-                              }}
+                              sx={getSkillChipSx(theme, t)}
                             />
                           ))}
                         </Stack>
@@ -508,6 +516,14 @@ export default function MyProjectsPage() {
           setSelectedProposal(null);
         }}
       />
+
+      <CreateProjectDialog
+  open={createOpen}
+  onClose={() => setCreateOpen(false)}
+  onSubmit={handleCreateProject}
+  categories={categories}
+/>
+
     </Box>
   );
 }
