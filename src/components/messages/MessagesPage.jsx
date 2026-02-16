@@ -19,8 +19,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import MarkEmailUnreadRoundedIcon from "@mui/icons-material/MarkEmailUnreadRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-
-import useActiveRole from "../../hooks/useActiveRole"; // همون هوکی که ساختیم
+import { useRole } from "../../context/RoleContext";
 import { useNavigate, generatePath } from "react-router-dom";
 import ProposalMessageCard from "./ProposalMessageCard";
 import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
@@ -106,7 +105,7 @@ export default function MessagesPage() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-    const { activeRole } = useActiveRole("freelancer"); // "freelancer" | "employer"
+    const { activeRole } = useRole(); // "freelancer" | "employer"
 
     const [attachments, setAttachments] = useState([]);
     const attachRef = useRef(null);

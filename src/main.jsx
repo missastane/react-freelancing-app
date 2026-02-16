@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { ThemeSettingsProvider, useThemeSettings } from "./theme/ThemeSettingsContext";
 import { Router } from "./app/Router";
-
+import { RoleProvider } from "./context/RoleContext";
 function AppRoot() {
   const { theme } = useThemeSettings();
 
@@ -20,7 +20,9 @@ function AppRoot() {
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeSettingsProvider>
+      <RoleProvider>
       <AppRoot />
+      </RoleProvider>
     </ThemeSettingsProvider>
   </React.StrictMode>
 );

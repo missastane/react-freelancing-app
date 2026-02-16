@@ -43,7 +43,7 @@ export default function RoleSwitch({ value, onChange }) {
             <Stack>
               <Typography sx={{ fontWeight: 900 }}>{r.label}</Typography>
               <Typography variant="body2" color="text.secondary">
-                {r.key === "freelancer" ? "Browse jobs & manage proposals" : "Manage projects & received proposals"}
+                {r.key === "freelancer" ? "Browse jobs & manage proposals" : "Manage projects & review proposals"}
               </Typography>
             </Stack>
           </MenuItem>

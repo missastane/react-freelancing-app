@@ -26,7 +26,7 @@ import { navItemsByRole } from "../../app/navConfig";
 import { palettes } from "../../theme/palettes";
 import { useThemeSettings } from "../../theme/ThemeSettingsContext";
 import RoleSwitch from "./RoleSwitch";
-import useActiveRole from "../../hooks/useActiveRole";
+import { useRole } from "../../context/RoleContext";
 
 export default function Header({ onOpenDrawer }) {
     const theme = useTheme();
@@ -35,14 +35,14 @@ export default function Header({ onOpenDrawer }) {
 
     const { settings, toggleMode, setPaletteKey } = useThemeSettings();
     const navigate = useNavigate();
-    const { activeRole, setActiveRole } = useActiveRole("freelancer");
+    const { activeRole, setActiveRole } = useRole();
 
     const pageTitle = useMemo(() => {
         const first = "/" + (pathname.split("/")[1] || "");
-        const items = navItemsByRole?.[activeRole] || [];
-        const match = items.find((x) => x.path === first);
-        return match?.label || "Dashboard";
+        const items = navItemsByRole?.[activeRole] ?? [];
+        return items.find((x) => x.path === first)?.label ?? "Dashboard";
     }, [pathname, activeRole]);
+
 
 
     const [anchorPalette, setAnchorPalette] = useState(null);
@@ -54,14 +54,15 @@ export default function Header({ onOpenDrawer }) {
     const openUser = (e) => setAnchorUser(e.currentTarget);
     const closeUser = () => setAnchorUser(null);
 
+
     return (
         <AppBar
             position="fixed"
             elevation={0}
             sx={{
                 backdropFilter: "blur(14px)",
-                bgcolor: "rgba(0,0,0,0.25)",
-                borderBottom: "1px solid rgba(255,255,255,0.08)",
+                bgcolor: theme.palette.mode === "dark" ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.65)",
+                borderBottom: `1px solid ${theme.palette.divider}`,
                 zIndex: (t) => t.zIndex.appBar, // یا کلاً این خط رو حذف کن
             }}
         >
@@ -86,8 +87,8 @@ export default function Header({ onOpenDrawer }) {
                             px: 1.5,
                             py: 0.75,
                             borderRadius: 999,
-                            border: "1px solid rgba(255,255,255,0.10)",
-                            bgcolor: "rgba(255,255,255,0.04)",
+                            border: `1px solid ${theme.palette.divider}`,
+                            bgcolor: theme.palette.mode === "dark" ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
                             maxWidth: 520,
                         }}
                     >
@@ -138,13 +139,17 @@ export default function Header({ onOpenDrawer }) {
                         </MenuItem>
                     ))}
                 </Menu>
+
                 <RoleSwitch
                     value={activeRole}
                     onChange={(role) => {
                         setActiveRole(role);
+                        closePalette();
+                        closeUser();
                         navigate(role === "employer" ? "/my-projects" : "/projects");
                     }}
                 />
+
 
                 <Tooltip title="Notifications">
                     <IconButton sx={{ color: "text.primary" }}>

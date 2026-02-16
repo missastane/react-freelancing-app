@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { navItemsByRole } from "../../app/navConfig";
-import useActiveRole from "../../hooks/useActiveRole";
+import { useRole } from "../../context/RoleContext";
 
 const linkStyle = ({ isActive }) => ({
   textDecoration: "none",
@@ -24,7 +24,7 @@ const linkStyle = ({ isActive }) => ({
 });
 
 export default function Sidebar({ width = 280, onNavigate }) {
-  const { activeRole } = useActiveRole("freelancer");
+ const { activeRole } = useRole();
 
   const items = navItemsByRole?.[activeRole] ?? navItemsByRole.freelancer;
 
