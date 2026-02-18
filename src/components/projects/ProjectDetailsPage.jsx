@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Box, Container, Paper } from "@mui/material";
+import { Box, Container, Paper, useTheme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import ProjectDetailsContent from "./ProjectDetailsContent";
 
@@ -26,6 +26,7 @@ function useMockProject(id) {
 }
 
 export default function ProjectDetailsPage() {
+  const theme = useTheme();
   const { id } = useParams();
   const project = useMockProject(id);
 
@@ -37,14 +38,17 @@ export default function ProjectDetailsPage() {
           sx={{
             p: { xs: 2, sm: 2.5, md: 3 },
             borderRadius: 3,
-            borderColor: "divider",
-            bgcolor: "background.paper",
-            backgroundImage: "none",
+
+            // ✅ هماهنگ با سیستم surface صفحه پروژه‌ها
+            borderColor: theme.palette.surface.border,
+            bgcolor: theme.palette.surface.soft,
+            backgroundImage: `linear-gradient(180deg, ${theme.palette.surface.tint}, transparent)`,
+            backgroundRepeat: "no-repeat",
           }}
         >
           <ProjectDetailsContent
             project={project}
-            showClose={false}         // ✅ صفحه‌ست، دکمه Close نذاریم
+            showClose={false} // ✅ صفحه‌ست، دکمه Close نذاریم
             onSubmitProposal={(p) => console.log("Submit proposal for:", p)}
           />
         </Paper>

@@ -15,7 +15,9 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import WorkOutlineRoundedIcon from "@mui/icons-material/WorkOutlineRounded";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
+
 import { getSkillChipSx } from "../../utils/skillColors";
+
 export default function ProjectCard({ project, onView }) {
   const theme = useTheme();
 
@@ -37,9 +39,20 @@ export default function ProjectCard({ project, onView }) {
       sx={{
         borderRadius: 3,
         border: "1px solid",
-        borderColor: "divider",
-        bgcolor: "background.paper",
+        borderColor: theme.palette.surface.border,
+
+        // ✅ مثل MyProjectsPage
+        bgcolor: theme.palette.surface.soft,
+        backgroundImage: "none",
+
         overflow: "hidden",
+        transition: "border-color 140ms ease, background-color 140ms ease, transform 140ms ease",
+
+        "&:hover": {
+          borderColor: theme.palette.surface.borderTint,
+          transform: "translateY(-1px)",
+          bgcolor: theme.palette.surface.strong,
+        },
       }}
     >
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
@@ -64,7 +77,7 @@ export default function ProjectCard({ project, onView }) {
           {description}
         </Typography>
 
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 2, borderColor: theme.palette.surface.border }} />
 
         {/* Meta Row */}
         <Stack
@@ -96,18 +109,12 @@ export default function ProjectCard({ project, onView }) {
 
         {/* Skills */}
         <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 2 }}>
-        {skills.map((s) => (
-  <Chip
-    // key={s.id ?? (s.original_title || s.persian_title)}
-    key={s}
-    // label={s.original_title || s.persian_title}
-    label={s}
-    sx={getSkillChipSx(theme, s)}
-  />
-))}
+          {skills.map((s) => (
+            <Chip key={s} label={s} sx={getSkillChipSx(theme, s)} />
+          ))}
         </Stack>
 
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 2, borderColor: theme.palette.surface.border }} />
 
         {/* Footer */}
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>

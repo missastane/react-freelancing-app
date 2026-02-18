@@ -34,13 +34,18 @@ function formatBytes(bytes) {
 }
 
 function Section({ title, subtitle, children }) {
+  const theme = useTheme();
+
   return (
     <Paper
       variant="outlined"
       sx={{
         p: { xs: 2, sm: 2.5 },
         borderRadius: 3,
-        bgcolor: "background.paper",
+
+        // ✅ هماهنگ با کارت‌های صفحه پروژه‌ها
+        bgcolor: theme.palette.surface.soft,
+        borderColor: theme.palette.surface.border,
         backgroundImage: "none",
       }}
     >
@@ -156,7 +161,8 @@ export default function CreateProjectDialog({
       fullScreen
       PaperProps={{
         sx: {
-          bgcolor: "background.default",
+          // ✅ بک‌گراند کل صفحه دیالوگ مثل صفحه پروژه‌ها
+          bgcolor: theme.palette.mode === "dark" ? theme.palette.surface.soft : theme.palette.background.default,
           backgroundImage: "none",
         },
       }}
@@ -166,9 +172,11 @@ export default function CreateProjectDialog({
         position="sticky"
         elevation={0}
         sx={{
-          bgcolor: "background.paper",
+          // ✅ هدر کمی پررنگ‌تر
+          bgcolor: theme.palette.surface.strong,
           borderBottom: "1px solid",
-          borderColor: "divider",
+          borderColor: theme.palette.surface.border,
+          backgroundImage: "none",
         }}
       >
         <Toolbar sx={{ gap: 1 }}>
@@ -288,15 +296,11 @@ export default function CreateProjectDialog({
                     cursor: "pointer",
                     borderStyle: "dashed",
                     borderWidth: 2,
-                    borderColor: dragOver ? "primary.main" : "divider",
-                    bgcolor:
-                      dragOver
-                        ? (theme.palette.mode === "dark"
-                            ? "rgba(255,255,255,0.04)"
-                            : "rgba(0,0,0,0.03)")
-                        : (theme.palette.mode === "dark"
-                            ? "rgba(255,255,255,0.02)"
-                            : "rgba(0,0,0,0.02)"),
+
+                    // ✅ رنگ‌ها از تم
+                    borderColor: dragOver ? theme.palette.surface.borderTint : theme.palette.surface.border,
+                    bgcolor: dragOver ? theme.palette.surface.strong : theme.palette.surface.soft,
+
                     transition: "border-color 120ms ease, background-color 120ms ease",
                   }}
                 >
@@ -350,7 +354,7 @@ export default function CreateProjectDialog({
 
                 {files.length > 0 && (
                   <>
-                    <Divider />
+                    <Divider sx={{ borderColor: theme.palette.surface.border }} />
                     <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
                       {files.map((f, idx) => (
                         <Chip
@@ -361,10 +365,11 @@ export default function CreateProjectDialog({
                           sx={{
                             borderRadius: 999,
                             fontWeight: 800,
-                            bgcolor:
-                              theme.palette.mode === "dark"
-                                ? "rgba(255,255,255,0.06)"
-                                : "rgba(0,0,0,0.05)",
+
+                            // ✅ هماهنگ با پنل‌ها
+                            bgcolor: theme.palette.action.selected,
+                            border: "1px solid",
+                            borderColor: theme.palette.surface.border,
                           }}
                         />
                       ))}
@@ -419,7 +424,7 @@ export default function CreateProjectDialog({
                   />
                 </Box>
 
-                <Divider />
+                <Divider sx={{ borderColor: theme.palette.surface.border }} />
 
                 <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.8 }}>
                   Tip: adding clear budget and timeline increases proposal quality.
@@ -441,7 +446,7 @@ export default function CreateProjectDialog({
                   Budget: {budgetMin || "—"} – {budgetMax || "—"} • {durationDays || "—"} days
                 </Typography>
 
-                <Divider sx={{ my: 1 }} />
+                <Divider sx={{ my: 1, borderColor: theme.palette.surface.border }} />
 
                 <Typography
                   variant="body2"
@@ -467,25 +472,34 @@ export default function CreateProjectDialog({
           </Stack>
         </Box>
 
-        {/* Bottom actions (for ergonomics) */}
+        {/* Bottom actions */}
         <Box sx={{ maxWidth: 980, mx: "auto", mt: 2 }}>
           <Paper
             variant="outlined"
             sx={{
               p: 2,
               borderRadius: 3,
-              bgcolor: "background.paper",
+
+              // ✅ پایین صفحه هم هماهنگ
+              bgcolor: theme.palette.surface.strong,
+              borderColor: theme.palette.surface.border,
               backgroundImage: "none",
+
               display: "flex",
               justifyContent: "flex-end",
               gap: 1,
-              borderColor: "divider",
             }}
           >
             <Button
               onClick={onClose}
               variant="outlined"
-              sx={{ borderRadius: 2.5, fontWeight: 800, textTransform: "none" }}
+              sx={{
+                borderRadius: 2.5,
+                fontWeight: 800,
+                textTransform: "none",
+                borderColor: theme.palette.surface.border,
+                "&:hover": { borderColor: theme.palette.surface.borderTint },
+              }}
             >
               Cancel
             </Button>

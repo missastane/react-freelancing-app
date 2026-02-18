@@ -20,7 +20,7 @@ import MarkEmailUnreadRoundedIcon from "@mui/icons-material/MarkEmailUnreadRound
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useRole } from "../../context/RoleContext";
-import { useNavigate, generatePath } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ProposalMessageCard from "./ProposalMessageCard";
 import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
@@ -62,12 +62,10 @@ function EmptyState({ text }) {
 }
 
 function ChatBubble({ mine, text, ts }) {
+    const theme = useTheme();
+
     return (
-        <Stack
-            direction="row"
-            justifyContent={mine ? "flex-end" : "flex-start"}
-            sx={{ width: "100%" }}
-        >
+        <Stack direction="row" justifyContent={mine ? "flex-end" : "flex-start"} sx={{ width: "100%" }}>
             <Box
                 sx={{
                     maxWidth: 640,
@@ -76,15 +74,13 @@ function ChatBubble({ mine, text, ts }) {
                     borderRadius: 3,
                     borderTopRightRadius: mine ? 1.2 : 12,
                     borderTopLeftRadius: mine ? 12 : 1.2,
-                    bgcolor: mine ? "primary.main" : "background.paper",
+                    bgcolor: mine ? theme.palette.surface.strong : theme.palette.surface.borderTint,
                     color: mine ? "primary.contrastText" : "text.primary",
                     border: mine ? "none" : "1px solid",
                     borderColor: mine ? "transparent" : "divider",
                 }}
             >
-                <Typography sx={{ whiteSpace: "pre-wrap", lineHeight: 1.75 }}>
-                    {text}
-                </Typography>
+                <Typography sx={{ whiteSpace: "pre-wrap", lineHeight: 1.75 }}>{text}</Typography>
                 <Typography
                     variant="caption"
                     sx={{
@@ -110,11 +106,9 @@ export default function MessagesPage() {
     const [attachments, setAttachments] = useState([]);
     const attachRef = useRef(null);
 
-
     const navigate = useNavigate();
 
     const goProject = (p) => {
-        // slug رو بعداً میتونی از API بیاری؛ فعلاً ساده
         const slug = (p.projectSlug || String(p.projectTitle || "project"))
             .toLowerCase()
             .replace(/\s+/g, "-")
@@ -123,10 +117,8 @@ export default function MessagesPage() {
         navigate(`/projects/${p.projectId}/${slug}`);
     };
 
-    // فعلاً برای View Proposal یه dialog ساده/قبلی یا همون modal پیشنهاد
     const viewProposal = (p) => {
         console.log("open proposal details", p);
-        // بعداً: setProposalDialogOpen(true) + setSelectedProposal(p)
     };
 
     const pickAttachments = () => attachRef.current?.click();
@@ -136,7 +128,6 @@ export default function MessagesPage() {
 
         const incoming = Array.from(fileList);
 
-        // جلوگیری از تکراری
         const existingKey = new Set(attachments.map((f) => `${f.name}__${f.size}`));
         const unique = incoming.filter((f) => !existingKey.has(`${f.name}__${f.size}`));
 
@@ -161,7 +152,6 @@ export default function MessagesPage() {
                 unread: 2,
                 lastMessage: "Great! I've approved your proposal...",
                 lastTime: "A moment ago",
-                // قانون شما: تا کارفرما شروع نکرده فریلنسر اجازه ارسال ندارد
                 employerStarted: true,
                 messages: [
                     {
@@ -201,24 +191,32 @@ export default function MessagesPage() {
                 unread: 0,
                 lastMessage: "I will handle the CRM system d...",
                 lastTime: "1 hour ago",
-                employerStarted: false, // 👈 یعنی کارفرما هنوز چت رو شروع نکرده
-                messages: [
+                employerStarted: false,
+                 messages: [
                     {
                         id: "m1",
                         from: "freelancer",
-                        ts: "Yesterday",
+                        ts: "4h ago",
                         type: "proposal",
                         proposal: {
-                            projectId: 12,
-                            projectTitle: "Build a Website for an E-Commerce Store",
-                            projectSlug: "build-a-website-for-an-e-commerce-store",
-                            amount: 650,
-                            durationDays: 7,
+                            projectId: 11,
+                            projectTitle: "Develop a Custom CRM System",
+                            projectSlug: "develop-a-custom-crm-system",
+                            amount: 2000,
+                            durationDays: 14,
                             statusLabel: "Pending",
-                            note: "Waiting for employer to start the chat.",
+                            note: "Milestones included. Ready to start immediately.",
                         },
-                    }
-
+                    },
+                    {
+                        id: "m2",
+                        from: activeRole === "employer" ? "employer" : "freelancer",
+                        ts: "3h ago",
+                        text:
+                            "Hi! Yes, I’m available. I’m glad to hear you’re interested.\nWhat time works for you?",
+                    },
+                    { id: "m3", from: "employer", ts: "2h ago", text: "How about tomorrow at 10 AM? Quick call?" },
+                    { id: "m4", from: "freelancer", ts: "2h ago", text: "Perfect. I’ll be there." },
                 ],
             },
             {
@@ -253,22 +251,14 @@ export default function MessagesPage() {
         return threads.filter((t) => {
             if (unreadOnly && !t.unread) return false;
             if (!q) return true;
-            return (
-                t.person.name.toLowerCase().includes(q) ||
-                (t.lastMessage || "").toLowerCase().includes(q)
-            );
+            return t.person.name.toLowerCase().includes(q) || (t.lastMessage || "").toLowerCase().includes(q);
         });
     }, [threads, query, unreadOnly]);
 
-    const totalUnread = useMemo(
-        () => threads.reduce((sum, t) => sum + (t.unread || 0), 0),
-        [threads]
-    );
+    const totalUnread = useMemo(() => threads.reduce((sum, t) => sum + (t.unread || 0), 0), [threads]);
 
     // ✅ اجازه ارسال
-    const canSend =
-        !!selectedThread &&
-        (activeRole === "employer" || selectedThread.employerStarted);
+    const canSend = !!selectedThread && (activeRole === "employer" || selectedThread.employerStarted);
 
     const handleSend = () => {
         if (!selectedThread) return;
@@ -285,7 +275,6 @@ export default function MessagesPage() {
         setAttachments([]);
     };
 
-
     return (
         <Box sx={{ py: { xs: 2, md: 3 } }}>
             <Box
@@ -294,22 +283,22 @@ export default function MessagesPage() {
                     gridTemplateColumns: { xs: "1fr", md: "360px 1fr" },
                     gap: 2,
                     alignItems: "stretch",
-                    height: { md: "calc(100vh - 120px)" }, // 120 رو اگر Toolbarت فرق داره کم/زیاد کن
+                    height: { md: "calc(100vh - 120px)" },
                 }}
             >
-
                 {/* LEFT: threads */}
                 <Paper
                     variant="outlined"
                     sx={{
                         borderRadius: 3,
                         overflow: "hidden",
-                        bgcolor: "background.paper",
+                        bgcolor: theme.palette.surface.strong,
                         backgroundImage: "none",
+                        borderColor: theme.palette.surface.borderTint,
                     }}
                 >
                     {/* header */}
-                    <Box sx={{ p: 2 }}>
+                    <Box sx={{ p: 2, bgcolor: "transparent" }}>
                         <Stack direction="row" alignItems="center" spacing={1.25}>
                             <Typography sx={{ fontWeight: 900, flex: 1 }}>Messages</Typography>
 
@@ -318,8 +307,9 @@ export default function MessagesPage() {
                                     onClick={() => setUnreadOnly((v) => !v)}
                                     sx={{
                                         border: "1px solid",
-                                        borderColor: "divider",
+                                        borderColor: theme.palette.surface.border,
                                         borderRadius: 2,
+                                        bgcolor: theme.palette.surface.soft,
                                     }}
                                 >
                                     <Badge badgeContent={totalUnread} color="primary">
@@ -337,11 +327,8 @@ export default function MessagesPage() {
                                 py: 0.9,
                                 borderRadius: 999,
                                 border: "1px solid",
-                                borderColor: "divider",
-                                bgcolor:
-                                    theme.palette.mode === "dark"
-                                        ? "rgba(255,255,255,0.03)"
-                                        : "rgba(0,0,0,0.02)",
+                                borderColor: theme.palette.surface.border,
+                                bgcolor: theme.palette.surface.soft,
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 1,
@@ -357,10 +344,16 @@ export default function MessagesPage() {
                         </Box>
                     </Box>
 
-                    <Divider />
+                    <Divider sx={{ borderColor: theme.palette.surface.borderTint }} />
 
                     {/* list */}
-                    <Box sx={{ maxHeight: { xs: 520, md: "calc(100vh - 290px)" }, overflowY: "auto" }}>
+                    <Box
+                        sx={{
+                            maxHeight: { xs: 520, md: "calc(100vh - 290px)" },
+                            overflowY: "auto",
+                            bgcolor: "transparent",
+                        }}
+                    >
                         {filteredThreads.length === 0 ? (
                             <EmptyState text="No conversations found" />
                         ) : (
@@ -376,13 +369,13 @@ export default function MessagesPage() {
                                                 p: 1.25,
                                                 borderRadius: 3,
                                                 cursor: "pointer",
-                                                borderColor: selected ? "primary.main" : "divider",
-                                                bgcolor: selected
-                                                    ? (theme.palette.mode === "dark"
-                                                        ? "rgba(255,255,255,0.04)"
-                                                        : "rgba(0,0,0,0.03)")
-                                                    : "transparent",
+                                                borderColor: selected ? theme.palette.surface.borderTint : theme.palette.surface.border,
+                                                bgcolor: selected ? theme.palette.surface.borderTint : "transparent",
                                                 transition: "border-color 120ms ease, background-color 120ms ease",
+                                                "&:hover": {
+                                                    borderColor: theme.palette.surface.borderTint,
+                                                    bgcolor: selected ? theme.palette.surface.strong : theme.palette.surface.soft,
+                                                },
                                             }}
                                         >
                                             <Stack direction="row" spacing={1.25} alignItems="center">
@@ -399,7 +392,7 @@ export default function MessagesPage() {
                                                                 borderRadius: 999,
                                                                 bgcolor: "success.main",
                                                                 border: "2px solid",
-                                                                borderColor: "background.paper",
+                                                                borderColor: theme.palette.background.paper,
                                                             }}
                                                         />
                                                     )}
@@ -453,12 +446,13 @@ export default function MessagesPage() {
                     sx={{
                         borderRadius: 3,
                         overflow: "hidden",
-                        bgcolor: "background.paper",
+                        bgcolor: theme.palette.background.paper,
                         backgroundImage: "none",
                         display: "flex",
                         flexDirection: "column",
                         minHeight: { xs: 520, md: "calc(100vh - 200px)" },
-
+                        borderColor: theme.palette.surface.border,
+                        bgcolor: theme.palette.surface.soft
                     }}
                 >
                     {/* chat header */}
@@ -478,20 +472,22 @@ export default function MessagesPage() {
                                             variant="body2"
                                             color="text.secondary"
                                             sx={{ cursor: "pointer", textDecoration: "underline" }}
-                                            onClick={() => navigate(`/projects/${selectedThread.projectId}/${selectedThread.projectSlug}`)}
+                                            onClick={() =>
+                                                navigate(`/projects/${selectedThread.projectId}/${selectedThread.projectSlug}`)
+                                            }
                                         >
                                             Project: {selectedThread.projectTitle}
                                         </Typography>
                                     )}
-
                                 </Box>
 
                                 <Tooltip title="Info">
                                     <IconButton
                                         sx={{
                                             border: "1px solid",
-                                            borderColor: "divider",
+                                            borderColor: theme.palette.surface.border,
                                             borderRadius: 2,
+                                            bgcolor: theme.palette.surface.soft,
                                         }}
                                     >
                                         <InfoOutlinedIcon />
@@ -503,7 +499,7 @@ export default function MessagesPage() {
                         )}
                     </Box>
 
-                    <Divider />
+                    <Divider sx={{ borderColor: theme.palette.surface.border }} />
 
                     {/* messages area */}
                     <Box
@@ -511,10 +507,7 @@ export default function MessagesPage() {
                             p: 2,
                             flex: 1,
                             overflowY: "auto",
-                            bgcolor:
-                                theme.palette.mode === "dark"
-                                    ? "rgba(255,255,255,0.02)"
-                                    : "rgba(0,0,0,0.015)",
+                            bgcolor: theme.palette.surface.soft,
                         }}
                     >
                         {!selectedThread ? (
@@ -544,7 +537,6 @@ export default function MessagesPage() {
                                     return <ChatBubble key={m.id} mine={mine} text={m.text} ts={m.ts} />;
                                 })}
 
-
                                 {/* Hint for rule */}
                                 {activeRole === "freelancer" && !selectedThread.employerStarted && (
                                     <Paper
@@ -553,16 +545,14 @@ export default function MessagesPage() {
                                             p: 1.5,
                                             borderRadius: 3,
                                             borderStyle: "dashed",
-                                            bgcolor: "background.paper",
-                                            borderColor: "divider",
+                                            bgcolor: theme.palette.surface.strong,
+                                            borderColor: theme.palette.surface.border,
                                         }}
                                     >
-                                        <Typography sx={{ fontWeight: 900 }}>
-                                            You can’t start this chat yet
-                                        </Typography>
+                                        <Typography sx={{ fontWeight: 900 }}>You can’t start this chat yet</Typography>
                                         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, lineHeight: 1.8 }}>
-                                            In this platform, employers must start the conversation first. Once the employer
-                                            sends the first message, you can reply here.
+                                            In this platform, employers must start the conversation first. Once the employer sends the first
+                                            message, you can reply here.
                                         </Typography>
                                     </Paper>
                                 )}
@@ -570,7 +560,7 @@ export default function MessagesPage() {
                         )}
                     </Box>
 
-                    <Divider />
+                    <Divider sx={{ borderColor: theme.palette.surface.border }} />
 
                     {/* composer */}
                     <Box sx={{ p: 1.5 }}>
@@ -582,7 +572,12 @@ export default function MessagesPage() {
                                         label={f.name}
                                         onDelete={() => removeAttachment(idx)}
                                         deleteIcon={<DeleteOutlineRoundedIcon />}
-                                        sx={{ borderRadius: 999, fontWeight: 800, bgcolor: "action.hover" }}
+                                        sx={{
+                                            borderRadius: 999,
+                                            fontWeight: 800,
+                                            bgcolor: theme.palette.surface.soft,
+                                            border: `1px solid ${theme.palette.surface.border}`,
+                                        }}
                                     />
                                 ))}
                             </Stack>
@@ -597,11 +592,8 @@ export default function MessagesPage() {
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 1,
-                                borderColor: "divider",
-                                bgcolor:
-                                    theme.palette.mode === "dark"
-                                        ? "rgba(255,255,255,0.03)"
-                                        : "rgba(0,0,0,0.02)",
+                                borderColor: theme.palette.surface.border,
+                                bgcolor: theme.palette.surface.soft,
                             }}
                         >
                             <InputBase
@@ -623,10 +615,15 @@ export default function MessagesPage() {
                                     }
                                 }}
                             />
+
                             <IconButton
                                 onClick={pickAttachments}
                                 disabled={!selectedThread || !canSend}
-                                sx={{ border: "1px solid", borderColor: "divider" }}
+                                sx={{
+                                    border: "1px solid",
+                                    borderColor: theme.palette.surface.border,
+                                    borderRadius: 2,
+                                }}
                             >
                                 <AttachFileRoundedIcon />
                             </IconButton>

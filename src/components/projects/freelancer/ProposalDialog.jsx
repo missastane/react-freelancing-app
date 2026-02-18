@@ -40,22 +40,6 @@ function normalizeMilestones(raw) {
   }));
 }
 
-/**
- * ProposalDialog
- * - mode="create": فرم خالی + project لازم‌تره
- * - mode="edit": فرم از initialValues پر میشه
- *
- * Props:
- * open: boolean
- * onClose: () => void
- * mode?: "create" | "edit"
- * project?: object (برای نمایش summary)
- * initialValues?: {
- *   project_id?, milestones?, overall_deadline?, details?
- * }
- * onSubmit?: (payload) => void | Promise<void>
- * submitLabel?: string
- */
 export default function ProposalDialog({
   open,
   onClose,
@@ -71,10 +55,9 @@ export default function ProposalDialog({
 
   // form state
   const [milestones, setMilestones] = useState([emptyMilestone()]);
-  const [overallDeadline, setOverallDeadline] = useState(""); // yyyy-mm-dd
+  const [overallDeadline, setOverallDeadline] = useState("");
   const [details, setDetails] = useState("");
 
-  // reset/fill when dialog opens
   useEffect(() => {
     if (!open) return;
 
@@ -87,7 +70,6 @@ export default function ProposalDialog({
       return;
     }
 
-    // create mode
     setMilestones([emptyMilestone()]);
     setOverallDeadline("");
     setDetails("");
@@ -150,19 +132,51 @@ export default function ProposalDialog({
     onClose?.();
   };
 
-  const softCardBg =
-    theme.palette.mode === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+  // ✅ unified surfaces
+  const paperSx = {
+    borderRadius: 3,
+    borderColor: theme.palette.surface.border,
+    bgcolor: theme.palette.surface.soft,
+    backgroundImage: "none",
+    p:2
+  };
+
+  const innerSoftSx = {
+    borderRadius: 3,
+    borderColor: theme.palette.surface.border,
+    bgcolor: theme.palette.surface.soft,
+    backgroundImage: "none",
+  };
+
+  const innerStrongSx = {
+    borderRadius: 3,
+    borderColor: theme.palette.surface.borderTint,
+    bgcolor: theme.palette.surface.strong,
+    backgroundImage: "none",
+  };
 
   return (
-    <Dialog fullScreen open={open} onClose={onClose}>
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          bgcolor: theme.palette.surface.soft,
+          backgroundImage: `linear-gradient(180deg, ${theme.palette.surface.tint}, transparent)`,
+          backgroundRepeat: "no-repeat",
+        },
+      }}
+    >
       {/* Top bar */}
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
-          bgcolor: "background.paper",
+          bgcolor: theme.palette.surface.strong,
           borderBottom: "1px solid",
-          borderColor: "divider",
+          borderColor: theme.palette.surface.border,
+          backgroundImage: "none",
         }}
       >
         <Toolbar sx={{ gap: 1 }}>
@@ -194,7 +208,7 @@ export default function ProposalDialog({
         <Container maxWidth="lg">
           <Stack spacing={2}>
             {/* Project summary FULL WIDTH */}
-            <Paper variant="outlined" sx={{ p: { xs: 2, sm: 2.5 }, borderRadius: 3 }}>
+            <Paper variant="outlined" sx={{ ...paperSx }}>
               <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
                 <Box sx={{ minWidth: 0 }}>
                   <Typography sx={{ fontWeight: 900 }} noWrap>
@@ -224,7 +238,7 @@ export default function ProposalDialog({
               </Stack>
 
               <Collapse in={showSummary} timeout="auto" unmountOnExit>
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: 2, borderColor: theme.palette.surface.border }} />
 
                 <Stack spacing={1.25}>
                   <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
@@ -262,14 +276,8 @@ export default function ProposalDialog({
               }}
             >
               {/* LEFT: Milestones */}
-              <Paper variant="outlined" sx={{ p: { xs: 2, sm: 2.5 }, borderRadius: 3 }}>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  gap={2}
-                  sx={{ mb: 1.5 }}
-                >
+              <Paper variant="outlined" sx={{ ...paperSx, p: { xs: 2, sm: 2.5 } }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} sx={{ mb: 1.5 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>
                     Milestones
                   </Typography>
@@ -278,7 +286,13 @@ export default function ProposalDialog({
                     startIcon={<AddRoundedIcon />}
                     onClick={addMilestone}
                     variant="outlined"
-                    sx={{ borderRadius: 2.5, fontWeight: 800, textTransform: "none" }}
+                    sx={{
+                      borderRadius: 2.5,
+                      fontWeight: 800,
+                      textTransform: "none",
+                      borderColor: theme.palette.surface.border,
+                      "&:hover": { borderColor: theme.palette.surface.borderTint },
+                    }}
                   >
                     Add milestone
                   </Button>
@@ -294,18 +308,16 @@ export default function ProposalDialog({
                       key={idx}
                       variant="outlined"
                       sx={{
+                        ...innerSoftSx,
                         p: 2,
-                        borderRadius: 3,
-                        bgcolor: softCardBg,
+                        transition: "border-color 140ms ease, background-color 140ms ease",
+                        "&:hover": {
+                          borderColor: theme.palette.surface.borderTint,
+                          bgcolor: theme.palette.surface.strong,
+                        },
                       }}
                     >
-                      <Stack
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        gap={1.5}
-                        sx={{ mb: 1.5 }}
-                      >
+                      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1.5} sx={{ mb: 1.5 }}>
                         <Typography sx={{ fontWeight: 900 }}>Milestone {idx + 1}</Typography>
 
                         <IconButton
@@ -368,7 +380,7 @@ export default function ProposalDialog({
 
               {/* RIGHT: Deadline + Fee (sticky) */}
               <Stack spacing={2} sx={{ position: { md: "sticky" }, top: { md: 88 } }}>
-                <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 3 }}>
+                <Paper variant="outlined" sx={{ ...paperSx, p: 2.5 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5 }}>
                     Overall deadline
                   </Typography>
@@ -387,7 +399,7 @@ export default function ProposalDialog({
                   </Typography>
                 </Paper>
 
-                <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 3 }}>
+                <Paper variant="outlined" sx={{ ...paperSx, p: 2.5 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5 }}>
                     Summary
                   </Typography>
@@ -395,7 +407,8 @@ export default function ProposalDialog({
                   <Stack spacing={1}>
                     <Row label="Total amount" value={`$${totals.total.toFixed(2)}`} strong />
                     <Row label={`Service fee (${FEE_PERCENT}%)`} value={`-$${totals.fee.toFixed(2)}`} />
-                    <Divider />
+                    <Divider sx={{ borderColor: theme.palette.surface.border }} />
+                    {/* ✅ accent با پالت خودت (نه سبز success) */}
                     <Row label="You will earn" value={`$${totals.earn.toFixed(2)}`} accent />
                   </Stack>
                 </Paper>
@@ -403,7 +416,7 @@ export default function ProposalDialog({
             </Box>
 
             {/* Proposal details FULL WIDTH */}
-            <Paper variant="outlined" sx={{ p: { xs: 2, sm: 2.5 }, borderRadius: 3 }}>
+            <Paper variant="outlined" sx={{ ...paperSx, p: { xs: 2, sm: 2.5 } }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 1.5 }}>
                 Proposal details
               </Typography>
@@ -421,20 +434,21 @@ export default function ProposalDialog({
                 Tip: include what you’ll deliver per milestone to reduce misunderstandings.
               </Typography>
 
-              {/* bottom actions for mobile convenience */}
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={1.2}
-                justifyContent="flex-end"
-                sx={{ mt: 2 }}
-              >
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.2} justifyContent="flex-end" sx={{ mt: 2 }}>
                 <Button
                   variant="outlined"
                   onClick={onClose}
-                  sx={{ borderRadius: 2.5, fontWeight: 800, textTransform: "none" }}
+                  sx={{
+                    borderRadius: 2.5,
+                    fontWeight: 800,
+                    textTransform: "none",
+                    borderColor: theme.palette.surface.border,
+                    "&:hover": { borderColor: theme.palette.surface.borderTint },
+                  }}
                 >
                   Cancel
                 </Button>
+
                 <Button
                   variant="contained"
                   disabled={!canSubmit}
@@ -453,16 +467,20 @@ export default function ProposalDialog({
 }
 
 function Row({ label, value, strong, accent }) {
+  const theme = useTheme();
+
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
       <Typography variant="body2" color="text.secondary">
         {label}
       </Typography>
+
       <Typography
         variant="body1"
         sx={{
           fontWeight: strong || accent ? 900 : 800,
-          color: accent ? "success.main" : "text.primary",
+          // ✅ accent با رنگ برند خودت
+          color: accent ? theme.palette.primary.main : "text.primary",
         }}
       >
         {value}

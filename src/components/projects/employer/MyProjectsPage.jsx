@@ -11,40 +11,46 @@ import {
   Stack,
   Typography,
   useTheme,
+  Drawer,
+  IconButton,
+  useMediaQuery,
 } from "@mui/material";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
-import { Drawer, IconButton, useMediaQuery } from "@mui/material";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 import ProposalDetailsDialog from "./ProposalDetailsDialog";
-import { getSkillChipSx } from "../../../utils/skillColors";
 import CreateProjectDialog from "./CreateProjectDialog";
+import { getSkillChipSx } from "../../../utils/skillColors";
 
+// --- status chip helper (only chip indicates status; card background stays uniform)
 const statusChipSx = (theme, status) => {
-  const isDark = theme.palette.mode === "dark";
   const map = {
-    open: { label: "Open", color: "success" },
-    closed: { label: "Closed", color: "default" },
-    draft: { label: "Draft", color: "warning" },
+    open: { label: "Open" },
+    closed: { label: "Closed" },
+    draft: { label: "Draft" },
   };
   const meta = map[status] ?? map.open;
 
+  // neutral chip look (no loud colors, just clean)
   return {
     label: meta.label,
+    variant: "outlined",
     sx: {
       borderRadius: 999,
       fontWeight: 900,
-      bgcolor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
+      bgcolor: theme.palette.action.selected,
+      borderColor: theme.palette.surface.border,
     },
   };
 };
 
 export default function MyProjectsPage() {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   // ✅ mock data (بعداً از API)
   const projects = useMemo(
@@ -142,37 +148,44 @@ export default function MyProjectsPage() {
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
   const proposals = selectedProjectId ? proposalsByProject[selectedProjectId] || [] : [];
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [mobileProposalsOpen, setMobileProposalsOpen] = useState(false);
 
-    const onEditProject = (projectId) => console.log("Edit project", projectId);
+  const onEditProject = (projectId) => console.log("Edit project", projectId);
   const onDeleteProject = (projectId) => console.log("Delete project", projectId);
-  const onViewProjectProposals = (projectId) => console.log("Go to proposals list", projectId);
-
   const onApprove = (proposalId) => console.log("Approve proposal", proposalId);
   const onReject = (proposalId) => console.log("Reject proposal", proposalId);
-const [createOpen, setCreateOpen] = useState(false);
 
-const categories = useMemo(
-  () => [
-    { id: "web", name: "Web Development" },
-    { id: "mobile", name: "Mobile Apps" },
-    { id: "design", name: "Design" },
-    { id: "content", name: "Content Writing" },
-  ],
-  []
-);
+  const [createOpen, setCreateOpen] = useState(false);
 
-const onCreateProject = () => setCreateOpen(true);
+  const categories = useMemo(
+    () => [
+      { id: "web", name: "Web Development" },
+      { id: "mobile", name: "Mobile Apps" },
+      { id: "design", name: "Design" },
+      { id: "content", name: "Content Writing" },
+    ],
+    []
+  );
 
-const handleCreateProject = (payload) => {
-  console.log("CREATE PROJECT payload:", payload);
-  // بعداً: API call
-};
+  const onCreateProject = () => setCreateOpen(true);
+
+  const handleCreateProject = (payload) => {
+    console.log("CREATE PROJECT payload:", payload);
+    // بعداً: API call
+  };
 
   return (
-    <Box sx={{ py: { xs: 3, sm: 4 }, overflowX: "hidden" }}>
+    <Box
+      sx={{
+        py: { xs: 3, sm: 4 },
+        overflowX: "hidden",
+        bgcolor: theme.palette.surface.soft,
+        zIndex: 999,
+        minHeight: "100vh",
+      }}
+    >
+
       <Container maxWidth="lg">
         {/* Header + CTA */}
         <Stack
@@ -191,7 +204,6 @@ const handleCreateProject = (payload) => {
             </Typography>
           </Box>
 
-          {/* ✅ CTA ایجاد پروژه جدید همینجاست */}
           <Button
             variant="contained"
             startIcon={<AddRoundedIcon />}
@@ -228,12 +240,16 @@ const handleCreateProject = (payload) => {
             }}
           >
             {/* LEFT: Projects list */}
-            <Stack spacing={2} sx={{
-              maxWidth: { xs: 350, md: "100%" },
-              mx: { xs: "auto", md: 0 }, // وسط‌چین تو موبایل
-            }}>
+            <Stack
+              spacing={2}
+              sx={{
+                maxWidth: { xs: 350, md: "100%" },
+                mx: { xs: "auto", md: 0 },
+              }}
+            >
               {projects.map((p) => {
                 const chip = statusChipSx(theme, p.status);
+                const isSelected = selectedProjectId === p.id;
 
                 return (
                   <Paper
@@ -244,8 +260,19 @@ const handleCreateProject = (payload) => {
                       p: { xs: 2, sm: 2.5 },
                       borderRadius: 3,
                       cursor: "pointer",
-                      borderColor: selectedProjectId === p.id ? "primary.main" : "divider",
-                      transition: "border-color 120ms ease",
+                      transition: "border-color 140ms ease, background-color 140ms ease, transform 140ms ease",
+
+                      // ✅ همه کارت‌ها soft (یکدست)
+                      // ✅ کارت انتخاب‌شده strong (پررنگ‌تر)
+                      bgcolor: isSelected ? theme.palette.surface.strong : theme.palette.surface.soft,
+
+                      // ✅ border هم برای انتخاب‌شده کمی قوی‌تر
+                      borderColor: isSelected ? theme.palette.surface.borderTint : theme.palette.surface.border,
+
+                      "&:hover": {
+                        borderColor: theme.palette.surface.borderTint,
+                        transform: "translateY(-1px)",
+                      },
                     }}
                   >
                     <Stack direction="row" justifyContent="space-between" alignItems="flex-start" gap={2}>
@@ -256,11 +283,7 @@ const handleCreateProject = (payload) => {
 
                         <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mt: 1 }}>
                           {p.tags.map((t) => (
-                            <Chip
-                              key={t}
-                              label={t}
-                              sx={getSkillChipSx(theme, t)}
-                            />
+                            <Chip key={t} label={t} sx={getSkillChipSx(theme, t)} />
                           ))}
                         </Stack>
 
@@ -277,7 +300,7 @@ const handleCreateProject = (payload) => {
                       </Stack>
                     </Stack>
 
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2, borderColor: "divider" }} />
 
                     <Stack direction="row" spacing={1} justifyContent="flex-end" useFlexGap flexWrap="wrap">
                       {isMobile && (
@@ -296,7 +319,6 @@ const handleCreateProject = (payload) => {
                         </Button>
                       )}
 
-
                       <Button
                         size="small"
                         startIcon={<EditRoundedIcon />}
@@ -305,7 +327,13 @@ const handleCreateProject = (payload) => {
                           onEditProject(p.id);
                         }}
                         variant="outlined"
-                        sx={{ borderRadius: 2, fontWeight: 800, textTransform: "none" }}
+                        sx={{
+                          borderRadius: 2,
+                          fontWeight: 800,
+                          textTransform: "none",
+                          borderColor: theme.palette.surface.border,
+                          "&:hover": { borderColor: theme.palette.surface.borderTint },
+                        }}
                       >
                         Edit
                       </Button>
@@ -319,7 +347,12 @@ const handleCreateProject = (payload) => {
                           onDeleteProject(p.id);
                         }}
                         variant="outlined"
-                        sx={{ borderRadius: 2, fontWeight: 800, textTransform: "none" }}
+                        sx={{
+                          borderRadius: 2,
+                          fontWeight: 800,
+                          textTransform: "none",
+                          borderColor: theme.palette.surface.border,
+                        }}
                       >
                         Delete
                       </Button>
@@ -330,90 +363,91 @@ const handleCreateProject = (payload) => {
             </Stack>
 
             {/* RIGHT: Proposals sidebar */}
-            {!isMobile && (<Paper
-              variant="outlined"
-              sx={{
-                p: { xs: 2, sm: 2.5 },
-                borderRadius: 3,
-                position: { md: "sticky" },
-                top: { md: 88 },
-              }}
-            >
-              <Stack spacing={1}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>
-                  Proposals
-                </Typography>
+            {!isMobile && (
+              <Paper
+                variant="outlined"
+                sx={{
+                  p: { xs: 2, sm: 2.5 },
+                  borderRadius: 3,
+                  position: { md: "sticky" },
+                  top: { md: 88 },
+                  borderColor: theme.palette.surface.border,
+                  bgcolor: theme.palette.surface.soft,
+                }}
+              >
 
-                <Typography variant="body2" color="text.secondary">
-                  {selectedProject ? `For: ${selectedProject.title}` : "Select a project"}
-                </Typography>
-              </Stack>
+                <Stack spacing={1}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>
+                    Proposals
+                  </Typography>
 
-              <Divider sx={{ my: 2 }} />
-
-              {proposals.length === 0 ? (
-                <Typography color="text.secondary">
-                  No proposals yet.
-                </Typography>
-              ) : (
-                <Stack spacing={1.25}>
-                  {proposals.map((pr) => (
-                    <Paper
-                      key={pr.id}
-                      variant="outlined"
-                      sx={{
-                        p: 1.5,
-                        borderRadius: 3,
-                        bgcolor:
-                          theme.palette.mode === "dark"
-                            ? "rgba(255,255,255,0.03)"
-                            : "rgba(0,0,0,0.02)",
-                      }}
-                    >
-                      <Stack direction="row" spacing={1.25} alignItems="center">
-                        <Avatar src={pr.freelancer.avatar} alt={pr.freelancer.name} />
-
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography sx={{ fontWeight: 900 }} noWrap>
-                            {pr.freelancer.name}
-                          </Typography>
-
-                          <Stack direction="row" spacing={0.75} alignItems="center">
-                            <Rating value={pr.freelancer.rating} precision={0.1} readOnly size="small" />
-                            <Typography variant="body2" color="text.secondary">
-                              {pr.freelancer.rating} ({pr.freelancer.reviews})
-                            </Typography>
-                          </Stack>
-                        </Box>
-
-                        <Box sx={{ textAlign: "right" }}>
-                          <Typography sx={{ fontWeight: 900 }}>${pr.amount}</Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {pr.durationDays} days
-                          </Typography>
-                        </Box>
-                      </Stack>
-
-                      <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1.25 }}>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          onClick={() => setSelectedProposal({ ...pr, project: selectedProject })}
-                          sx={{ borderRadius: 2, fontWeight: 900, textTransform: "none" }}
-                        >
-                          View Details
-                        </Button>
-                      </Stack>
-                    </Paper>
-                  ))}
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedProject ? `For: ${selectedProject.title}` : "Select a project"}
+                  </Typography>
                 </Stack>
-              )}
-            </Paper>
-            )}
 
+                <Divider sx={{ my: 2, borderColor: "divider" }} />
+
+                {proposals.length === 0 ? (
+                  <Typography color="text.secondary">No proposals yet.</Typography>
+                ) : (
+                  <Stack spacing={1.25}>
+                    {proposals.map((pr) => (
+                      <Paper
+                        key={pr.id}
+                        variant="outlined"
+                        sx={{
+                          p: 1.5,
+                          borderRadius: 3,
+                          borderColor: theme.palette.surface.border,
+                          bgcolor: theme.palette.action.selected,
+                        }}
+                      >
+                        <Stack direction="row" spacing={1.25} alignItems="center">
+                          <Avatar src={pr.freelancer.avatar} alt={pr.freelancer.name} />
+
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Typography sx={{ fontWeight: 900 }} noWrap>
+                              {pr.freelancer.name}
+                            </Typography>
+
+                            <Stack direction="row" spacing={0.75} alignItems="center">
+                              <Rating value={pr.freelancer.rating} precision={0.1} readOnly size="small" />
+                              <Typography variant="body2" color="text.secondary">
+                                {pr.freelancer.rating} ({pr.freelancer.reviews})
+                              </Typography>
+                            </Stack>
+                          </Box>
+
+                          <Box sx={{ textAlign: "right" }}>
+                            <Typography sx={{ fontWeight: 900 }}>${pr.amount}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {pr.durationDays} days
+                            </Typography>
+                          </Box>
+                        </Stack>
+
+                        <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1.25 }}>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={() => setSelectedProposal({ ...pr, project: selectedProject })}
+                            sx={{ borderRadius: 2, fontWeight: 900, textTransform: "none" }}
+                          >
+                            View Details
+                          </Button>
+                        </Stack>
+                      </Paper>
+                    ))}
+                  </Stack>
+                )}
+              </Paper>
+            )}
           </Box>
         )}
       </Container>
+
+      {/* Mobile proposals drawer */}
       <Drawer
         anchor="right"
         open={mobileProposalsOpen}
@@ -422,10 +456,11 @@ const handleCreateProject = (payload) => {
           sx: {
             width: "100%",
             maxWidth: 520,
-            bgcolor: "background.default",
+            bgcolor: theme.palette.surface.soft,
             backgroundImage: "none",
           },
         }}
+
       >
         <Box sx={{ p: 2 }}>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -443,7 +478,7 @@ const handleCreateProject = (payload) => {
             </Box>
           </Stack>
 
-          <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 2, borderColor: "divider" }} />
 
           {proposals.length === 0 ? (
             <Typography color="text.secondary">No proposals yet.</Typography>
@@ -456,9 +491,8 @@ const handleCreateProject = (payload) => {
                   sx={{
                     p: 1.5,
                     borderRadius: 3,
-                    bgcolor: theme.palette.mode === "dark"
-                      ? "rgba(255,255,255,0.03)"
-                      : "rgba(0,0,0,0.02)",
+                    borderColor: theme.palette.surface.border,
+                    bgcolor: theme.palette.action.selected,
                   }}
                 >
                   <Stack direction="row" spacing={1.25} alignItems="center">
@@ -503,7 +537,7 @@ const handleCreateProject = (payload) => {
 
       {/* Proposal details dialog */}
       <ProposalDetailsDialog
-      fullScreen={isMobile}
+        fullScreen={isMobile}
         open={Boolean(selectedProposal)}
         proposal={selectedProposal}
         onClose={() => setSelectedProposal(null)}
@@ -517,13 +551,13 @@ const handleCreateProject = (payload) => {
         }}
       />
 
+      {/* Create project dialog */}
       <CreateProjectDialog
-  open={createOpen}
-  onClose={() => setCreateOpen(false)}
-  onSubmit={handleCreateProject}
-  categories={categories}
-/>
-
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onSubmit={handleCreateProject}
+        categories={categories}
+      />
     </Box>
   );
 }

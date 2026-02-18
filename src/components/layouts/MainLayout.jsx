@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Drawer, Toolbar, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, alpha } from "@mui/material/styles";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -17,7 +17,12 @@ export default function MainLayout() {
   const closeDrawer = () => setDrawerOpen(false);
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: theme.palette.surface.soft, // ✅ surface-based app background
+      }}
+    >
       {/* Header (hamburger should show on desktop too) */}
       <Header onOpenDrawer={openDrawer} />
 
@@ -28,34 +33,38 @@ export default function MainLayout() {
         onClose={closeDrawer}
         ModalProps={{
           keepMounted: true,
-          BackdropProps: { sx: { bgcolor: "rgba(0,0,0,0.6)" } },
+          BackdropProps: {
+            sx: { bgcolor: alpha(theme.palette.common.black, 0.6) }, // ✅ theme-based overlay
+          },
         }}
         sx={{
           zIndex: (t) => t.zIndex.appBar + 2, // روی هدر بیفته
           "& .MuiDrawer-paper": {
             width: DRAWER_WIDTH,
             boxSizing: "border-box",
-            bgcolor: "background.default",     // یا یه رنگ ثابت مثل "#0B0F14"
-            backdropFilter: "none",            // شیشه‌ای/blur خاموش
-            backgroundImage: "none",           // مطمئن برای مود dark
-            borderRight: "1px solid rgba(255,255,255,0.08)",
-            overflowX:"hidden"
+            bgcolor: theme.palette.background.paper, // ✅ paper surface
+            backdropFilter: "none", // شیشه‌ای/blur خاموش
+            backgroundImage: "none", // مطمئن برای مود dark
+            borderRight: `1px solid ${theme.palette.surface.border}`, // ✅ surface border
+            overflowX: "hidden",
           },
         }}
       >
         <Sidebar width={DRAWER_WIDTH} onNavigate={closeDrawer} />
       </Drawer>
 
-
       {/* Content */}
-      <Box component="main" sx={{
-        xs:{
-           p: 0
-        },
-        md:{
-          p:3
-        }
-       }}>
+      <Box
+        component="main"
+        sx={{
+          xs: {
+            p: 0,
+          },
+          md: {
+            p: 3,
+          },
+        }}
+      >
         <Toolbar />
         <Outlet />
       </Box>

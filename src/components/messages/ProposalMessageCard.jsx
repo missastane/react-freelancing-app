@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Button, Chip, Divider, Paper, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 
 export default function ProposalMessageCard({ proposal, onViewProject, onViewProposal }) {
+  const theme = useTheme();
   if (!proposal) return null;
 
   return (
@@ -12,9 +14,9 @@ export default function ProposalMessageCard({ proposal, onViewProject, onViewPro
       sx={{
         borderRadius: 3,
         overflow: "hidden",
-        bgcolor: "background.paper",
+        bgcolor: "transparent",
         backgroundImage: "none",
-        borderColor: "divider",
+        borderColor: theme.palette.surface.border,
       }}
     >
       <Box sx={{ p: 1.75 }}>
@@ -23,12 +25,14 @@ export default function ProposalMessageCard({ proposal, onViewProject, onViewPro
             <Typography sx={{ fontWeight: 900 }} noWrap>
               Proposal Submitted
             </Typography>
+
             <Chip
               label={proposal.statusLabel || "Pending"}
               sx={{
                 borderRadius: 999,
                 fontWeight: 900,
-                bgcolor: "action.hover",
+                bgcolor: theme.palette.surface.soft,
+                border: `1px solid ${theme.palette.surface.border}`,
               }}
             />
           </Stack>
@@ -43,11 +47,21 @@ export default function ProposalMessageCard({ proposal, onViewProject, onViewPro
           <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
             <Chip
               label={`Budget: $${proposal.amount}`}
-              sx={{ borderRadius: 999, fontWeight: 800, bgcolor: "action.hover" }}
+              sx={{
+                borderRadius: 999,
+                fontWeight: 800,
+                bgcolor: theme.palette.surface.soft,
+                border: `1px solid ${theme.palette.surface.border}`,
+              }}
             />
             <Chip
               label={`Duration: ${proposal.durationDays} days`}
-              sx={{ borderRadius: 999, fontWeight: 800, bgcolor: "action.hover" }}
+              sx={{
+                borderRadius: 999,
+                fontWeight: 800,
+                bgcolor: theme.palette.surface.soft,
+                border: `1px solid ${theme.palette.surface.border}`,
+              }}
             />
           </Stack>
 
@@ -59,7 +73,7 @@ export default function ProposalMessageCard({ proposal, onViewProject, onViewPro
         </Stack>
       </Box>
 
-      <Divider />
+      <Divider sx={{ borderColor: theme.palette.surface.border }} />
 
       <Stack direction="row" spacing={1} sx={{ p: 1.25, justifyContent: "flex-end" }}>
         <Button
@@ -67,7 +81,13 @@ export default function ProposalMessageCard({ proposal, onViewProject, onViewPro
           variant="outlined"
           startIcon={<OpenInNewRoundedIcon />}
           onClick={onViewProject}
-          sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
+          sx={{
+            borderRadius: 2.5,
+            fontWeight: 900,
+            textTransform: "none",
+            borderColor: theme.palette.surface.border,
+            "&:hover": { borderColor: theme.palette.surface.borderTint },
+          }}
         >
           View Project
         </Button>

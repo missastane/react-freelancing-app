@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack, Typography, useTheme } from "@mui/material";
 import ProjectCard from "../ProjectCard";
 import ProjectDetailsModal from "./ProjectDetailsModal";
 import ProposalDialog from "./ProposalDialog";
 
 export default function ProjectsPage() {
+  const theme = useTheme();
+
   const projects = useMemo(
     () => [
       {
@@ -68,16 +70,23 @@ export default function ProjectsPage() {
   const openDetails = (p) => setSelected(p);
   const closeDetails = () => setSelected(null);
 
-    const openProposal = (p) => {
-    // ✅ مودال جزئیات بسته بشه و پیشنهاد باز بشه
+  const openProposal = (p) => {
     setSelected(null);
-    setProposalProject(p); // همین باعث open شدن دیالوگ میشه
+    setProposalProject(p);
   };
 
   const closeProposal = () => setProposalProject(null);
 
   return (
-    <Box sx={{ py: { xs: 3, sm: 4 } }}>
+    <Box
+      sx={{
+        py: { xs: 3, sm: 4 },
+        // ✅ هماهنگ با صفحه‌ی MyProjects
+        bgcolor: theme.palette.surface?.soft || "background.default",
+        minHeight: "calc(100vh - 64px)",
+        backgroundImage: "none",
+      }}
+    >
       <Container maxWidth="lg">
         <Stack spacing={1} sx={{ mb: 3 }}>
           <Typography variant="h4" sx={{ fontWeight: 900, letterSpacing: -0.6 }}>
@@ -108,7 +117,6 @@ export default function ProjectsPage() {
           project={proposalProject}
           onSubmit={(payload) => proposalService.submit(payload)}
         />
-
       </Container>
     </Box>
   );
