@@ -3,12 +3,20 @@ import { createTheme, alpha } from "@mui/material/styles";
 export function createAppTheme({ mode = "dark", brand }) {
   // base borders depending on mode
   const surfaceBorder =
-    mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.15)";
+    mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.12)";
 
   // surface tints derived from brand (palette)
-  const surfaceSoft = alpha(brand.primary, mode === "dark" ? 0.10 : 0.06);
-  const surfaceStrong = alpha(brand.primary, mode === "dark" ? 0.22 : 0.12);
-  const borderTint = alpha(brand.primary, mode === "dark" ? 0.45 : 0.35);
+ const surfaceSoft =
+  mode === "dark"
+     ? "#141A23" : "#F9FAFB";
+
+const surfaceStrong =
+  mode === "dark"
+   ? "#1A2230" : "#FFFFFF";
+
+const borderTint = alpha(brand.primary, 0.35) // فقط برای accent
+
+  // const borderTint = alpha(brand.primary, mode === "dark" ? 0.45 : 0.35);
 
   const theme = createTheme({
     palette: {

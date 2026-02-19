@@ -1,7 +1,7 @@
 export const palettes = {
   violet: {
     name: "Violet",
-    primary: "#7C5CFF",
+    primary: "#9379f7",
     secondary: "#00D1FF",
   },
   emerald: {
@@ -14,4 +14,11 @@ export const palettes = {
     primary: "#FB7185",
     secondary: "#FBBF24",
   },
+ azure: {
+  name: "Royal Blue",
+  primary: "#3B5BDB",     // deep royal blue
+  secondary: "#5C7CFA",   // lighter accent
+}
+
+
 };

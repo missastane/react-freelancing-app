@@ -1,13 +1,14 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "../components/layouts/MainLayout";
-import LoginPage from "../components/pages/auth/LoginPage";
-import RegisterPage from "../components/pages/auth/RegisterPage";
+import LoginPage from "../components/auth/LoginPage";
+import RegisterPage from "../components/auth/RegisterPage";
 import ProjectsPage from "../components/projects/freelancer/ProjectsPage";
 import MyProjectsPage from "../components/projects/employer/MyProjectsPage";
 import MessagesPage from "../components/messages/MessagesPage";
 import ProjectDetailsPage from "../components/projects/ProjectDetailsPage";
 import ProposalsPage from "../components/proposals/ProposalsPage";
 import ProposalDetailsPage from "../components/proposals/ProposalDetailsPage";
+import RoleBasedDashboard from "../components/dashboard/RoleBasedDashboard";
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
 );
@@ -25,7 +26,7 @@ export const Router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
-      { path: "dashboard", element: <Placeholder title="Dashboard" /> },
+      { path: "dashboard", element: <RoleBasedDashboard /> },
 
       // freelancer
       { path: "projects", element: <ProjectsPage /> },
