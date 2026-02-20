@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -22,6 +22,7 @@ import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ProposalDetailsDialog from "./ProposalDetailsDialog";
 import CreateProjectDialog from "./CreateProjectDialog";
 import { getSkillChipSx } from "../../../utils/skillColors";
@@ -51,6 +52,10 @@ const statusChipSx = (theme, status) => {
 export default function MyProjectsPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // ✅ mock data (بعداً از API)
   const projects = useMemo(
@@ -168,11 +173,78 @@ export default function MyProjectsPage() {
     []
   );
 
-  const onCreateProject = () => setCreateOpen(true);
+  const onCreateProject = () => {
+    const sp = new URLSearchParams(searchParams);
+    sp.set("create", "1");
+    setSearchParams(sp, { replace: false });
+    setCreateOpen(true);
+  };
 
   const handleCreateProject = (payload) => {
     console.log("CREATE PROJECT payload:", payload);
     // بعداً: API call
+  };
+
+  // --- Route-based behaviors (query driven)
+  const createFromQuery = searchParams.get("create") === "1";
+  const tab = searchParams.get("tab");
+  const projectParam = searchParams.get("project");
+  const wantsProposals = tab === "proposals";
+
+  useEffect(() => {
+    // If URL includes ?project=ID, select it (only if exists in list)
+    if (!projectParam) return;
+
+    const pid = Number(projectParam);
+    if (!Number.isFinite(pid)) return;
+
+    const exists = projects.some((p) => p.id === pid);
+    if (!exists) return;
+
+    setSelectedProjectId(pid);
+  }, [projectParam, projects]);
+
+  useEffect(() => {
+    // If URL includes ?create=1, open create dialog
+    if (createFromQuery) {
+      setCreateOpen(true);
+    }
+  }, [createFromQuery]);
+
+  useEffect(() => {
+    // If URL includes ?tab=proposals on mobile, open drawer
+    if (wantsProposals && isMobile) {
+      setMobileProposalsOpen(true);
+    }
+  }, [wantsProposals, isMobile]);
+
+  const closeCreateDialog = () => {
+    setCreateOpen(false);
+
+    // If opened by query param, remove it so Back/URL stays clean
+    if (createFromQuery) {
+      const sp = new URLSearchParams(searchParams);
+      sp.delete("create");
+      setSearchParams(sp, { replace: true });
+    }
+  };
+
+  const openProposalsForProject = (projectId) => {
+    const sp = new URLSearchParams(searchParams);
+    sp.set("tab", "proposals");
+    sp.set("project", String(projectId));
+    setSearchParams(sp, { replace: false });
+  };
+
+  const closeMobileProposals = () => {
+    setMobileProposalsOpen(false);
+
+    // If drawer opened via ?tab=proposals, clear tab (keep project selection)
+    if (wantsProposals) {
+      const sp = new URLSearchParams(searchParams);
+      sp.delete("tab");
+      setSearchParams(sp, { replace: true });
+    }
   };
 
   return (
@@ -255,7 +327,12 @@ export default function MyProjectsPage() {
                   <Paper
                     key={p.id}
                     variant="outlined"
-                    onClick={() => setSelectedProjectId(p.id)}
+                    onClick={() => {
+                      setSelectedProjectId(p.id);
+                      const sp = new URLSearchParams(searchParams);
+                      sp.set("project", String(p.id));
+                      setSearchParams(sp, { replace: true });
+                    }}
                     sx={{
                       p: { xs: 2, sm: 2.5 },
                       borderRadius: 3,
@@ -310,6 +387,7 @@ export default function MyProjectsPage() {
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedProjectId(p.id);
+                            openProposalsForProject(p.id);
                             setMobileProposalsOpen(true);
                           }}
                           variant="contained"
@@ -451,7 +529,7 @@ export default function MyProjectsPage() {
       <Drawer
         anchor="right"
         open={mobileProposalsOpen}
-        onClose={() => setMobileProposalsOpen(false)}
+        onClose={closeMobileProposals}
         PaperProps={{
           sx: {
             width: "100%",
@@ -464,7 +542,7 @@ export default function MyProjectsPage() {
       >
         <Box sx={{ p: 2 }}>
           <Stack direction="row" alignItems="center" spacing={1}>
-            <IconButton onClick={() => setMobileProposalsOpen(false)}>
+            <IconButton onClick={closeMobileProposals}>
               <ArrowBackRoundedIcon />
             </IconButton>
 
@@ -554,7 +632,7 @@ export default function MyProjectsPage() {
       {/* Create project dialog */}
       <CreateProjectDialog
         open={createOpen}
-        onClose={() => setCreateOpen(false)}
+        onClose={closeCreateDialog}
         onSubmit={handleCreateProject}
         categories={categories}
       />

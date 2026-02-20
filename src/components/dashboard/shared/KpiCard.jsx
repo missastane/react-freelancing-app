@@ -1,8 +1,11 @@
 import React from "react";
 import { Card, CardActionArea, Stack, Typography, Box, Chip } from "@mui/material";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import { Link as RouterLink } from "react-router-dom";
 
-export default function KpiCard({ icon, label, value, hint, trend, href }) {
+export default function KpiCard({ icon, label, value, hint, trend, href, to }) {
+  const linkTo = to || href;
+
   const content = (
     <Stack spacing={1.2} sx={{ p: 2, flex: 1, width: "100%" }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -48,10 +51,10 @@ export default function KpiCard({ icon, label, value, hint, trend, href }) {
     <Card
       elevation={0}
       sx={(t) => ({
-        width: "100%",          // ✅ مهم
-        height: "100%",         // ✅ مهم
-        display: "flex",        // ✅ مهم
-        flexDirection: "column",// ✅ مهم
+        width: "100%",           // ✅ مهم
+        height: "100%",          // ✅ مهم
+        display: "flex",         // ✅ مهم
+        flexDirection: "column", // ✅ مهم
 
         borderRadius: 3,
         border: `1px solid ${t.palette.surface?.border || t.palette.divider}`,
@@ -63,8 +66,12 @@ export default function KpiCard({ icon, label, value, hint, trend, href }) {
         },
       })}
     >
-      {href ? (
-        <CardActionArea sx={{ width: "100%", height: "100%" }} href={href}>
+      {linkTo ? (
+        <CardActionArea
+          component={RouterLink}
+          to={linkTo}
+          sx={{ width: "100%", height: "100%" }}
+        >
           {content}
         </CardActionArea>
       ) : (

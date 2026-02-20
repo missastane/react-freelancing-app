@@ -9,6 +9,9 @@ import ProjectDetailsPage from "../components/projects/ProjectDetailsPage";
 import ProposalsPage from "../components/proposals/ProposalsPage";
 import ProposalDetailsPage from "../components/proposals/ProposalDetailsPage";
 import RoleBasedDashboard from "../components/dashboard/RoleBasedDashboard";
+import PaymentsPage from "../components/finance/employer/PaymentsPage";
+import EarningsPage from "../components/finance/freelancer/EarningsPage";
+
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
 );
@@ -31,20 +34,25 @@ export const Router = createBrowserRouter([
       // freelancer
       { path: "projects", element: <ProjectsPage /> },
       { path: "proposals", element: <ProposalsPage /> },
-      {
-        path: "/proposals/:id/:slug",
-        element: <ProposalDetailsPage />,
-      },
-
+      { path: "proposals/:id/:slug", element: <ProposalDetailsPage /> },
 
       // employer
       { path: "my-projects", element: <MyProjectsPage /> },
-      { path: "my-projects/:id/proposals", element: <Placeholder title="Project Proposals" /> },
+
+      // ✅ proposals are shown inside /my-projects (no separate page needed)
+      // (kept route removed to avoid confusion)
+      // { path: "my-projects/:id/proposals", element: <Placeholder title="Project Proposals" /> },
+
+      // shared
       { path: "projects/:id/:slug", element: <ProjectDetailsPage /> },
 
       { path: "messages", element: <MessagesPage /> },
       { path: "settings", element: <Placeholder title="Settings" /> },
-    ],
-  }
-]);
 
+      // optional placeholders for dashboard links (avoid 404 if used)
+      { path: "payments", element: <PaymentsPage /> },
+      { path: "earnings", element: <EarningsPage /> },
+      { path: "contracts", element: <Placeholder title="Contracts" /> },
+    ],
+  },
+]);

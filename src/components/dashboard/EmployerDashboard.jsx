@@ -14,6 +14,8 @@ import {
   useTheme,
 } from "@mui/material";
 
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+
 import WorkOutlineRoundedIcon from "@mui/icons-material/WorkOutlineRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import PaidRoundedIcon from "@mui/icons-material/PaidRounded";
@@ -49,6 +51,7 @@ function SpendChartMock() {
 
 export default function EmployerDashboard() {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   // --- mock data (بعداً از API)
   const openJobs = [
@@ -108,6 +111,17 @@ export default function EmployerDashboard() {
     alignItems: "stretch",
   };
 
+  const goCreateProject = () => {
+    navigate("/my-projects?create=1", { state: { from: "dashboard" } });
+  };
+
+  const goMyProjects = () => navigate("/my-projects");
+
+  const goMyProposals = () => {
+    // ✅ proposals are shown inside /my-projects (query-driven)
+    navigate("/my-projects?tab=proposals", { state: { from: "dashboard" } });
+  };
+
   return (
     <Box
       sx={{
@@ -141,14 +155,14 @@ export default function EmployerDashboard() {
           <Stack direction="row" spacing={1.2} justifyContent={{ xs: "flex-start", sm: "flex-end" }}>
             <Button
               variant="contained"
-              href="/projects/create"
+              onClick={goCreateProject}
               sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
             >
               Post a Project
             </Button>
             <Button
               variant="outlined"
-              href="/proposals"
+              onClick={goMyProposals}
               sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
             >
               Review Proposals
@@ -164,7 +178,7 @@ export default function EmployerDashboard() {
               label="Open Projects"
               value="4"
               hint="Currently hiring"
-              href="/projects"
+              to="/my-projects"
               trend={{ label: "", value: "+2" }}
             />
           </Box>
@@ -175,7 +189,7 @@ export default function EmployerDashboard() {
               label="New Proposals"
               value="12"
               hint="Awaiting review"
-              href="/proposals"
+              to="/my-projects?tab=proposals"
             />
           </Box>
 
@@ -185,7 +199,7 @@ export default function EmployerDashboard() {
               label="Pending Payments"
               value="$1,180"
               hint="Release / manage"
-              href="/payments"
+              to="/payments"
             />
           </Box>
 
@@ -195,7 +209,7 @@ export default function EmployerDashboard() {
               label="Unread Messages"
               value="6"
               hint="Check inbox"
-              href="/messages"
+              to="/messages"
             />
           </Box>
         </Box>
@@ -208,7 +222,8 @@ export default function EmployerDashboard() {
               action={
                 <Button
                   size="small"
-                  href="/payments"
+                  component={RouterLink}
+                  to="/payments"
                   endIcon={<ArrowForwardRoundedIcon />}
                   sx={{ fontWeight: 900, textTransform: "none" }}
                 >
@@ -257,7 +272,7 @@ export default function EmployerDashboard() {
               action={
                 <Button
                   size="small"
-                  href="/projects"
+                  onClick={goMyProjects}
                   endIcon={<ArrowForwardRoundedIcon />}
                   sx={{ fontWeight: 900, textTransform: "none" }}
                 >
@@ -299,7 +314,7 @@ export default function EmployerDashboard() {
               action={
                 <Button
                   size="small"
-                  href="/proposals"
+                  onClick={goMyProposals}
                   endIcon={<ArrowForwardRoundedIcon />}
                   sx={{ fontWeight: 900, textTransform: "none" }}
                 >
@@ -350,7 +365,7 @@ export default function EmployerDashboard() {
               action={
                 <Button
                   size="small"
-                  href="/projects/create"
+                  onClick={goCreateProject}
                   endIcon={<ArrowForwardRoundedIcon />}
                   sx={{ fontWeight: 900, textTransform: "none" }}
                 >
@@ -362,7 +377,7 @@ export default function EmployerDashboard() {
               <Stack spacing={1.2}>
                 <Button
                   variant="contained"
-                  href="/projects/create"
+                  onClick={goCreateProject}
                   sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
                   fullWidth
                 >
@@ -371,7 +386,7 @@ export default function EmployerDashboard() {
 
                 <Button
                   variant="outlined"
-                  href="/proposals"
+                  onClick={goMyProposals}
                   sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
                   fullWidth
                 >
@@ -380,7 +395,8 @@ export default function EmployerDashboard() {
 
                 <Button
                   variant="outlined"
-                  href="/contracts"
+                  component={RouterLink}
+                  to="/contracts"
                   sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
                   fullWidth
                 >
@@ -389,7 +405,8 @@ export default function EmployerDashboard() {
 
                 <Button
                   variant="outlined"
-                  href="/payments"
+                  component={RouterLink}
+                  to="/payments"
                   sx={{ borderRadius: 2.5, fontWeight: 900, textTransform: "none" }}
                   fullWidth
                 >
