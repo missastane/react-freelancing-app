@@ -8,6 +8,7 @@ import HandshakeRoundedIcon from "@mui/icons-material/HandshakeRounded";
 export const navItemsByRole = {
   freelancer: [
     { label: "Dashboard", path: "/dashboard", icon: DashboardIcon },
+    { label: "Profile", path: "/profile", icon: DashboardIcon },
     { label: "Browse Jobs", path: "/projects", icon: WorkOutlineIcon },
     { label: "My Proposals", path: "/proposals", icon: DescriptionOutlinedIcon },
     { label: "My Contracts", path: "/contracts", icon: HandshakeRoundedIcon },
@@ -18,6 +19,7 @@ export const navItemsByRole = {
 
   employer: [
     { label: "Dashboard", path: "/dashboard", icon: DashboardIcon },
+    { label: "Profile", path: "/profile", icon: DashboardIcon },
     { label: "My Projects", path: "/my-projects", icon: WorkOutlineIcon },
     { label: "My Contracts", path: "/contracts", icon: HandshakeRoundedIcon },
     { label: "Messages", path: "/messages", icon: ChatBubbleOutlineIcon },

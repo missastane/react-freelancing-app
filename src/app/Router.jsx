@@ -13,6 +13,7 @@ import PaymentsPage from "../components/finance/employer/PaymentsPage";
 import EarningsPage from "../components/finance/freelancer/EarningsPage";
 import ContractsPage from "../components/contracts/ContractsPage";
 import ContractWorkspacePage from "../components/contracts/ContractWorkSpacePage";
+import ProfilePage from "../components/profile/shared/ProfilePage";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -32,6 +33,7 @@ export const Router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: "dashboard", element: <RoleBasedDashboard /> },
+      { path: "profile", element: <ProfilePage /> },
 
       // freelancer
       { path: "projects", element: <ProjectsPage /> },
