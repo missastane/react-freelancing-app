@@ -11,6 +11,8 @@ import ProposalDetailsPage from "../components/proposals/ProposalDetailsPage";
 import RoleBasedDashboard from "../components/dashboard/RoleBasedDashboard";
 import PaymentsPage from "../components/finance/employer/PaymentsPage";
 import EarningsPage from "../components/finance/freelancer/EarningsPage";
+import ContractsPage from "../components/contracts/ContractsPage";
+import ContractWorkspacePage from "../components/contracts/ContractWorkSpacePage";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -52,7 +54,8 @@ export const Router = createBrowserRouter([
       // optional placeholders for dashboard links (avoid 404 if used)
       { path: "payments", element: <PaymentsPage /> },
       { path: "earnings", element: <EarningsPage /> },
-      { path: "contracts", element: <Placeholder title="Contracts" /> },
+      { path: "contracts", element: <ContractsPage /> },
+      { path: "contracts/:id", element: <ContractWorkspacePage /> },
     ],
   },
 ]);

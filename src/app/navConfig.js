@@ -4,11 +4,13 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PaidRoundedIcon from "@mui/icons-material/PaidRounded";
+import HandshakeRoundedIcon from "@mui/icons-material/HandshakeRounded";
 export const navItemsByRole = {
   freelancer: [
     { label: "Dashboard", path: "/dashboard", icon: DashboardIcon },
     { label: "Browse Jobs", path: "/projects", icon: WorkOutlineIcon },
     { label: "My Proposals", path: "/proposals", icon: DescriptionOutlinedIcon },
+    { label: "My Contracts", path: "/contracts", icon: HandshakeRoundedIcon },
     { label: "Messages", path: "/messages", icon: ChatBubbleOutlineIcon },
     { label: "Earnings", path: "/earnings", icon: PaidRoundedIcon },
     { label: "Settings", path: "/settings", icon: SettingsOutlinedIcon },
@@ -17,8 +19,7 @@ export const navItemsByRole = {
   employer: [
     { label: "Dashboard", path: "/dashboard", icon: DashboardIcon },
     { label: "My Projects", path: "/my-projects", icon: WorkOutlineIcon },
-    // پیشنهادها برای کارفرما رو فعلاً از داخل هر پروژه می‌ریم
-    // اگر خواستی بعداً صفحه کلی بسازیم: /received-proposals
+    { label: "My Contracts", path: "/contracts", icon: HandshakeRoundedIcon },
     { label: "Messages", path: "/messages", icon: ChatBubbleOutlineIcon },
     { label: "Payments", path: "/payments", icon: PaidRoundedIcon },
     { label: "Settings", path: "/setting", icon: SettingsOutlinedIcon },
