@@ -6,9 +6,14 @@ export default function SettingsSectionHeader({ title, subtitle, right }) {
     <Stack
       direction={{ xs: "column", sm: "row" }}
       spacing={1.5}
-      sx={{ alignItems: { sm: "center" }, justifyContent: "space-between", mb: 2 }}
+      sx={{
+        alignItems: { sm: "center" },
+        justifyContent: "space-between",
+        mb: 2,
+        minWidth: 0,
+      }}
     >
-      <Box>
+      <Box sx={{ minWidth: 0 }}>
         <Typography variant="h6" sx={{ fontWeight: 800 }}>
           {title}
         </Typography>
@@ -18,7 +23,12 @@ export default function SettingsSectionHeader({ title, subtitle, right }) {
           </Typography>
         ) : null}
       </Box>
-      {right ? <Box sx={{ flexShrink: 0 }}>{right}</Box> : null}
+
+      {right ? (
+        <Box sx={{ flexShrink: 0, width: { xs: "100%", sm: "auto" }, minWidth: 0 }}>
+          {right}
+        </Box>
+      ) : null}
     </Stack>
   );
 }

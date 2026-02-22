@@ -60,6 +60,7 @@ export default function SettingsLayout() {
             gridTemplateColumns: { xs: "1fr", md: "320px 1fr" },
             gap: 2,
             alignItems: "start",
+            minWidth: 0,
           }}
         >
           {/* Desktop left nav */}
@@ -69,11 +70,12 @@ export default function SettingsLayout() {
               display: { xs: "none", md: "block" },
               borderColor: theme.palette.surface?.border ?? "divider",
               borderRadius: 3,
-              overflow: "hidden",
               backgroundImage: "none",
+              minWidth: 0,
+              overflow: "hidden",
             }}
           >
-            <Box sx={{ p: 2 }}>
+            <Box sx={{ p: 2, minWidth: 0 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
                 Preferences
               </Typography>
@@ -114,11 +116,29 @@ export default function SettingsLayout() {
                 borderColor: theme.palette.surface?.border ?? "divider",
                 borderRadius: 3,
                 backgroundImage: "none",
+                minWidth: 0,
+                overflow: "visible", // ✅ مهم: اسکرول Tabs خفه نشه
               }}
             >
-              <Tabs value={tab} variant="scrollable" scrollButtons="auto" sx={{ px: 1 }}>
+              <Tabs
+                value={tab}
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+                sx={{
+                  px: 1,
+                  minWidth: 0,
+                  "& .MuiTabs-scroller": { overflowX: "auto" }, // ✅ اسکرول فقط همینجا
+                }}
+              >
                 {NAV.map((item) => (
-                  <Tab key={item.to} label={item.label} component={NavLink} to={item.to} />
+                  <Tab
+                    key={item.to}
+                    label={item.label}
+                    component={NavLink}
+                    to={item.to}
+                    sx={{ minHeight: 48 }}
+                  />
                 ))}
               </Tabs>
             </Paper>
@@ -132,9 +152,10 @@ export default function SettingsLayout() {
               borderRadius: 3,
               backgroundImage: "none",
               minWidth: 0,
+              overflow: "hidden", // ✅ فقط اینجا اگر چیزی بیرون زد، کات میشه (نه کل صفحه)
             }}
           >
-            <Box sx={{ p: { xs: 2, md: 3 } }}>
+            <Box sx={{ p: { xs: 2, md: 3 }, minWidth: 0 }}>
               <Outlet />
             </Box>
           </Paper>

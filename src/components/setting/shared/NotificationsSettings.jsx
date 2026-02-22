@@ -146,39 +146,39 @@ export default function NotificationsSettings() {
   const roleCategories =
     activeRole === "freelancer"
       ? [
-          {
-            key: "job_invites",
-            title: "Invitations",
-            desc: "Invites to apply to projects.",
-            defaultOn: true,
-          },
-          {
-            key: "new_matches",
-            title: "New matches",
-            desc: "New projects that match your skills and preferences.",
-            defaultOn: true,
-          },
-          {
-            key: "proposal_status",
-            title: "Proposal updates",
-            desc: "Your proposal is viewed, shortlisted, accepted, or rejected.",
-            defaultOn: true,
-          },
-        ]
+        {
+          key: "job_invites",
+          title: "Invitations",
+          desc: "Invites to apply to projects.",
+          defaultOn: true,
+        },
+        {
+          key: "new_matches",
+          title: "New matches",
+          desc: "New projects that match your skills and preferences.",
+          defaultOn: true,
+        },
+        {
+          key: "proposal_status",
+          title: "Proposal updates",
+          desc: "Your proposal is viewed, shortlisted, accepted, or rejected.",
+          defaultOn: true,
+        },
+      ]
       : [
-          {
-            key: "new_proposals",
-            title: "New proposals",
-            desc: "A freelancer submits a proposal on your project.",
-            defaultOn: true,
-          },
-          {
-            key: "project_activity",
-            title: "Project activity",
-            desc: "Updates on your projects: status changes, approvals, delivery notes.",
-            defaultOn: true,
-          },
-        ];
+        {
+          key: "new_proposals",
+          title: "New proposals",
+          desc: "A freelancer submits a proposal on your project.",
+          defaultOn: true,
+        },
+        {
+          key: "project_activity",
+          title: "Project activity",
+          desc: "Updates on your projects: status changes, approvals, delivery notes.",
+          defaultOn: true,
+        },
+      ];
 
   const categories = React.useMemo(
     () => [...roleCategories, ...baseCategories],
@@ -225,25 +225,35 @@ export default function NotificationsSettings() {
       <SettingsSectionHeader
         title="Notifications"
         subtitle="Choose what we notify you about and how."
-        right={
-          <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-            <Chip
-              size="small"
-              label={`${totalOn} enabled`}
-              sx={{
-                borderRadius: 2,
-                border: `1px solid ${theme.palette.surface?.borderTint ?? theme.palette.divider}`,
-                backgroundColor: theme.palette.surface?.soft ?? "transparent",
-              }}
-            />
-            <Button variant="outlined" onClick={() => setAll(true)}>
-              Enable all
-            </Button>
-            <Button variant="outlined" onClick={() => setAll(false)}>
-              Disable all
-            </Button>
-          </Stack>
-        }
+       right={
+  <Stack
+    direction={{ xs: "column", sm: "row" }}
+    spacing={1}
+    sx={{
+      width: { xs: "100%", sm: "auto" },
+      minWidth: 0,
+      flexWrap: { sm: "wrap" },
+      alignItems: { xs: "stretch", sm: "center" },
+    }}
+  >
+    <Chip
+      size="small"
+      label={`${totalOn} enabled`}
+      sx={{
+        alignSelf: { xs: "flex-start", sm: "center" },
+        borderRadius: 2,
+        border: `1px solid ${theme.palette.surface?.borderTint ?? theme.palette.divider}`,
+        backgroundColor: theme.palette.surface?.soft ?? "transparent",
+      }}
+    />
+    <Button fullWidth={!isSmUp} variant="outlined" onClick={() => setAll(true)}>
+      Enable all
+    </Button>
+    <Button fullWidth={!isSmUp} variant="outlined" onClick={() => setAll(false)}>
+      Disable all
+    </Button>
+  </Stack>
+}
       />
 
       <Stack spacing={2}>
