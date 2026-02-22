@@ -5,10 +5,11 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PaidRoundedIcon from "@mui/icons-material/PaidRounded";
 import HandshakeRoundedIcon from "@mui/icons-material/HandshakeRounded";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 export const navItemsByRole = {
   freelancer: [
     { label: "Dashboard", path: "/dashboard", icon: DashboardIcon },
-    { label: "Profile", path: "/profile", icon: DashboardIcon },
+    { label: "Profile", path: "/profile", icon: PersonRoundedIcon },
     { label: "Browse Jobs", path: "/projects", icon: WorkOutlineIcon },
     { label: "My Proposals", path: "/proposals", icon: DescriptionOutlinedIcon },
     { label: "My Contracts", path: "/contracts", icon: HandshakeRoundedIcon },
@@ -19,11 +20,11 @@ export const navItemsByRole = {
 
   employer: [
     { label: "Dashboard", path: "/dashboard", icon: DashboardIcon },
-    { label: "Profile", path: "/profile", icon: DashboardIcon },
+    { label: "Profile", path: "/profile", icon: PersonRoundedIcon },
     { label: "My Projects", path: "/my-projects", icon: WorkOutlineIcon },
     { label: "My Contracts", path: "/contracts", icon: HandshakeRoundedIcon },
     { label: "Messages", path: "/messages", icon: ChatBubbleOutlineIcon },
     { label: "Payments", path: "/payments", icon: PaidRoundedIcon },
-    { label: "Settings", path: "/setting", icon: SettingsOutlinedIcon },
+    { label: "Settings", path: "/settings", icon: SettingsOutlinedIcon },
   ],
 };

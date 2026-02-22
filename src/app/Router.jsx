@@ -14,6 +14,13 @@ import EarningsPage from "../components/finance/freelancer/EarningsPage";
 import ContractsPage from "../components/contracts/ContractsPage";
 import ContractWorkspacePage from "../components/contracts/ContractWorkSpacePage";
 import ProfilePage from "../components/profile/shared/ProfilePage";
+import AccountSettings from "../components/setting/shared/AccountSettings";
+import SecuritySettings from "../components/setting/shared/SecuritySettings";
+import NotificationsSettings from "../components/setting/shared/NotificationsSettings";
+import SettingsLayout from "../components/setting/shared/SettingsLayout";
+import ActivityLogSettings from "../components/setting/shared/ActivityLogSettings";
+import PrivacySettings from "../components/setting/shared/PrivacySettings";
+import ConnectedAccountsSettings from "../components/setting/shared/ConnectedAccountsSettings";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -58,6 +65,19 @@ export const Router = createBrowserRouter([
       { path: "earnings", element: <EarningsPage /> },
       { path: "contracts", element: <ContractsPage /> },
       { path: "contracts/:id", element: <ContractWorkspacePage /> },
+      {
+        path: "settings",
+        element: <SettingsLayout />,
+        children: [
+          { index: true, element: <Navigate to="account" replace /> },
+          { path: "account", element: <AccountSettings /> },
+          { path: "security", element: <SecuritySettings /> },
+          { path: "notifications", element: <NotificationsSettings /> },
+          { path: "privacy", element: <PrivacySettings /> },
+          { path: "connections", element: <ConnectedAccountsSettings /> },
+          { path: "activity", element: <ActivityLogSettings /> },
+        ],
+      },
     ],
   },
 ]);
