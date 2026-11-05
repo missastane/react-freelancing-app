@@ -6,6 +6,9 @@ import "./index.css";
 import { ThemeSettingsProvider, useThemeSettings } from "./theme/ThemeSettingsContext";
 import { Router } from "./app/Router";
 import { RoleProvider } from "./context/RoleContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 function AppRoot() {
   const { theme } = useThemeSettings();
 
@@ -19,10 +22,12 @@ function AppRoot() {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeSettingsProvider>
-      <RoleProvider>
-      <AppRoot />
-      </RoleProvider>
-    </ThemeSettingsProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeSettingsProvider>
+        <RoleProvider>
+          <AppRoot />
+        </RoleProvider>
+      </ThemeSettingsProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

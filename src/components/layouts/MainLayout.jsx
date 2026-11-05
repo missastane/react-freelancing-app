@@ -57,11 +57,9 @@ export default function MainLayout() {
       <Box
         component="main"
         sx={{
-          xs: {
-            p: 0,
-          },
-          md: {
-            p: 3,
+          p: {
+            xs: 0,
+            md: 3,
           },
         }}
       >

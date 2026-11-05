@@ -225,35 +225,35 @@ export default function NotificationsSettings() {
       <SettingsSectionHeader
         title="Notifications"
         subtitle="Choose what we notify you about and how."
-       right={
-  <Stack
-    direction={{ xs: "column", sm: "row" }}
-    spacing={1}
-    sx={{
-      width: { xs: "100%", sm: "auto" },
-      minWidth: 0,
-      flexWrap: { sm: "wrap" },
-      alignItems: { xs: "stretch", sm: "center" },
-    }}
-  >
-    <Chip
-      size="small"
-      label={`${totalOn} enabled`}
-      sx={{
-        alignSelf: { xs: "flex-start", sm: "center" },
-        borderRadius: 2,
-        border: `1px solid ${theme.palette.surface?.borderTint ?? theme.palette.divider}`,
-        backgroundColor: theme.palette.surface?.soft ?? "transparent",
-      }}
-    />
-    <Button fullWidth={!isSmUp} variant="outlined" onClick={() => setAll(true)}>
-      Enable all
-    </Button>
-    <Button fullWidth={!isSmUp} variant="outlined" onClick={() => setAll(false)}>
-      Disable all
-    </Button>
-  </Stack>
-}
+        right={
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1}
+            sx={{
+              width: { xs: "100%", sm: "auto" },
+              minWidth: 0,
+              flexWrap: { sm: "wrap" },
+              alignItems: { xs: "stretch", sm: "center" },
+            }}
+          >
+            <Chip
+              size="small"
+              label={`${totalOn} enabled`}
+              sx={{
+                alignSelf: { xs: "flex-start", sm: "center" },
+                borderRadius: 2,
+                border: `1px solid ${theme.palette.surface?.borderTint ?? theme.palette.divider}`,
+                backgroundColor: theme.palette.surface?.soft ?? "transparent",
+              }}
+            />
+            <Button fullWidth={!isSmUp} variant="outlined" onClick={() => setAll(true)}>
+              Enable all
+            </Button>
+            <Button fullWidth={!isSmUp} variant="outlined" onClick={() => setAll(false)}>
+              Disable all
+            </Button>
+          </Stack>
+        }
       />
 
       <Stack spacing={2}>

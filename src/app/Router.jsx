@@ -21,6 +21,15 @@ import SettingsLayout from "../components/setting/shared/SettingsLayout";
 import ActivityLogSettings from "../components/setting/shared/ActivityLogSettings";
 import PrivacySettings from "../components/setting/shared/PrivacySettings";
 import ConnectedAccountsSettings from "../components/setting/shared/ConnectedAccountsSettings";
+import AdminProjectCategories from "../components/admin/pages/AdminProjectCategories";
+import AdminLayout from "../components/admin/layouts/AdminLayout";
+import AdminDashboard from "../components/admin/pages/dashboard/AdminDashboard";
+import AdminUsers from "../components/admin/pages/AdminUsers";
+import AdminSkills from "../components/admin/pages/AdminSkills";
+import AdminTickets from "../components/admin/pages/AdminTickets";
+import AdminContent from "../components/admin/pages/AdminContent";
+import AdminReports from "../components/admin/pages/AdminReports";
+import AdminSettings from "../components/admin/pages/AdminSettings";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -34,6 +43,20 @@ export const Router = createBrowserRouter([
       { path: "register", element: <RegisterPage /> },
     ],
   },
+   {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <AdminDashboard /> },
+          { path: "users", element: <AdminUsers /> },
+          { path: "skills", element: <AdminSkills /> },
+          { path: "projects", element: <AdminProjectCategories /> },
+          { path: "tickets", element: <AdminTickets /> },
+          { path: "content", element: <AdminContent /> },
+          { path: "reports", element: <AdminReports /> },
+          { path: "settings", element: <AdminSettings /> },
+        ],
+      },
   {
     path: "/",
     element: <MainLayout />,
@@ -58,7 +81,6 @@ export const Router = createBrowserRouter([
       { path: "projects/:id/:slug", element: <ProjectDetailsPage /> },
 
       { path: "messages", element: <MessagesPage /> },
-      { path: "settings", element: <Placeholder title="Settings" /> },
 
       // optional placeholders for dashboard links (avoid 404 if used)
       { path: "payments", element: <PaymentsPage /> },
@@ -78,6 +100,7 @@ export const Router = createBrowserRouter([
           { path: "activity", element: <ActivityLogSettings /> },
         ],
       },
+     
     ],
   },
 ]);
