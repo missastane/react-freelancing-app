@@ -1,5 +1,7 @@
+
 import React, { useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   Divider,
@@ -11,21 +13,51 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
+
 import AuthLayout from "./AuthLayout";
+import { useRegister } from "../../hooks/auth/useRegister";
 
 export default function RegisterPage() {
   const [show, setShow] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    role: "2",
+    password: "",
+    password_confirmation: "",
+  });
+
+  const registerMutation = useRegister();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // TODO: connect to API
-    console.log("register submit");
+
+    const payload = {
+      ...formData,
+      role: Number(formData.role),
+    };
+
+    registerMutation.mutate(payload);
   };
+
+  const errorMessage =
+    registerMutation.error?.response?.data?.message ||
+    "Something went wrong. Please try again.";
 
   return (
     <AuthLayout
@@ -34,21 +66,28 @@ export default function RegisterPage() {
     >
       <Box component="form" onSubmit={onSubmit}>
         <Stack spacing={2.2}>
-          <TextField
-            label="Full name"
-            placeholder="Jane Doe"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutlineIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-          />
+          {registerMutation.isError && (
+            <Alert severity="error">
+              {errorMessage}
+            </Alert>
+          )}
+
+          {registerMutation.isSuccess && (
+            <Alert severity="success">
+              {registerMutation.data?.message ||
+                "Your account has been created successfully."}
+            </Alert>
+          )}
 
           <TextField
+            name="email"
             label="Email"
+            type="email"
             placeholder="you@example.com"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            autoComplete="email"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -58,28 +97,81 @@ export default function RegisterPage() {
             }}
           />
 
-          <TextField select label="Role" defaultValue="freelancer">
-            <MenuItem value="freelancer">Freelancer</MenuItem>
-            <MenuItem value="client">Client</MenuItem>
+          <TextField
+            select
+            name="role"
+            label="Role"
+            value={formData.role}
+            onChange={handleChange}
+          >
+            <MenuItem value="2">Freelancer</MenuItem>
+            <MenuItem value="1">Client</MenuItem>
           </TextField>
 
           <TextField
+            name="password"
             label="Password"
             type={show ? "text" : "password"}
             placeholder="At least 8 characters"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setShow((s) => !s)} edge="end">
-                    {show ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+                  <IconButton
+                    onClick={() => setShow((prev) => !prev)}
+                    edge="end"
+                  >
+                    {show ? (
+                      <VisibilityOffOutlinedIcon />
+                    ) : (
+                      <VisibilityOutlinedIcon />
+                    )}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
 
-          <Button type="submit" size="large" variant="contained" sx={{ py: 1.2 }}>
-            Create account
+          <TextField
+            name="password_confirmation"
+            label="Confirm Password"
+            type={showConfirm ? "text" : "password"}
+            placeholder="Repeat your password"
+            value={formData.password_confirmation}
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowConfirm((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showConfirm ? (
+                      <VisibilityOffOutlinedIcon />
+                    ) : (
+                      <VisibilityOutlinedIcon />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Button
+            type="submit"
+            size="large"
+            variant="contained"
+            sx={{ py: 1.2 }}
+            disabled={registerMutation.isPending}
+          >
+            {registerMutation.isPending
+              ? "Creating account..."
+              : "Create account"}
           </Button>
 
           <Divider sx={{ my: 0.5 }}>or</Divider>
@@ -94,7 +186,11 @@ export default function RegisterPage() {
             Continue with Google
           </Button>
 
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", mt: 1 }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: "center", mt: 1 }}
+          >
             Already have an account?{" "}
             <Link href="/auth/login" underline="hover">
               Sign in

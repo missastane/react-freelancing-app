@@ -32,6 +32,7 @@ import AdminReports from "../components/admin/pages/AdminReports";
 import AdminSettings from "../components/admin/pages/AdminSettings";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import RoleProtectedRoute from "../components/auth/RoleProtectedRoute";
+import EmailVerifiedPage from "../components/auth/EmailVerifiedPage";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -43,6 +44,10 @@ export const Router = createBrowserRouter([
     children: [
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
+      {
+        path: "email-verified",
+        element: <EmailVerifiedPage />,
+      },
     ],
   },
   {
