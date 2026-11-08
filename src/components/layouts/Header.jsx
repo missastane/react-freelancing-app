@@ -27,6 +27,8 @@ import { palettes } from "../../theme/palettes";
 import { useThemeSettings } from "../../theme/ThemeSettingsContext";
 import RoleSwitch from "./RoleSwitch";
 import { useRole } from "../../context/RoleContext";
+import { useAuth } from "../../context/AuthContext";
+import { useLogout } from "../../hooks/auth/useLogout";
 
 export default function Header({ onOpenDrawer }) {
   const theme = useTheme();
@@ -35,6 +37,13 @@ export default function Header({ onOpenDrawer }) {
 
   const { settings, toggleMode, setPaletteKey } = useThemeSettings();
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const {
+    mutateAsync: logoutRequest,
+    isPending: isLoggingOut,
+  } = useLogout();
+
   const { activeRole, setActiveRole } = useRole();
 
   const pageTitle = useMemo(() => {
@@ -51,7 +60,18 @@ export default function Header({ onOpenDrawer }) {
 
   const openUser = (e) => setAnchorUser(e.currentTarget);
   const closeUser = () => setAnchorUser(null);
+  const handleLogout = async () => {
+    closeUser();
 
+    try {
+      await logoutRequest();
+    } catch (error) {
+      console.error("Logout request failed:", error);
+    } finally {
+      logout();
+      navigate("/auth/login", { replace: true });
+    }
+  };
   return (
     <AppBar
       position="fixed"
@@ -167,7 +187,12 @@ export default function Header({ onOpenDrawer }) {
         <Menu anchorEl={anchorUser} open={!!anchorUser} onClose={closeUser}>
           <MenuItem onClick={closeUser}>Profile</MenuItem>
           <MenuItem onClick={closeUser}>Settings</MenuItem>
-          <MenuItem onClick={closeUser}>Logout</MenuItem>
+          <MenuItem
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+          >
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

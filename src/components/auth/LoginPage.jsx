@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -17,29 +18,60 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
+import { useNavigate } from "react-router-dom";
+
 import AuthLayout from "./AuthLayout";
 import { useLogin } from "../../hooks/auth/useLogin";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
+  const {
+    isAuthenticated,
+    isInitializing,
+    startAuth,
+    authError,
+  } = useAuth();
+
   const {
     mutate,
     isPending,
     isError,
     error,
-    isSuccess,
   } = useLogin();
+
+  // Redirect after successful profile retrieval
+  useEffect(() => {
+    if (isAuthenticated && !isInitializing) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, isInitializing, navigate]);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    mutate({
-      email,
-      password,
-    });
+    mutate(
+      {
+        email,
+        password,
+      },
+      {
+        onSuccess: (response) => {
+          const accessToken = response?.data?.access_token;
+
+          if (!accessToken) {
+            return;
+          }
+
+          startAuth(accessToken);
+        },
+      }
+    );
   };
 
   const errorMessage =
@@ -56,7 +88,7 @@ export default function LoginPage() {
           <TextField
             label="Email"
             type="email"
-            placeholder="you@example.com"
+            placeholder="missastane@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -73,7 +105,7 @@ export default function LoginPage() {
           <TextField
             label="Password"
             type={show ? "text" : "password"}
-            placeholder="••••••••"
+            placeholder="r@mZ4Ob00r"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -103,9 +135,9 @@ export default function LoginPage() {
             </Alert>
           )}
 
-          {isSuccess && (
-            <Alert severity="success">
-              Login successful! Your credentials have been verified.
+          {authError && (
+            <Alert severity="error">
+              {authError}
             </Alert>
           )}
 
@@ -131,9 +163,9 @@ export default function LoginPage() {
             size="large"
             variant="contained"
             sx={{ py: 1.2 }}
-            disabled={isPending}
+            disabled={isPending || isInitializing}
           >
-            {isPending ? "Signing in..." : "Sign in"}
+            {isPending || isInitializing ? "Signing in..." : "Sign in"}
           </Button>
 
           <Divider sx={{ my: 0.5 }}>or</Divider>
