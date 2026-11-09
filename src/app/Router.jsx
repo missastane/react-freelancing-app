@@ -33,6 +33,7 @@ import AdminSettings from "../components/admin/pages/AdminSettings";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import RoleProtectedRoute from "../components/auth/RoleProtectedRoute";
 import EmailVerifiedPage from "../components/auth/EmailVerifiedPage";
+import VerifyEmailPage from "../components/auth/VerifyEmailPage";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -47,6 +48,10 @@ export const Router = createBrowserRouter([
       {
         path: "email-verified",
         element: <EmailVerifiedPage />,
+      },
+      {
+        path: "/auth/verify-email",
+        element: <VerifyEmailPage />,
       },
     ],
   },

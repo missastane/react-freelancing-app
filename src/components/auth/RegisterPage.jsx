@@ -18,7 +18,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import GoogleIcon from "@mui/icons-material/Google";
-
+import { useNavigate } from "react-router-dom";
 import AuthLayout from "./AuthLayout";
 import { useRegister } from "../../hooks/auth/useRegister";
 
@@ -34,6 +34,7 @@ export default function RegisterPage() {
   });
 
   const registerMutation = useRegister();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +53,15 @@ export default function RegisterPage() {
       role: Number(formData.role),
     };
 
-    registerMutation.mutate(payload);
+    registerMutation.mutate(payload, {
+      onSuccess: () => {
+        navigate("/auth/verify-email", {
+          state: {
+            email: formData.email,
+          },
+        });
+      },
+    });
   };
 
   const errorMessage =
@@ -69,13 +78,6 @@ export default function RegisterPage() {
           {registerMutation.isError && (
             <Alert severity="error">
               {errorMessage}
-            </Alert>
-          )}
-
-          {registerMutation.isSuccess && (
-            <Alert severity="success">
-              {registerMutation.data?.message ||
-                "Your account has been created successfully."}
             </Alert>
           )}
 

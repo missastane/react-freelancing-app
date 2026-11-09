@@ -12,6 +12,15 @@ export const register = async (credentials) => {
     return response.data;
 };
 
+export const resendVerificationEmail = async (email) => {
+    const response = await api.post(
+        `${authPrefix}/email/verification-notification`,
+        { email }
+    );
+
+    return response.data;
+};
+
 export const logout = async () => {
     const response = await api.post(`${authPrefix}/logout`);
     return response.data;
