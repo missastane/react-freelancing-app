@@ -153,7 +153,7 @@ export default function LoginPage() {
               label={<Typography variant="body2">Remember me</Typography>}
             />
 
-            <Link href="/auth/forgot" underline="hover" sx={{ fontSize: 13 }}>
+            <Link href="/auth/forgot-password" underline="hover" sx={{ fontSize: 13 }}>
               Forgot password?
             </Link>
           </Box>
