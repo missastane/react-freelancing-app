@@ -34,6 +34,8 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import RoleProtectedRoute from "../components/auth/RoleProtectedRoute";
 import EmailVerifiedPage from "../components/auth/EmailVerifiedPage";
 import VerifyEmailPage from "../components/auth/VerifyEmailPage";
+import ForgotPasswordPage from "../components/auth/ForgotPasswordPage";
+import ResetPasswordPage from "../components/auth/ResetPasswordPage"
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -50,9 +52,17 @@ export const Router = createBrowserRouter([
         element: <EmailVerifiedPage />,
       },
       {
-        path: "/auth/verify-email",
+        path: "verify-email",
         element: <VerifyEmailPage />,
       },
+      {
+        path: "forgot-password",
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPasswordPage />,
+      }
     ],
   },
   {
