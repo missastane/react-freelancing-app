@@ -21,6 +21,24 @@ export const resendVerificationEmail = async (email) => {
     return response.data;
 };
 
+export const forgotPassword = async (email) => {
+    const response = await api.post(
+        `${authPrefix}/forgot-password`,
+        { email }
+    );
+
+    return response.data;
+};
+
+export const resetPassword = async (data) => {
+    const response = await api.post(
+        `${authPrefix}/reset-password`,
+        data
+    );
+
+    return response.data;
+};
+
 export const logout = async () => {
     const response = await api.post(`${authPrefix}/logout`);
     return response.data;
