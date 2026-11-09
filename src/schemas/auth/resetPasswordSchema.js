@@ -1,19 +1,21 @@
+
 import { z } from "zod";
 
-export const resetPasswordSchema = z
-    .object({
-        password: z
-            .string()
-            .min(8, "Password must be at least 8 characters."),
+export const createResetPasswordSchema = (t) =>
+    z
+        .object({
+            password: z
+                .string()
+                .min(8, t("validation.passwordMin")),
 
-        password_confirmation: z
-            .string()
-            .min(1, "Please confirm your password."),
-    })
-    .refine(
-        (data) => data.password === data.password_confirmation,
-        {
-            message: "Passwords do not match.",
-            path: ["password_confirmation"],
-        }
-    );
+            password_confirmation: z
+                .string()
+                .min(1, t("validation.confirmPasswordRequired")),
+        })
+        .refine(
+            (data) => data.password === data.password_confirmation,
+            {
+                message: t("validation.passwordMismatch"),
+                path: ["password_confirmation"],
+            }
+        );

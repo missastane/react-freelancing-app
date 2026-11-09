@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
     Alert,
@@ -16,13 +17,16 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { Link as RouterLink, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 
 import AuthLayout from "./AuthLayout";
 import { useResetPassword } from "../../hooks/auth/useResetPassword";
-import { resetPasswordSchema } from "../../schemas/auth/resetPasswordSchema";
+import { createResetPasswordSchema } from "../../schemas/auth/resetPasswordSchema";
 
 export default function ResetPasswordPage() {
     const [searchParams] = useSearchParams();
+    const { t } = useTranslation();
+    const resetPasswordSchema = createResetPasswordSchema(t);
 
     const token = searchParams.get("token");
     const email = searchParams.get("email");
@@ -67,7 +71,7 @@ export default function ResetPasswordPage() {
                     setRequestStatus("success");
                     setRequestMessage(
                         response?.message ||
-                        "Your password has been changed successfully."
+                        t("auth.resetPassword.success")
                     );
                 },
                 onError: (error) => {
@@ -77,23 +81,23 @@ export default function ResetPasswordPage() {
                     setRequestMessage(
                         errorList?.join("\n") ||
                         error?.response?.data?.message ||
-                        "Something went wrong. Please try again."
+                        t("auth.resetPassword.generalError")
                     );
-                },
+                }
             }
         );
     };
 
     return (
         <AuthLayout
-            title="Reset Password"
-            subtitle="Create a new password for your account."
+            title={t("auth.resetPassword.pageTitle")}
+            subtitle={t("auth.resetPassword.pageSubtitle")}
         >
             <Box sx={{ width: "100%", maxWidth: 420, mx: "auto" }}>
                 <Stack spacing={3}>
                     <Box>
                         <Typography variant="h5" fontWeight={800}>
-                            Create New Password
+                            {t("auth.resetPassword.title")}
                         </Typography>
 
                         <Typography
@@ -101,14 +105,13 @@ export default function ResetPasswordPage() {
                             color="text.secondary"
                             sx={{ mt: 1 }}
                         >
-                            Enter your new password below.
+                            {t("auth.resetPassword.description")}
                         </Typography>
                     </Box>
 
                     {!hasValidParams && (
                         <Alert severity="error">
-                            This password reset link is invalid or incomplete.
-                            Please request a new recovery link.
+                            {t("auth.resetPassword.invalidLink")}
                         </Alert>
                     )}
 
@@ -125,7 +128,7 @@ export default function ResetPasswordPage() {
                                 size="large"
                                 fullWidth
                             >
-                                Go to Login
+                                {t("auth.resetPassword.goToLogin")}
                             </Button>
                         </>
                     )}
@@ -148,7 +151,7 @@ export default function ResetPasswordPage() {
                                 <TextField
                                     {...register("password")}
                                     fullWidth
-                                    label="Password"
+                                    label={t("common.password")}
                                     type={showPassword ? "text" : "password"}
                                     autoComplete="new-password"
                                     disabled={isPending}
@@ -159,11 +162,17 @@ export default function ResetPasswordPage() {
                                             endAdornment: (
                                                 <InputAdornment position="end">
                                                     <IconButton
-                                                        onClick={() => setShowPassword((prev) => !prev)}
+                                                        onClick={() =>
+                                                            setShowPassword((prev) => !prev)
+                                                        }
                                                         edge="end"
                                                         type="button"
                                                         disabled={isPending}
-                                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                                        aria-label={
+                                                            showPassword
+                                                                ? t("common.hidePassword")
+                                                                : t("common.showPassword")
+                                                        }
                                                     >
                                                         {showPassword
                                                             ? <VisibilityOffOutlinedIcon />
@@ -178,8 +187,12 @@ export default function ResetPasswordPage() {
                                 <TextField
                                     {...register("password_confirmation")}
                                     fullWidth
-                                    label="Confirm Password"
-                                    type={showPasswordConfirmation ? "text" : "password"}
+                                    label={t("auth.resetPassword.confirmPassword")}
+                                    type={
+                                        showPasswordConfirmation
+                                            ? "text"
+                                            : "password"
+                                    }
                                     autoComplete="new-password"
                                     disabled={isPending}
                                     error={Boolean(errors.password_confirmation)}
@@ -197,8 +210,8 @@ export default function ResetPasswordPage() {
                                                         disabled={isPending}
                                                         aria-label={
                                                             showPasswordConfirmation
-                                                                ? "Hide password"
-                                                                : "Show password"
+                                                                ? t("common.hidePassword")
+                                                                : t("common.showPassword")
                                                         }
                                                     >
                                                         {showPasswordConfirmation
@@ -219,8 +232,8 @@ export default function ResetPasswordPage() {
                                     disabled={isPending}
                                 >
                                     {isPending
-                                        ? "Resetting Password..."
-                                        : "Reset Password"}
+                                        ? t("auth.resetPassword.resetting")
+                                        : t("auth.resetPassword.submit")}
                                 </Button>
                             </Stack>
                         </Box>
@@ -234,7 +247,7 @@ export default function ResetPasswordPage() {
                                 underline="hover"
                                 fontWeight={600}
                             >
-                                Back to Login
+                                {t("common.backToLogin")}
                             </Link>
                         </Box>
                     )}

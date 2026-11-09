@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useMemo, useState } from "react";
 import {
     Alert,
     Box,
@@ -9,23 +10,42 @@ import {
     Typography,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import AuthLayout from "./AuthLayout";
 import { useForgotPassword } from "../../hooks/auth/useForgotPassword";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createForgotPasswordSchema } from "../../schemas/auth/forgotPasswordSchema";
 
 export default function ForgotPasswordPage() {
-    const [email, setEmail] = useState("");
     const [requestStatus, setRequestStatus] = useState(null);
     const [requestMessage, setRequestMessage] = useState("");
+
+    const { t } = useTranslation();
+    const forgotPasswordSchema = useMemo(
+        () => createForgotPasswordSchema(t),
+        [t]
+    );
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(forgotPasswordSchema),
+        mode: "onChange",
+        defaultValues: {
+            email: "",
+        },
+    });
 
     const {
         mutate: sendRecoveryLink,
         isPending,
-        isSuccess,
-        isError,
     } = useForgotPassword();
 
-    const handleSubmit = () => {
+    const onSubmit = ({ email }) => {
         sendRecoveryLink(email.trim(), {
             onSuccess: () => {
                 setRequestStatus("success");
@@ -38,13 +58,13 @@ export default function ForgotPasswordPage() {
                     setRequestStatus("rateLimited");
                     setRequestMessage(
                         errorList?.join("\n") ||
-                        "Please wait before requesting another recovery link."
+                        t("auth.forgotPassword.rateLimited")
                     );
                 } else {
                     setRequestStatus("error");
                     setRequestMessage(
                         errorList?.join("\n") ||
-                        "Something went wrong. Please try again later."
+                        t("auth.forgotPassword.generalError")
                     );
                 }
             },
@@ -53,14 +73,15 @@ export default function ForgotPasswordPage() {
 
     return (
         <AuthLayout
-            title="Forgot Password?"
-            subtitle="No worries! Enter your email address and we'll send you a password recovery link."
+            title={t("auth.forgotPassword.pageTitle")}
+            subtitle={t("auth.forgotPassword.pageSubtitle")}
         >
-            <Box sx={{ width: "100%", maxWidth: 420, mx: "auto" }}>
+            <Box sx={{ width: "100%", maxWidth: 420, mx: "auto" }} component="form"
+                onSubmit={handleSubmit(onSubmit)}>
                 <Stack spacing={3}>
                     <Box>
                         <Typography variant="h5" fontWeight={800}>
-                            Reset your password
+                            {t("auth.forgotPassword.title")}
                         </Typography>
 
                         <Typography
@@ -68,25 +89,24 @@ export default function ForgotPasswordPage() {
                             color="text.secondary"
                             sx={{ mt: 1 }}
                         >
-                            Enter the email address associated with your account.
+                            {t("auth.forgotPassword.description")}
                         </Typography>
                     </Box>
 
                     {requestStatus === "success" && (
                         <Alert severity="success">
-                            If an account exists with this email address, a password
-                            recovery link will be sent.
+                            {t("auth.forgotPassword.success")}
                         </Alert>
                     )}
 
-                    {isSuccess && (
+                    {requestStatus === "success" && (
                         <Box textAlign="center">
                             <Typography variant="body2" fontWeight={600}>
-                                Didn't receive the email?
+                                {t("auth.forgotPassword.didNotReceive")}
                             </Typography>
 
                             <Typography variant="caption" color="text.secondary">
-                                Check your spam folder or try requesting another link.
+                                {t("auth.forgotPassword.checkSpam")}
                             </Typography>
                         </Box>
                     )}
@@ -96,6 +116,7 @@ export default function ForgotPasswordPage() {
                             {requestMessage}
                         </Alert>
                     )}
+
                     {requestStatus === "error" && (
                         <Alert severity="error">
                             {requestMessage}
@@ -103,34 +124,29 @@ export default function ForgotPasswordPage() {
                     )}
 
                     <TextField
+                        {...register("email")}
                         fullWidth
-                        label="Email Address"
+                        label={t("common.emailAddress")}
                         type="email"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                            setRequestStatus(null);
-                            setRequestMessage("");
-                        }}
                         autoComplete="email"
                         disabled={isPending}
+                        error={Boolean(errors.email)}
+                        helperText={errors.email?.message}
                     />
 
                     <Button
                         fullWidth
+                        type="submit"
                         variant="contained"
                         size="large"
-                        disabled={!email.trim() || isPending}
-                        onClick={handleSubmit}
+                        disabled={isPending}
                     >
                         {isPending
-                            ? "Sending..."
+                            ? t("auth.forgotPassword.sending")
                             : requestStatus === "success"
-                                ? "Resend Recovery Link"
-                                : "Send Recovery Link"}
+                                ? t("auth.forgotPassword.resend")
+                                : t("auth.forgotPassword.submit")}
                     </Button>
-
-
 
                     <Box textAlign="center">
                         <Link
@@ -139,7 +155,7 @@ export default function ForgotPasswordPage() {
                             underline="hover"
                             fontWeight={600}
                         >
-                            Back to Login
+                            {t("common.backToLogin")}
                         </Link>
                     </Box>
                 </Stack>

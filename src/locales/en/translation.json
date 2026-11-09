@@ -1,0 +1,86 @@
+{
+    "common": {
+        "english": "English",
+        "persian": "Persian",
+        "loading": "Loading...",
+        "backToLogin": "Back to Login",
+        "directionTest": "This is an English text for testing font and direction.",
+        "emailAddress": "Email Address",
+        "password": "Password",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "or": "or"
+    },
+    "validation": {
+        "passwordMin": "Password must be at least 8 characters.",
+        "confirmPasswordRequired": "Please confirm your password.",
+        "passwordRequired": "Password is required.",
+        "passwordMismatch": "Passwords do not match.",
+        "emailRequired": "Email address is required.",
+        "emailInvalid": "Please enter a valid email address."
+    },
+    "auth": {
+        "layout": {
+            "brand": "Freelance Platform",
+            "feature1": "Post jobs & hire faster",
+            "feature2": "Proposals, chat, and file sharing",
+            "feature3": "Build a standout freelancer profile",
+            "footer": "UI inspired by modern SaaS dashboards"
+        },
+        "login": {
+            "pageTitle": "Sign in",
+            "pageSubtitle": "Welcome back. Enter your details to access your dashboard.",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password?",
+            "signingIn": "Signing in...",
+            "submit": "Sign in",
+            "googleSignIn": "Continue with Google",
+            "noAccount": "Don't have an account?",
+            "createAccount": "Create one",
+            "generalError": "Something went wrong. Please try again."
+        },
+        "register": {
+            "pageTitle": "Create account",
+            "pageSubtitle": "Choose your role and get started. You can complete your profile later.",
+            "role": "Role",
+            "freelancer": "Freelancer",
+            "client": "Client",
+            "passwordPlaceholder": "At least 8 characters",
+            "confirmPassword": "Confirm Password",
+            "confirmPasswordPlaceholder": "Repeat your password",
+            "creatingAccount": "Creating account...",
+            "submit": "Create account",
+            "googleSignUp": "Continue with Google",
+            "alreadyHaveAccount": "Already have an account?",
+            "signIn": "Sign in",
+            "generalError": "Something went wrong. Please try again."
+        },
+        "forgotPassword": {
+            "pageTitle": "Forgot Password?",
+            "pageSubtitle": "No worries! Enter your email address and we'll send you a password recovery link.",
+            "title": "Reset your password",
+            "description": "Enter the email address associated with your account.",
+            "success": "If an account exists with this email address, a password recovery link will be sent.",
+            "didNotReceive": "Didn't receive the email?",
+            "checkSpam": "Check your spam folder or try requesting another link.",
+            "rateLimited": "Please wait before requesting another recovery link.",
+            "generalError": "Something went wrong. Please try again later.",
+            "sending": "Sending...",
+            "resend": "Resend Recovery Link",
+            "submit": "Send Recovery Link"
+        },
+        "resetPassword": {
+            "pageTitle": "Reset Password",
+            "pageSubtitle": "Create a new password for your account.",
+            "title": "Create New Password",
+            "description": "Enter your new password below.",
+            "confirmPassword": "Confirm Password",
+            "invalidLink": "This password reset link is invalid or incomplete. Please request a new recovery link.",
+            "success": "Your password has been changed successfully.",
+            "generalError": "Something went wrong. Please try again.",
+            "goToLogin": "Go to Login",
+            "resetting": "Resetting Password...",
+            "submit": "Reset Password"
+        }
+    }
+}
