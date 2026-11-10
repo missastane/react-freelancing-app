@@ -44,11 +44,6 @@ export const logout = async () => {
     return response.data;
 };
 
-export const refreshToken = async () => {
-    const response = await api.post(`${authPrefix}/refresh`);
-    return response.data;
-};
-
 export const getProfile = async () => {
     const response = await api.get(`/profile`);
     return response.data;
