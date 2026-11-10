@@ -1,3 +1,4 @@
+
 import React, {
     createContext,
     useContext,
@@ -11,6 +12,7 @@ import {
     getAccessToken,
     clearAccessToken,
 } from "../services/auth.token";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthContext = createContext(null);
 
@@ -20,12 +22,19 @@ export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
     const [loginMessage, setLoginMessage] = useState(null);
     const [shouldShowWelcomeMessage, setShouldShowWelcomeMessage] = useState(false);
+
     const profileQuery = useProfile(Boolean(token));
 
     const isAuthenticated = Boolean(token && user);
 
-    // Start authentication after receiving the access token
+    const queryClient = useQueryClient();
+
+    // Start authentication after receiving the access token.
     const startAuth = (accessToken) => {
+        queryClient.removeQueries({
+            queryKey: ["auth", "profile"],
+            exact: true,
+        });
         setAccessToken(accessToken);
         setToken(accessToken);
         setUser(null);
@@ -34,7 +43,7 @@ export const AuthProvider = ({ children }) => {
         setIsInitializing(true);
     };
 
-    // Handle profile request result
+    // Handle profile request result.
     useEffect(() => {
         if (!token) {
             setIsInitializing(false);
@@ -53,11 +62,24 @@ export const AuthProvider = ({ children }) => {
         }
 
         if (profileQuery.isError) {
-            clearAccessToken();
-            setToken(null);
-            setUser(null);
             setIsInitializing(false);
-            setShouldShowWelcomeMessage(false);
+
+            const status = profileQuery.error?.response?.status;
+
+            // A 401 means the current session is no longer valid.
+            if (status === 401) {
+                queryClient.removeQueries({
+                    queryKey: ["auth", "profile"],
+                    exact: true,
+                });
+                clearAccessToken();
+                setToken(null);
+                setUser(null);
+                setLoginMessage(null);
+                setShouldShowWelcomeMessage(false);
+            }
+
+            // Network errors and server errors do not log out the user.
         }
     }, [
         token,
@@ -65,9 +87,58 @@ export const AuthProvider = ({ children }) => {
         profileQuery.isSuccess,
         profileQuery.isError,
         profileQuery.data,
+        profileQuery.error,
     ]);
 
+    // Listen for authentication events from Axios.
+    useEffect(() => {
+        const handleTokenRefreshed = (event) => {
+            if (event.detail) {
+                setToken(event.detail);
+            }
+        };
+
+        const handleSessionExpired = () => {
+            queryClient.removeQueries({
+                queryKey: ["auth", "profile"],
+                exact: true,
+            });
+            clearAccessToken();
+            setToken(null);
+            setUser(null);
+            setLoginMessage(null);
+            setIsInitializing(false);
+            setShouldShowWelcomeMessage(false);
+        };
+
+        window.addEventListener(
+            "auth:token-refreshed",
+            handleTokenRefreshed
+        );
+
+        window.addEventListener(
+            "auth:session-expired",
+            handleSessionExpired
+        );
+
+        return () => {
+            window.removeEventListener(
+                "auth:token-refreshed",
+                handleTokenRefreshed
+            );
+
+            window.removeEventListener(
+                "auth:session-expired",
+                handleSessionExpired
+            );
+        };
+    }, []);
+
     const logout = () => {
+        queryClient.removeQueries({
+            queryKey: ["auth", "profile"],
+            exact: true,
+        });
         clearAccessToken();
         setToken(null);
         setUser(null);
@@ -85,10 +156,13 @@ export const AuthProvider = ({ children }) => {
         logout,
         loginMessage,
         setLoginMessage,
-        authError: profileQuery.isError
+
+        authError: token && profileQuery.isError
             ? profileQuery.error?.response?.data?.message ||
             "Unable to load your profile. Please try again."
             : null,
+
+        retryProfile: profileQuery.refetch,
     };
 
     return (
