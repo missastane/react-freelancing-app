@@ -29,6 +29,7 @@ import RoleSwitch from "./RoleSwitch";
 import { useRole } from "../../context/RoleContext";
 import { useAuth } from "../../context/AuthContext";
 import { useLogout } from "../../hooks/auth/useLogout";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 
 export default function Header({ onOpenDrawer }) {
   const theme = useTheme();
@@ -122,6 +123,8 @@ export default function Header({ onOpenDrawer }) {
         )}
 
         <Box sx={{ flexGrow: 1 }} />
+
+        <LanguageSwitcher />
 
         <Tooltip title={settings.mode === "dark" ? "Switch to light" : "Switch to dark"}>
           <IconButton onClick={toggleMode} sx={{ color: "text.primary" }}>

@@ -9,6 +9,7 @@ import {
     setNetworkError,
     clearNetworkError,
 } from "../services/network.error";
+import i18n from "../i18n";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -55,11 +56,15 @@ const notifySessionExpired = () => {
 };
 
 // Attach access token to every outgoing request.
+// Attach access token and current locale to every outgoing request.
 api.interceptors.request.use(
     (config) => {
         const token = getAccessToken();
+        const locale = i18n.resolvedLanguage || i18n.language || "en";
 
         config.headers = config.headers || {};
+
+        config.headers["X-Locale"] = locale.split("-")[0];
 
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
