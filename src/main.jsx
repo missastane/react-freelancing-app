@@ -24,6 +24,7 @@ import { RoleProvider } from "./context/RoleContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
 import AppSnackbar from "./components/common/AppSnackbar";
+import GlobalNetworkAlert from "./components/common/GlobalNetworkAlert";
 
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -52,6 +53,7 @@ function AppRoot() {
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <RouterProvider router={Router} />
+                <GlobalNetworkAlert />
                 <AppSnackbar />
             </ThemeProvider>
         </CacheProvider>

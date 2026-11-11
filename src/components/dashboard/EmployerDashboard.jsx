@@ -21,7 +21,7 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import PaidRoundedIcon from "@mui/icons-material/PaidRounded";
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-
+import { useAuth } from "../../context/AuthContext";
 import KpiCard from "./shared/KpiCard";
 import SectionCard from "./shared/SectionCard";
 
@@ -52,7 +52,7 @@ function SpendChartMock() {
 export default function EmployerDashboard() {
   const theme = useTheme();
   const navigate = useNavigate();
-
+ const { user } = useAuth();
   // --- mock data (بعداً از API)
   const openJobs = [
     { title: "Build a Landing Page", status: "Open", due: "Mar 12", budget: "$300" },
@@ -145,7 +145,7 @@ export default function EmployerDashboard() {
               Dashboard
             </Typography>
             <Typography sx={{ mt: 0.75, fontWeight: 800 }}>
-              Welcome back, John!
+              Welcome back,  {user?.first_name || "User"}!!
             </Typography>
             <Typography color="text.secondary">
               Here’s an overview of your hiring activity.

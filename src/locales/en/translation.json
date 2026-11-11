@@ -9,7 +9,11 @@
         "password": "Password",
         "showPassword": "Show password",
         "hidePassword": "Hide password",
-        "or": "or"
+        "or": "or",
+        "networkError": "A network connection problem occurred. Some information may not be up to date.",
+        "serverError": "The server is temporarily unavailable. Please try again.",
+        "retrying": "Retrying...",
+        "retry": "Retry"
     },
     "validation": {
         "passwordMin": "Password must be at least 8 characters.",
@@ -81,6 +85,15 @@
             "goToLogin": "Go to Login",
             "resetting": "Resetting Password...",
             "submit": "Reset Password"
+        },
+        "sessionRecovery": {
+            "pageTitle": "Connection problem",
+            "pageSubtitle": "We couldn't verify your current session.",
+            "heading": "Your session hasn't been verified yet",
+            "description": "This may be caused by a temporary network or server issue. Your session may still be valid. Please try again.",
+            "retrying": "Retrying...",
+            "tryAgain": "Try again",
+            "goToLogin": "Go to login"
         }
     }
 }

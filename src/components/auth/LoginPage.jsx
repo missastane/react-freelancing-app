@@ -32,6 +32,7 @@ import { createLoginSchema } from "../../schemas/auth/loginSchema";
 
 export default function LoginPage() {
     const [show, setShow] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -58,7 +59,6 @@ export default function LoginPage() {
         isAuthenticated,
         isInitializing,
         startAuth,
-        authError,
     } = useAuth();
 
     const {
@@ -79,6 +79,8 @@ export default function LoginPage() {
             {
                 email: values.email.trim(),
                 password: values.password,
+                client_type: "web",
+                remember_me: rememberMe,
             },
             {
                 onSuccess: (response) => {
@@ -161,12 +163,6 @@ export default function LoginPage() {
                         </Alert>
                     )}
 
-                    {authError && (
-                        <Alert severity="error">
-                            {authError}
-                        </Alert>
-                    )}
-
                     <Box
                         sx={{
                             display: "flex",
@@ -176,7 +172,13 @@ export default function LoginPage() {
                         }}
                     >
                         <FormControlLabel
-                            control={<Checkbox size="small" />}
+                            control={
+                                <Checkbox
+                                    size="small"
+                                    checked={rememberMe}
+                                    onChange={(event) => setRememberMe(event.target.checked)}
+                                />
+                            }
                             label={
                                 <Typography variant="body2">
                                     {t("auth.login.rememberMe")}

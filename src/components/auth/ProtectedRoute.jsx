@@ -1,13 +1,25 @@
+
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
+import SessionRecoveryPage from "./SessionRecoveryPage";
 
 export default function ProtectedRoute() {
-    const { isAuthenticated, isInitializing } = useAuth();
+    const {
+        isAuthenticated,
+        isInitializing,
+        bootstrapError,
+    } = useAuth();
+
     const location = useLocation();
 
-    // Wait until the authentication process is completed
+    // Show the recovery page when session restoration fails temporarily.
+    if (bootstrapError && !isAuthenticated) {
+        return <SessionRecoveryPage />;
+    }
+
+    // Wait until the authentication process is completed.
     if (isInitializing) {
         return (
             <Box
@@ -23,7 +35,7 @@ export default function ProtectedRoute() {
         );
     }
 
-    // Redirect unauthenticated users to login
+    // Redirect unauthenticated users to login.
     if (!isAuthenticated) {
         return (
             <Navigate
@@ -34,6 +46,5 @@ export default function ProtectedRoute() {
         );
     }
 
-    // Allow access to protected routes
     return <Outlet />;
 }

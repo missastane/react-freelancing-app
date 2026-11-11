@@ -3,7 +3,9 @@ import React, {
     createContext,
     useContext,
     useEffect,
+    useRef,
     useState,
+    useCallback,
 } from "react";
 
 import { useProfile } from "../hooks/auth/useProfile";
@@ -11,7 +13,9 @@ import {
     setAccessToken,
     getAccessToken,
     clearAccessToken,
+    clearLocalAccessToken,
 } from "../services/auth.token";
+import { refreshToken } from "../services/auth.refresh";
 import { useQueryClient } from "@tanstack/react-query";
 
 const AuthContext = createContext(null);
@@ -22,12 +26,83 @@ export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
     const [loginMessage, setLoginMessage] = useState(null);
     const [shouldShowWelcomeMessage, setShouldShowWelcomeMessage] = useState(false);
+    const [bootstrapError, setBootstrapError] = useState(null);
+
+    const queryClient = useQueryClient();
+
+    // Prevent duplicate bootstrap refresh requests.
+    const bootstrapAttemptedRef = useRef(false);
 
     const profileQuery = useProfile(Boolean(token));
 
-    const isAuthenticated = Boolean(token && user);
+    const isAuthenticated = Boolean(token);
 
-    const queryClient = useQueryClient();
+    // Restore authentication when no access token exists.
+    const restoreSession = useCallback(async () => {
+        if (bootstrapAttemptedRef.current) {
+            return;
+        }
+
+        bootstrapAttemptedRef.current = true;
+
+        setIsInitializing(true);
+
+        try {
+            const response = await refreshToken();
+
+            const accessToken = response?.data?.access_token;
+
+            if (!accessToken) {
+                throw new Error(
+                    "Refresh response does not contain an access token."
+                );
+            }
+
+            setToken(accessToken);
+            setBootstrapError(null);
+
+        } catch (error) {
+            const status = error?.response?.status;
+
+            const isInvalidSession =
+                status === 401 ||
+                status === 419 ||
+                error?.message === "CSRF token cookie is missing.";
+
+            if (isInvalidSession) {
+                // The refresh session is no longer valid.
+                clearAccessToken();
+                setToken(null);
+                setUser(null);
+                setIsInitializing(false);
+                setBootstrapError(null);
+
+                return;
+            }
+
+            // Network errors and server errors should not invalidate the session.
+            setBootstrapError(
+                error?.response?.data?.message ||
+                error?.message ||
+                "Unable to restore your session. Please try again."
+            );
+
+            setIsInitializing(false);
+        }
+    }, []);
+
+    // Restore authentication on application startup.
+    useEffect(() => {
+        if (!token) {
+            restoreSession();
+        }
+    }, [token, restoreSession]);
+
+    // Retry bootstrap authentication.
+    const retryBootstrap = () => {
+        bootstrapAttemptedRef.current = false;
+        restoreSession();
+    };
 
     // Start authentication after receiving the access token.
     const startAuth = (accessToken) => {
@@ -35,10 +110,12 @@ export const AuthProvider = ({ children }) => {
             queryKey: ["auth", "profile"],
             exact: true,
         });
+
         setAccessToken(accessToken);
         setToken(accessToken);
         setUser(null);
         setLoginMessage(null);
+        setBootstrapError(null);
         setShouldShowWelcomeMessage(true);
         setIsInitializing(true);
     };
@@ -46,7 +123,6 @@ export const AuthProvider = ({ children }) => {
     // Handle profile request result.
     useEffect(() => {
         if (!token) {
-            setIsInitializing(false);
             return;
         }
 
@@ -72,6 +148,7 @@ export const AuthProvider = ({ children }) => {
                     queryKey: ["auth", "profile"],
                     exact: true,
                 });
+
                 clearAccessToken();
                 setToken(null);
                 setUser(null);
@@ -98,17 +175,22 @@ export const AuthProvider = ({ children }) => {
             }
         };
 
-        const handleSessionExpired = () => {
+
+        const handleSessionExpired = (event) => {
             queryClient.removeQueries({
                 queryKey: ["auth", "profile"],
                 exact: true,
             });
-            clearAccessToken();
+
+            // Do not broadcast again when the event came from another tab.
+            clearLocalAccessToken();
+
             setToken(null);
             setUser(null);
             setLoginMessage(null);
             setIsInitializing(false);
             setShouldShowWelcomeMessage(false);
+            setBootstrapError(null);
         };
 
         window.addEventListener(
@@ -139,12 +221,14 @@ export const AuthProvider = ({ children }) => {
             queryKey: ["auth", "profile"],
             exact: true,
         });
+
         clearAccessToken();
         setToken(null);
         setUser(null);
         setLoginMessage(null);
         setIsInitializing(false);
         setShouldShowWelcomeMessage(false);
+        setBootstrapError(null);
     };
 
     const value = {
@@ -157,12 +241,16 @@ export const AuthProvider = ({ children }) => {
         loginMessage,
         setLoginMessage,
 
+        bootstrapError,
+        retryBootstrap,
+
         authError: token && profileQuery.isError
             ? profileQuery.error?.response?.data?.message ||
             "Unable to load your profile. Please try again."
             : null,
 
         retryProfile: profileQuery.refetch,
+        isProfileFetching: profileQuery.isFetching,
     };
 
     return (
