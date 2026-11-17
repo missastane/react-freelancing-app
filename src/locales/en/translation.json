@@ -23,6 +23,7 @@
         "retrying": "Retrying...",
         "retry": "Retry",
         "cancel": "cancel",
+        "save": "Save",
         "refresh": "Refresh"
     },
     "validation": {
@@ -146,7 +147,10 @@
                 "edit": "Edit",
                 "activate": "Activate",
                 "deactivate": "Deactivate",
-                "manageAccess": "Manage roles & permissions"
+                "manageAccess": "Manage roles & permissions",
+                "manageRoles": "Manage Roles",
+                "managePermissions": "Manage Permissions",
+                "manageDepartments": "Manage Departments"
             },
             "placeholders": {
                 "firstName": "Enter first name",
@@ -179,6 +183,7 @@
                 "emailVerified": "Email Verification",
                 "mobileVerified": "Mobile Verification",
                 "notVerified": "Not verified",
+                "activation": "Activation Status",
                 "activationDate": "Activation Date",
                 "createdAt": "Created At",
                 "updatedAt": "Last Updated",
@@ -188,6 +193,43 @@
                 "noRoles": "No roles assigned.",
                 "noPermissions": "No permissions assigned."
             },
+            "update": {
+                "title": "Edit Administrator",
+                "loadError": "Failed to load administrator information.",
+                "error": "Failed to update administrator.",
+                "updating": "Updating..."
+            },
+            "confirm": {
+                "activateTitle": "Activate Admin",
+                "deactivateTitle": "Deactivate Admin",
+                "activateMessage": "Are you sure you want to activate this account?",
+                "deactivateMessage": "Are you sure you want to deactivate this account?",
+                "deactivateDescription": "This user will no longer have access to the panel.",
+                "activateDescription": "User access will be restored immediately."
+            },
+            "roles": {
+                "title": "Manage Roles",
+                "available": "Available Roles",
+                "description": "Select the roles you want to assign to this admin.",
+                "loadError": "Failed to load roles. Please try again.",
+                "empty": "No roles available."
+            },
+            "permissions": {
+                "title": "Manage Permissions",
+                "available": "Available Permissions",
+                "description": "Select the permissions assigned to this admin.",
+                "loadError": "Failed to load permissions.",
+                "empty": "No permissions are available."
+            },
+            "departments": {
+                "title": "Manage Departments",
+                "available": "Available Departments",
+                "description": "Select the departments assigned to this admin.",
+                "empty": "No departments found.",
+                "loadError": "Failed to load departments.",
+                "inactive": "Inactive",
+                "active": "Active"
+            },
             "validation": {
                 "firstNameRequired": "First name is required",
                 "firstNameMax": "First name must not exceed 120 characters",
@@ -196,7 +238,8 @@
                 "invalidName": "Name contains invalid characters",
                 "mobileLength": "Mobile number must contain exactly 11 digits",
                 "emailRequired": "Email is required",
-                "invalidEmail": "Please enter a valid email address"
+                "invalidEmail": "Please enter a valid email address",
+                "invalidActivation": "Please select a valid account status."
             }
         }
     }
