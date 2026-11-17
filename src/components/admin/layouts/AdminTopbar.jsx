@@ -1,6 +1,16 @@
-import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
+
+import {
+  AppBar,
+  Box,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
+import LanguageSwitcher from "../../common/LanguageSwitcher";
 
 export default function AdminTopbar() {
   return (
@@ -17,6 +27,8 @@ export default function AdminTopbar() {
         </Typography>
 
         <Box sx={{ flexGrow: 1 }} />
+
+        <LanguageSwitcher />
 
         <IconButton>
           <NotificationsOutlinedIcon />
