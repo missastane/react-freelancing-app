@@ -111,6 +111,12 @@
         "sidebar": {
             "dashboard": "Dashboard",
             "users": "Users",
+            "userManagement": "User Management",
+            "accessManagement": "Access Management",
+            "supportManagement": "Support Management",
+            "roles": "Roles",
+            "permissions": "Permissions",
+            "departments": "Departments",
             "skills": "Skills",
             "projects": "Projects",
             "tickets": "Tickets",
@@ -240,6 +246,56 @@
                 "emailRequired": "Email is required",
                 "invalidEmail": "Please enter a valid email address",
                 "invalidActivation": "Please select a valid account status."
+            }
+        },
+        "roles": {
+            "title": "Role Management",
+            "subtitle": "View and manage system roles",
+            "add": "Add Role",
+            "loadError": "Failed to load roles",
+            "empty": "No roles found.",
+            "table": {
+                "id": "ID",
+                "permissionsCount": "Permissions Count",
+                "actions": "Actions"
+            },
+            "fields": {
+                "name": "Role Name",
+                "guard": "Guard"
+            },
+            "actions": {
+                "managePermissions": "Manage Permissions",
+                "edit": "Edit",
+                "delete": "Delete"
+            },
+            "create": {
+                "title": "Create New Role",
+                "subtitle": "Enter the information for the new role.",
+                "submit": "Create Role",
+                "creating": "Creating...",
+                "error": "Failed to create role"
+            },
+            "update": {
+                "title": "Edit Role",
+                "subtitle": "Update the role name.",
+                "updating": "Saving...",
+                "loadError": "Failed to load role details",
+                "error": "Failed to update role"
+            },
+            "permissions": {
+                "title": "Manage Role Permissions",
+                "loadError": "Failed to load role or permissions",
+                "empty": "No permissions available.",
+                "available": "Available Permissions",
+                "description": "Select the permissions you want to assign to this role."
+            },
+            "confirm": {
+                "deleteTitle": "Delete Role",
+                "deleteMessage": "Are you sure you want to delete the role '{{name}}'?",
+                "deleteDescription": "Deleting this role may also affect its assigned users and permissions."
+            },
+            "validation": {
+                "nameRequired": "Role name is required."
             }
         }
     }
