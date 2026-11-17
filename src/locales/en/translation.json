@@ -1,5 +1,13 @@
 {
     "common": {
+        "pagination": {
+            "rowsPerPage": "Rows per page:",
+            "displayedRows": "{{from}}–{{to}} of {{count}}",
+            "displayedRowsMore": "{{from}}–{{to}} of more than {{to}}"
+        },
+        "table": {
+            "empty": "No records found."
+        },
         "english": "English",
         "persian": "Persian",
         "loading": "Loading...",
@@ -13,7 +21,9 @@
         "networkError": "A network connection problem occurred. Some information may not be up to date.",
         "serverError": "The server is temporarily unavailable. Please try again.",
         "retrying": "Retrying...",
-        "retry": "Retry"
+        "retry": "Retry",
+        "cancel": "cancel",
+        "refresh": "Refresh"
     },
     "validation": {
         "passwordMin": "Password must be at least 8 characters.",
@@ -94,6 +104,100 @@
             "retrying": "Retrying...",
             "tryAgain": "Try again",
             "goToLogin": "Go to login"
+        }
+    },
+    "admin": {
+        "sidebar": {
+            "dashboard": "Dashboard",
+            "users": "Users",
+            "skills": "Skills",
+            "projects": "Projects",
+            "tickets": "Tickets",
+            "content": "Content",
+            "reports": "Reports",
+            "settings": "Settings"
+        },
+        "users": {
+            "title": "Admin Users",
+            "subtitle": "Manage system administrators.",
+            "add": "Add Administrator",
+            "searchPlaceholder": "Search administrators...",
+            "loadError": "Failed to load administrators.",
+            "noSearchResults": "No administrators match your search.",
+            "empty": "No administrators found.",
+            "table": {
+                "id": "ID",
+                "status": "Status",
+                "actions": "Actions"
+            },
+            "fields": {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "email": "Email Address",
+                "mobile": "Mobile Number",
+                "username": "Username"
+            },
+            "status": {
+                "active": "Active",
+                "inactive": "Inactive"
+            },
+            "actions": {
+                "view": "View",
+                "edit": "Edit",
+                "activate": "Activate",
+                "deactivate": "Deactivate",
+                "manageAccess": "Manage roles & permissions"
+            },
+            "placeholders": {
+                "firstName": "Enter first name",
+                "lastName": "Enter last name"
+            },
+            "create": {
+                "title": "Create New Administrator",
+                "subtitle": "Add a new administrator to your system",
+                "submit": "Create Administrator",
+                "creating": "Creating...",
+                "infoTitle": "Administrator Information",
+                "infoSubtitle": "Enter the basic information of the new administrator.",
+                "accountTitle": "Account Setup",
+                "accountSubtitle": "Login credentials will be generated automatically.",
+                "accountDescription": "A username and temporary password will be generated automatically. The administrator will receive an email to set their password.",
+                "success": "Administrator created successfully.",
+                "error": "Failed to create administrator."
+            },
+            "details": {
+                "title": "Administrator Details",
+                "subtitle": "View administrator profile and access information",
+                "loadError": "Failed to load administrator details.",
+                "basicInfo": "Personal Information",
+                "accountInfo": "Account Information",
+                "mobile": "Mobile Number",
+                "nationalCode": "National Code",
+                "gender": "Gender",
+                "birthDate": "Birth Date",
+                "activeRole": "Active Role",
+                "emailVerified": "Email Verification",
+                "mobileVerified": "Mobile Verification",
+                "notVerified": "Not verified",
+                "activationDate": "Activation Date",
+                "createdAt": "Created At",
+                "updatedAt": "Last Updated",
+                "aboutMe": "About Me",
+                "roles": "Roles",
+                "permissions": "Permissions",
+                "noRoles": "No roles assigned.",
+                "noPermissions": "No permissions assigned."
+            },
+            "validation": {
+                "firstNameRequired": "First name is required",
+                "firstNameMax": "First name must not exceed 120 characters",
+                "lastNameRequired": "Last name is required",
+                "lastNameMax": "Last name must not exceed 120 characters",
+                "invalidName": "Name contains invalid characters",
+                "mobileLength": "Mobile number must contain exactly 11 digits",
+                "emailRequired": "Email is required",
+                "invalidEmail": "Please enter a valid email address"
+            }
         }
     }
 }
