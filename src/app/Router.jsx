@@ -24,7 +24,7 @@ import ConnectedAccountsSettings from "../components/setting/shared/ConnectedAcc
 import AdminProjectCategories from "../components/admin/pages/AdminProjectCategories";
 import AdminLayout from "../components/admin/layouts/AdminLayout";
 import AdminDashboard from "../components/admin/pages/dashboard/AdminDashboard";
-import AdminUsers from "../components/admin/pages/AdminUsers";
+import AdminUsers from "../components/admin/pages/users/AdminUsers";
 import AdminSkills from "../components/admin/pages/AdminSkills";
 import AdminTickets from "../components/admin/pages/AdminTickets";
 import AdminContent from "../components/admin/pages/AdminContent";
