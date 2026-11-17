@@ -39,3 +39,31 @@ export const createAdminSchema = (t) =>
             .min(1, t("admin.users.validation.emailRequired"))
             .email(t("admin.users.validation.invalidEmail")),
     });
+
+
+    export const updateAdminSchema = (t) =>
+    z.object({
+        first_name: z.string()
+            .trim()
+            .min(1, t("admin.users.validation.firstNameRequired"))
+            .max(120, t("admin.users.validation.firstNameMax"))
+            .regex(
+                persianEnglishNameRegex,
+                t("admin.users.validation.invalidName")
+            ),
+
+        last_name: z.string()
+            .trim()
+            .min(1, t("admin.users.validation.lastNameRequired"))
+            .max(120, t("admin.users.validation.lastNameMax"))
+            .regex(
+                persianEnglishNameRegex,
+                t("admin.users.validation.invalidName")
+            ),
+
+        activation: z.coerce.number()
+            .refine(
+                (value) => [1, 2].includes(value),
+                t("admin.users.validation.invalidActivation")
+            ),
+    });
