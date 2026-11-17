@@ -14,6 +14,11 @@ import {
     Stack,
     Alert,
     Button,
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    ListItemText,
+    Snackbar
 } from "@mui/material";
 
 import {
@@ -26,12 +31,26 @@ import {
     ToggleOff,
     ManageAccounts,
     Refresh,
+    PersonAdd,
+    PersonAddDisabled,
+    ShieldOutlined,
+    KeyOutlined
+
 } from "@mui/icons-material";
 
 import CreateAdminDialog from "../../pages/users/CreateAdminDialog";
 import DataTable from "../../../common/DataTable/DataTable";
 import { useAdminUsers } from "../../../../hooks/admin/admin-user/useAdminUsers";
+import { useToggleAdminUserActivation } from "../../../../hooks/admin/admin-user/useToggleAdminUserActivation";
 import AdminUserDetailsDialog from "./AdminUserDetailsDialog"
+import UpdateAdminDialog from "./UpdateAdminDialog";
+import { useConfirmDialog } from "../../../../hooks/useConfirmDialog";
+import { useNotification } from "../../../../hooks/useNotification";
+import ManageAdminRolesDialog from "./ManageAdminRolesDialog";
+import ManageAdminPermissionsDialog from "./ManageAdminPermissionsDialog";
+import ManageAdminDepartmentsDialog from "./ManageAdminDepartmentsDialog";
+import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
+
 export default function AdminUsers() {
     const { t } = useTranslation();
 
@@ -43,6 +62,20 @@ export default function AdminUsers() {
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [selectedAdminId, setSelectedAdminId] = useState(null);
     const [detailsOpen, setDetailsOpen] = useState(false);
+    const [updateAdminId, setUpdateAdminId] = useState(null);
+    const [updateOpen, setUpdateOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [accessMenuAnchor, setAccessMenuAnchor] = useState(null);
+    const [selectedAccessAdmin, setSelectedAccessAdmin] = useState(null);
+    const accessMenuOpen = Boolean(accessMenuAnchor);
+    const [rolesDialogOpen, setRolesDialogOpen] = useState(false);
+    const [permissionsDialogOpen, setPermissionsDialogOpen] = useState(false);
+    const [selectedAdmin, setSelectedAdmin] = useState(null);
+    const [departmentsDialogOpen, setDepartmentsDialogOpen] = useState(false);
+
+    const { confirm } = useConfirmDialog();
+    const { showNotification } = useNotification();
+    const toggleMutation = useToggleAdminUserActivation();
 
 
     // Debounce search input
@@ -73,6 +106,9 @@ export default function AdminUsers() {
     const admins = data?.data?.data ?? [];
     const total = data?.total ?? 0;
 
+
+
+
     // Temporary action handlers
     // These will be connected to their respective mutation hooks later.
     const handleView = (admin) => {
@@ -86,15 +122,102 @@ export default function AdminUsers() {
     };
 
     const handleEdit = (admin) => {
-        console.log("Edit admin:", admin);
+        setUpdateAdminId(admin.id);
+        setUpdateOpen(true);
     };
 
-    const handleToggleActivation = (admin) => {
-        console.log("Toggle activation:", admin);
+    const handleCloseUpdate = () => {
+        setUpdateOpen(false);
+        setUpdateAdminId(null);
     };
 
-    const handleManageAccess = (admin) => {
-        console.log("Manage roles and permissions:", admin);
+    const handleToggleActivation = async (admin) => {
+        const isActive = Number(admin.activation) === 1;
+
+        const confirmed = await confirm({
+            title: isActive
+                ? t("admin.users.confirm.deactivateTitle")
+                : t("admin.users.confirm.activateTitle"),
+
+            message: isActive
+                ? t("admin.users.confirm.deactivateMessage")
+                : t("admin.users.confirm.activateMessage"),
+
+            description: isActive
+                ? t("admin.users.confirm.deactivateDescription")
+                : t("admin.users.confirm.activateDescription"),
+
+            confirmText: isActive
+                ? t("admin.users.actions.deactivate")
+                : t("admin.users.actions.activate"),
+
+            cancelText: t("common.cancel"),
+            confirmColor: isActive ? "error" : "success",
+            icon: isActive ? <PersonAddDisabled /> : <PersonAdd />
+        });
+
+        if (!confirmed) return;
+
+        try {
+            const response = await toggleMutation.mutateAsync(admin.id);
+            showNotification(response.message, "success");
+        } catch (error) {
+            showNotification(
+                error?.response?.data?.message || t("common.generalError"),
+                "error"
+            );
+        }
+    };
+
+    const handleOpenAccessMenu = (event, admin) => {
+        setAccessMenuAnchor(event.currentTarget);
+        setSelectedAccessAdmin(admin);
+    };
+
+    const handleCloseAccessMenu = () => {
+        setAccessMenuAnchor(null);
+    };
+
+    const handleSelectManageRoles = () => {
+        const admin = selectedAccessAdmin;
+        handleCloseAccessMenu();
+
+        if (admin) {
+            handleManageRoles(admin);
+        }
+    };
+
+    const handleSelectManagePermissions = () => {
+        const admin = selectedAccessAdmin;
+        handleCloseAccessMenu();
+
+        if (admin) {
+            handleManagePermissions(admin);
+        }
+    };
+
+    const handleManageRoles = (admin) => {
+        setSelectedAdmin(admin);
+        setRolesDialogOpen(true);
+    };
+
+    const handleManagePermissions = (admin) => {
+        setSelectedAdmin(admin);
+        setPermissionsDialogOpen(true);
+    };
+
+    const handleSelectManageDepartments = () => {
+        const admin = selectedAccessAdmin;
+        handleCloseAccessMenu();
+
+        if (admin) {
+            handleManageDepartments(admin);
+        }
+    };
+
+    const handleManageDepartments = (admin) => {
+        setSelectedAdmin(admin);
+        setDepartmentsDialogOpen(true);
     };
 
     const columns = [
@@ -136,12 +259,12 @@ export default function AdminUsers() {
             renderCell: (row, value) => (
                 <Chip
                     label={
-                        value === "active"
+                        value === 1
                             ? t("admin.users.status.active")
                             : t("admin.users.status.inactive")
                     }
                     color={
-                        value === "active"
+                        value === 1
                             ? "success"
                             : "default"
                     }
@@ -155,76 +278,89 @@ export default function AdminUsers() {
             align: "center",
             minWidth: 190,
             sortable: false,
-            renderCell: (row) => (
-                <Stack
-                    direction="row"
-                    spacing={0.5}
-                    justifyContent="center"
-                >
-                    <Tooltip title={t("admin.users.actions.view")}>
-                        <IconButton
-                            size="small"
-                            color="info"
-                            onClick={() => handleView(row)}
-                        >
-                            <Visibility fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
+            renderCell: (row) => {
+                const isActive = Number(row.activation) === 1;
 
-                    <Tooltip title={t("admin.users.actions.edit")}>
-                        <IconButton
-                            size="small"
-                            color="primary"
-                            onClick={() => handleEdit(row)}
-                        >
-                            <Edit fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip
-                        title={
-                            row.activation === "active"
-                                ? t("admin.users.actions.deactivate")
-                                : t("admin.users.actions.activate")
-                        }
+                return (
+                    <Stack
+                        direction="row"
+                        spacing={0.5}
+                        justifyContent="center"
                     >
-                        <IconButton
-                            size="small"
-                            color={
-                                row.activation === "active"
-                                    ? "warning"
-                                    : "success"
-                            }
-                            onClick={() =>
-                                handleToggleActivation(row)
+                        <Tooltip title={t("admin.users.actions.view")}>
+                            <IconButton
+                                size="small"
+                                color="info"
+                                onClick={() => handleView(row)}
+                            >
+                                <Visibility fontSize="small" />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title={t("admin.users.actions.edit")}>
+                            <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={() => handleEdit(row)}
+                            >
+                                <Edit fontSize="small" />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip
+                            title={
+                                !isActive
+                                    ? t("admin.users.actions.deactivate")
+                                    : t("admin.users.actions.activate")
                             }
                         >
-                            {row.activation === "active" ? (
-                                <ToggleOff fontSize="small" />
-                            ) : (
-                                <ToggleOn fontSize="small" />
-                            )}
-                        </IconButton>
-                    </Tooltip>
+                            <IconButton
+                                size="small"
+                                color={!isActive ? "warning" : "success"}
+                                onClick={() => handleToggleActivation(row)}
+                            >
+                                {isActive ? (
+                                    <ToggleOff fontSize="small" />
+                                ) : (
+                                    <ToggleOn fontSize="small" />
+                                )}
+                            </IconButton>
+                        </Tooltip>
 
-                    <Tooltip
-                        title={t("admin.users.actions.manageAccess")}
-                    >
-                        <IconButton
-                            size="small"
-                            color="secondary"
-                            onClick={() => handleManageAccess(row)}
-                        >
-                            <ManageAccounts fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                </Stack>
-            ),
+                        <Tooltip title={t("admin.users.actions.manageAccess")}>
+                            <IconButton
+                                size="small"
+                                color="secondary"
+                                onClick={(event) => handleOpenAccessMenu(event, row)}
+                            >
+                                <ManageAccounts fontSize="small" />
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                );
+            },
         },
     ];
 
     return (
         <>
+            <Snackbar
+                open={!!successMessage}
+                autoHideDuration={4000}
+                onClose={() => setSuccessMessage("")}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                }}
+            >
+                <Alert
+                    severity="success"
+                    variant="filled"
+                    onClose={() => setSuccessMessage("")}
+                >
+                    {successMessage}
+                </Alert>
+            </Snackbar>
             <Paper
                 sx={{
                     p: 3,
@@ -352,6 +488,47 @@ export default function AdminUsers() {
                             : t("admin.users.empty")
                     }
                 />
+
+                <Menu
+                    anchorEl={accessMenuAnchor}
+                    open={accessMenuOpen}
+                    onClose={handleCloseAccessMenu}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                    }}
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                    }}
+                >
+                    <MenuItem onClick={handleSelectManageRoles}>
+                        <ListItemIcon>
+                            <ShieldOutlined fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("admin.users.actions.manageRoles")}
+                        </ListItemText>
+                    </MenuItem>
+
+                    <MenuItem onClick={handleSelectManagePermissions}>
+                        <ListItemIcon>
+                            <KeyOutlined fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("admin.users.actions.managePermissions")}
+                        </ListItemText>
+                    </MenuItem>
+
+                    <MenuItem onClick={handleSelectManageDepartments}>
+                        <ListItemIcon>
+                            <ApartmentRoundedIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("admin.users.actions.manageDepartments")}
+                        </ListItemText>
+                    </MenuItem>
+                </Menu>
             </Paper>
 
             <CreateAdminDialog
@@ -363,6 +540,41 @@ export default function AdminUsers() {
                 open={detailsOpen}
                 adminId={selectedAdminId}
                 onClose={handleCloseDetails}
+            />
+
+            <UpdateAdminDialog
+                open={updateOpen}
+                adminId={updateAdminId}
+                onClose={handleCloseUpdate}
+                onSuccess={(message) => setSuccessMessage(message)}
+
+            />
+
+            <ManageAdminRolesDialog
+                open={rolesDialogOpen}
+                onClose={() => {
+                    setRolesDialogOpen(false);
+                    setSelectedAdmin(null);
+                }}
+                admin={selectedAdmin}
+            />
+
+            <ManageAdminPermissionsDialog
+                open={permissionsDialogOpen}
+                onClose={() => {
+                    setPermissionsDialogOpen(false);
+                    setSelectedAdmin(null);
+                }}
+                admin={selectedAdmin}
+            />
+
+            <ManageAdminDepartmentsDialog
+                open={departmentsDialogOpen}
+                onClose={() => {
+                    setDepartmentsDialogOpen(false);
+                    setSelectedAdmin(null);
+                }}
+                admin={selectedAdmin}
             />
         </>
     );
