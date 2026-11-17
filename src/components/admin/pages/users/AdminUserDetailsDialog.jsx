@@ -7,7 +7,6 @@ import {
     CardContent,
     Chip,
     CircularProgress,
-    Dialog,
     DialogContent,
     Divider,
     IconButton,
@@ -32,7 +31,7 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useAdminUser } from "../../../../hooks/admin/admin-user/useAdminUser";
-
+import BaseDialog from "../../../common/BaseDialog";
 import InfoItem from "./sections/DialogInfoItem";
 
 import DialogSectionCard from "./sections/DialogSectionCard"
@@ -63,7 +62,6 @@ export default function AdminUserDetailsDialog({ open, adminId, onClose }) {
     };
 
     const isActive =
-        admin?.activation === "active user" ||
         admin?.activation === 1 ||
         admin?.activation === true;
 
@@ -71,7 +69,7 @@ export default function AdminUserDetailsDialog({ open, adminId, onClose }) {
     const permissions = admin?.permissions ?? [];
 
     return (
-        <Dialog
+        <BaseDialog
             open={open}
             onClose={onClose}
             fullScreen
@@ -479,6 +477,6 @@ export default function AdminUserDetailsDialog({ open, adminId, onClose }) {
                     </Box>
                 )}
             </DialogContent>
-        </Dialog>
+        </BaseDialog>
     );
 }
