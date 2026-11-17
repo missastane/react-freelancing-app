@@ -12,3 +12,20 @@ body {
 :root::-webkit-scrollbar {
     display: none !important;
 }
+
+/* Hide scrollbar globally while preserving scroll functionality */
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+    display: none;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* Internet Explorer and old Edge */
+* {
+    -ms-overflow-style: none;
+}
