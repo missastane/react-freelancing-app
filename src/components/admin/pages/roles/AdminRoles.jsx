@@ -41,7 +41,7 @@ export default function AdminRoles() {
     const [selectedRole, setSelectedRole] = useState(null);
 
     const deleteMutation = useDeleteAdminRole();
-   const { confirm } = useConfirmDialog();
+    const { confirm } = useConfirmDialog();
     const { showNotification } = useNotification();
 
     const handleDeleteRole = async (role) => {

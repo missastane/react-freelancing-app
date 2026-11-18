@@ -297,6 +297,57 @@
             "validation": {
                 "nameRequired": "Role name is required."
             }
+        },
+        "permissions": {
+            "title": "Permissions Management",
+            "subtitle": "Manage and view system-defined permissions",
+            "add": "Add Permission",
+            "loadError": "Failed to load permissions",
+            "empty": "No permissions found",
+            "fields": {
+                "name": "Permission Name",
+                "guard": "Guard"
+            },
+            "table": {
+                "id": "ID",
+                "rolesCount": "Assigned Roles",
+                "actions": "Actions"
+            },
+            "actions": {
+                "edit": "Edit Permission",
+                "delete": "Delete Permission",
+                "manageRoles": "Manage Assigned Roles"
+            },
+            "create": {
+                "title": "Create New Permission",
+                "subtitle": "Enter the new permission information",
+                "creating": "Creating...",
+                "submit": "Create Permission",
+                "error": "Failed to create permission"
+            },
+            "validation": {
+                "nameRequired": "Permission name is required",
+                "nameInvalid": "Permission name must start with an English letter and contain only English letters, numbers, and underscores"
+            },
+            "update": {
+                "title": "Update Permission",
+                "subtitle": "Edit the permission name",
+                "updating": "Updating...",
+                "loadError": "Failed to load permission details",
+                "error": "Failed to update permission"
+            },
+            "roles": {
+                "title": "Manage Assigned Roles",
+                "loadError": "Failed to load roles or permission details",
+                "empty": "No roles found",
+                "available": "Available Roles",
+                "description": "Select the roles that should have this permission."
+            },
+            "confirm": {
+                "deleteTitle": "Delete Permission",
+                "deleteMessage": "Are you sure you want to delete the permission \"{{name}}\"?",
+                "deleteDescription": "Deleting this permission will also remove its availability for the associated roles."
+            }
         }
     }
 }
