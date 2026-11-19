@@ -25,7 +25,7 @@ import AdminProjectCategories from "../components/admin/pages/AdminProjectCatego
 import AdminLayout from "../components/admin/layouts/AdminLayout";
 import AdminDashboard from "../components/admin/pages/dashboard/AdminDashboard";
 import AdminUsers from "../components/admin/pages/users/AdminUsers";
-import AdminSkills from "../components/admin/pages/AdminSkills";
+import AdminSkills from "../components/admin/pages/skills/AdminSkills";
 import AdminTickets from "../components/admin/pages/AdminTickets";
 import AdminContent from "../components/admin/pages/AdminContent";
 import AdminReports from "../components/admin/pages/AdminReports";

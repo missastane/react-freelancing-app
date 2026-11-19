@@ -348,6 +348,51 @@
                 "deleteMessage": "Are you sure you want to delete the permission \"{{name}}\"?",
                 "deleteDescription": "Deleting this permission will also remove its availability for the associated roles."
             }
+        },
+        "skills": {
+            "title": "Skill Management",
+            "subtitle": "View and search registered skills",
+            "searchPlaceholder": "Search by Persian or English title...",
+            "loadError": "Failed to load skills",
+            "empty": "No skills found",
+            "fields": {
+                "persianTitle": "Persian Title",
+                "originalTitle": "English Title"
+            },
+            "table": {
+                "id": "ID",
+                "actions": "Actions"
+            },
+            "add": "Add Skill",
+            "actions": {
+                "edit": "Edit",
+                "delete": "Delete"
+            },
+            "create": {
+                "title": "Create New Skill",
+                "subtitle": "Enter the information for the new skill",
+                "creating": "Creating...",
+                "submit": "Create Skill",
+                "error": "Failed to create skill"
+            },
+            "update": {
+                "title": "Update Skill",
+                "subtitle": "Edit the skill information",
+                "updating": "Updating...",
+                "loadError": "Failed to load skill information",
+                "error": "Failed to update skill"
+            },
+            "validation": {
+                "persianTitleRequired": "Persian title is required",
+                "persianTitleInvalid": "Persian title can only contain Persian letters and numbers",
+                "originalTitleRequired": "English title is required",
+                "originalTitleInvalid": "English title can only contain English letters and numbers"
+            },
+            "confirm": {
+                "deleteTitle": "Delete Skill",
+                "deleteMessage": "Are you sure you want to delete the skill \"{{name}}\"?",
+                "deleteDescription": "This action cannot be undone."
+            }
         }
     }
 }
