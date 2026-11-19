@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -12,6 +12,8 @@ import {
     Stack,
     Tooltip,
     Typography,
+    InputAdornment,
+    TextField,
 } from "@mui/material";
 
 import {
@@ -20,6 +22,8 @@ import {
     Delete,
     Refresh,
     KeyRounded,
+    Search,
+    Clear,
 } from "@mui/icons-material";
 
 import DataTable from "../../../common/DataTable/DataTable";
@@ -36,6 +40,8 @@ export default function AdminRoles() {
 
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(15);
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [selectedRoleId, setSelectedRoleId] = useState(null);
     const [selectedRole, setSelectedRole] = useState(null);
@@ -43,6 +49,33 @@ export default function AdminRoles() {
     const deleteMutation = useDeleteAdminRole();
     const { confirm } = useConfirmDialog();
     const { showNotification } = useNotification();
+
+
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearch(searchInput.trim());
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [searchInput]);
+
+    const {
+        data,
+        isLoading,
+        isFetching,
+        isError,
+        error,
+        refetch,
+    } = useAdminRoles({
+        page,
+        perPage,
+        search,
+    });
+
+    // Extract paginated response
+    const roles = data?.data?.data ?? [];
+    const total = data?.total ?? 0;
 
     const handleDeleteRole = async (role) => {
         const confirmed = await confirm({
@@ -72,21 +105,6 @@ export default function AdminRoles() {
             );
         }
     };
-    const {
-        data,
-        isLoading,
-        isFetching,
-        isError,
-        error,
-        refetch,
-    } = useAdminRoles({
-        page,
-        perPage,
-    });
-
-    // Extract paginated response
-    const roles = data?.data?.data ?? [];
-    const total = data?.total ?? 0;
 
     const columns = [
         {
@@ -227,6 +245,41 @@ export default function AdminRoles() {
                         </Button>
                     </Stack>
                 </Box>
+
+                <TextField
+                    fullWidth
+                    size="small"
+                    placeholder={t("admin.roles.searchPlaceholder")}
+                    value={searchInput}
+                    onChange={(event) => {
+                        setSearchInput(event.target.value);
+                        setPage(1);
+                    }}
+                    sx={{ mb: 3 }}
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                            endAdornment: searchInput && (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => {
+                                            setSearchInput("");
+                                            setPage(1);
+                                        }}
+                                        edge="end"
+                                    >
+                                        <Clear fontSize="small" />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        },
+                    }}
+                />
 
                 {isError && (
                     <Alert

@@ -251,6 +251,7 @@
         "roles": {
             "title": "Role Management",
             "subtitle": "View and manage system roles",
+            "searchPlaceholder": "Search roles...",
             "add": "Add Role",
             "loadError": "Failed to load roles",
             "empty": "No roles found.",
@@ -301,6 +302,7 @@
         "permissions": {
             "title": "Permissions Management",
             "subtitle": "Manage and view system-defined permissions",
+            "searchPlaceholder": "Search permissions...",
             "add": "Add Permission",
             "loadError": "Failed to load permissions",
             "empty": "No permissions found",

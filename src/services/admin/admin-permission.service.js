@@ -2,11 +2,16 @@ import api from "../../api/axios";
 
 const adminPermissionPrefix = "/admin/user/permission";
 
-export const getAdminPermissions = async (page = 1, perPage = 15) => {
+export const getAdminPermissions = async (
+    page = 1,
+    perPage = 15,
+    search = ""
+) => {
     const response = await api.get(adminPermissionPrefix, {
         params: {
             page,
             per_page: perPage,
+            search,
         },
     });
 

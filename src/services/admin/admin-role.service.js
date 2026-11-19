@@ -2,11 +2,16 @@ import api from "../../api/axios";
 
 const adminRolePrefix = "/admin/user/role";
 
-export const getAdminRoles = async (page = 1, perPage = 15) => {
+export const getAdminRoles = async (
+    page = 1,
+    perPage = 15,
+    search = ""
+) => {
     const response = await api.get(adminRolePrefix, {
         params: {
             page,
             per_page: perPage,
+            search,
         },
     });
 

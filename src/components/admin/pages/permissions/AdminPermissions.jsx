@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -12,6 +12,8 @@ import {
     Stack,
     Tooltip,
     Typography,
+    InputAdornment,
+    TextField,
 } from "@mui/material";
 
 import {
@@ -20,6 +22,8 @@ import {
     Delete,
     Refresh,
     KeyRounded,
+    Search,
+    Clear,
 } from "@mui/icons-material";
 
 import DataTable from "../../../common/DataTable/DataTable";
@@ -36,9 +40,19 @@ export default function AdminPermissions() {
 
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(15);
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [selectedPermissionId, setSelectedPermissionId] = useState(null);
     const [selectedPermission, setSelectedPermission] = useState(null);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearch(searchInput.trim());
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
     const {
         data,
@@ -50,6 +64,7 @@ export default function AdminPermissions() {
     } = useAdminPermissions({
         page,
         perPage,
+        search,
     });
 
     const deleteMutation = useDeleteAdminPermission();
@@ -226,6 +241,41 @@ export default function AdminPermissions() {
                         </Button>
                     </Stack>
                 </Box>
+
+                <TextField
+                    fullWidth
+                    size="small"
+                    placeholder={t("admin.permissions.searchPlaceholder")}
+                    value={searchInput}
+                    onChange={(event) => {
+                        setSearchInput(event.target.value);
+                        setPage(1);
+                    }}
+                    sx={{ mb: 3 }}
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                            endAdornment: searchInput && (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => {
+                                            setSearchInput("");
+                                            setPage(1);
+                                        }}
+                                        edge="end"
+                                    >
+                                        <Clear fontSize="small" />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        },
+                    }}
+                />
 
                 {isError && (
                     <Alert
