@@ -14,7 +14,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
-
+import PublicIcon from "@mui/icons-material/Public";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
 
@@ -67,6 +67,18 @@ export default function AdminSidebar() {
         },
         {
             type: "group",
+            labelKey: "admin.sidebar.localeManagement",
+            icon: <PublicIcon />,
+            items: [
+                {
+                    label: t("admin.sidebar.provinces"),
+                    to: "/admin/provinces",
+                    icon: <PublicIcon />,
+                },
+            ],
+        },
+        {
+            type: "group",
             labelKey: "admin.sidebar.supportManagement",
             icon: <SupportAgentIcon />,
             items: [
@@ -109,6 +121,7 @@ export default function AdminSidebar() {
     ];
 
     return (
+
         <Drawer
             variant="permanent"
             sx={{
@@ -121,12 +134,20 @@ export default function AdminSidebar() {
                     borderColor: "surface.border",
                     bgcolor: "background.paper",
                     overflowY: "auto",
+
+                    "&::-webkit-scrollbar": {
+                        width: 5,
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        bgcolor: "action.disabledBackground",
+                        borderRadius: 5,
+                    },
                 },
             }}
         >
             <Toolbar />
 
-            <List sx={{ px: 1, py: 1 }}>
+            <List sx={{ px: 1.25, py: 1 }}>
                 {menuItems.map((item) =>
                     item.type === "group" ? (
                         <AdminNavGroup
@@ -145,5 +166,6 @@ export default function AdminSidebar() {
                 )}
             </List>
         </Drawer>
+
     );
 }

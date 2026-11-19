@@ -1,43 +1,60 @@
 
 import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
+    AppBar,
+    Box,
+    Toolbar,
+    Typography,
 } from "@mui/material";
 
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import LanguageSwitcher from "../../common/LanguageSwitcher";
+import HeaderActions from "../../common/header/HeaderActions";
 
 export default function AdminTopbar() {
-  return (
-    <AppBar position="sticky" elevation={0} color="transparent">
-      <Toolbar
-        sx={{
-          borderBottom: 1,
-          borderColor: "surface.border",
-          bgcolor: "background.paper",
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 800 }}>
-          Admin Panel
-        </Typography>
+    const theme = useTheme();
 
-        <Box sx={{ flexGrow: 1 }} />
+    return (
+        <AppBar
+            position="sticky"
+            elevation={0}
+            sx={{
+                backdropFilter: "blur(14px)",
+                bgcolor:
+                    theme.palette.mode === "dark"
+                        ? alpha(theme.palette.background.default, 0.65)
+                        : alpha(theme.palette.background.paper, 0.72),
+                borderBottom: `1px solid ${theme.palette.surface.border}`,
+                color: "text.primary",
+            }}
+        >
+            <Toolbar sx={{ gap: 1.5 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                    }}
+                >
+                    <AdminPanelSettingsRoundedIcon
+                        sx={{ color: "primary.main" }}
+                    />
 
-        <LanguageSwitcher />
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontWeight: 800,
+                            letterSpacing: 0.2,
+                        }}
+                    >
+                        Admin Panel
+                    </Typography>
+                </Box>
 
-        <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
+                <Box sx={{ flexGrow: 1 }} />
 
-        <IconButton>
-          <AccountCircleOutlinedIcon />
-        </IconButton>
-      </Toolbar>
-    </AppBar>
-  );
+                <HeaderActions />
+            </Toolbar>
+        </AppBar>
+    );
 }

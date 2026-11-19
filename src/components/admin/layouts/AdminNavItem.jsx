@@ -19,17 +19,48 @@ export default function AdminNavItem({
             to={to}
             end={end}
             sx={{
-                borderRadius: 2,
-                mb: 0.5,
-                "&.active": {
-                    bgcolor: "surface.soft",
-                    border: 1,
-                    borderColor: "surface.borderTint",
+                minHeight: 38,
+                px: 1.5,
+                py: 0.5,
+                borderRadius: 1.5,
+                mb: 0.35,
+                color: "text.secondary",
+                transition: "all 0.18s ease",
+
+                "&:hover": {
+                    bgcolor: "action.hover",
+                    color: "text.primary",
                 },
+
+                "&.active": {
+                    bgcolor: "action.selected",
+                    color: "primary.main",
+                    "& .MuiListItemIcon-root": {
+                        color: "primary.main",
+                    },
+                    "& .MuiListItemText-primary": {
+                        fontWeight: 700,
+                    },
+                },
+
+                "& .MuiListItemIcon-root": {
+                    minWidth: 34,
+                    color: "inherit",
+                    "& .MuiSvgIcon-root": {
+                        fontSize: 19,
+                    },
+                },
+
+                "& .MuiListItemText-primary": {
+                    fontSize: "0.82rem",
+                    fontWeight: 500,
+                    lineHeight: 1.5,
+                },
+
                 ...sx,
             }}
         >
-            <ListItemIcon sx={{ minWidth: 40 }}>
+            <ListItemIcon>
                 {icon}
             </ListItemIcon>
 

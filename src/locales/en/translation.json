@@ -118,6 +118,8 @@
             "permissions": "Permissions",
             "departments": "Departments",
             "skills": "Skills",
+            "localeManagement": "Location Management",
+            "provinces": "Provinces",
             "projects": "Projects",
             "tickets": "Tickets",
             "content": "Content",
@@ -394,6 +396,90 @@
                 "deleteTitle": "Delete Skill",
                 "deleteMessage": "Are you sure you want to delete the skill \"{{name}}\"?",
                 "deleteDescription": "This action cannot be undone."
+            }
+        },
+        "provinces": {
+            "title": "Provinces Management",
+            "subtitle": "View and manage country provinces",
+            "searchPlaceholder": "Search provinces...",
+            "loadError": "Failed to load provinces",
+            "empty": "No provinces found",
+            "fields": {
+                "name": "Province Name"
+            },
+            "table": {
+                "id": "ID",
+                "actions": "Actions"
+            },
+            "actions": {
+                "manageCities": "Manage Cities",
+                "edit": "Edit Province",
+                "delete": "Delete Province"
+            },
+            "create": {
+                "title": "Add Province",
+                "subtitle": "Enter the information for the new province.",
+                "submit": "Create Province",
+                "creating": "Creating...",
+                "error": "Failed to create province"
+            },
+            "update": {
+                "title": "Edit Province",
+                "subtitle": "Update the province name.",
+                "updating": "Updating...",
+                "loadError": "Failed to load province information",
+                "error": "Failed to update province"
+            },
+            "confirm": {
+                "deleteTitle": "Delete Province",
+                "deleteMessage": "Are you sure you want to delete the province \"{{name}}\"?",
+                "deleteDescription": "All cities associated with this province will also be permanently deleted. This operation cannot be undone."
+            },
+            "validation": {
+                "nameMin": "Province name must be at least 2 characters.",
+                "nameMax": "Province name must not exceed 120 characters.",
+                "nameInvalid": "Province name may only contain letters, spaces, hyphens, and apostrophes."
+            }
+        },
+        "cities": {
+            "title": "Province Cities",
+            "subtitle": "Manage the cities associated with this province.",
+            "searchPlaceholder": "Search cities...",
+            "loadError": "Failed to load cities.",
+            "empty": "No cities found.",
+            "fields": {
+                "name": "City Name"
+            },
+            "table": {
+                "id": "ID",
+                "actions": "Actions"
+            },
+            "actions": {
+                "edit": "Edit City",
+                "delete": "Delete City"
+            },
+            "create": {
+                "title": "Create City",
+                "subtitle": "Add a new city to this province.",
+                "submit": "Add City",
+                "creating": "Creating...",
+                "error": "Failed to create city."
+            },
+            "update": {
+                "title": "Update City",
+                "subtitle": "Edit the city information.",
+                "updating": "Saving...",
+                "loadError": "Failed to load city information.",
+                "error": "Failed to update city."
+            },
+            "confirm": {
+                "deleteTitle": "Delete City",
+                "deleteMessage": "Are you sure you want to delete the city \"{{name}}\"?",
+                "deleteDescription": "This action cannot be undone."
+            },
+            "validation": {
+                "nameRequired": "City name is required.",
+                "nameInvalid": "City name contains invalid characters."
             }
         }
     }

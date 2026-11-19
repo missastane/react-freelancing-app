@@ -39,6 +39,7 @@ import ResetPasswordPage from "../components/auth/ResetPasswordPage"
 import AdminRoles from "../components/admin/pages/roles/AdminRoles";
 import AdminPermissions from "../components/admin/pages/permissions/AdminPermissions";
 import AdminDepartments from "../components/admin/pages/departments/AdminDepartments";
+import AdminProvinces from "../components/admin/pages/provinces/AdminProvinces";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -84,6 +85,7 @@ export const Router = createBrowserRouter([
               { path: "permissions", element: <AdminPermissions /> },
               { path: "departments", element: <AdminDepartments /> },
               { path: "skills", element: <AdminSkills /> },
+              { path: "provinces", element: <AdminProvinces /> },
               { path: "projects", element: <AdminProjectCategories /> },
               { path: "tickets", element: <AdminTickets /> },
               { path: "content", element: <AdminContent /> },

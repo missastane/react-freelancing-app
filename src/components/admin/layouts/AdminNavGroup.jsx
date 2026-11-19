@@ -16,8 +16,10 @@ import AdminNavItem from "./AdminNavItem";
 export default function AdminNavGroup({ label, icon, items }) {
     const location = useLocation();
 
-    const isActiveGroup = items.some((item) =>
-        location.pathname.startsWith(item.to)
+    const isActiveGroup = items.some(
+        (item) =>
+            location.pathname === item.to ||
+            location.pathname.startsWith(`${item.to}/`)
     );
 
     const [open, setOpen] = useState(isActiveGroup);
@@ -33,33 +35,85 @@ export default function AdminNavGroup({ label, icon, items }) {
             <ListItemButton
                 onClick={() => setOpen((prev) => !prev)}
                 sx={{
-                    borderRadius: 2,
-                    mb: 0.5,
-                    bgcolor: isActiveGroup ? "action.selected" : "transparent",
+                    minHeight: 40,
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 1.5,
+                    mb: 0.35,
+                    color: isActiveGroup ? "primary.main" : "text.primary",
+                    bgcolor: isActiveGroup
+                        ? "action.hover"
+                        : "transparent",
+                    transition: "all 0.18s ease",
+
+                    "&:hover": {
+                        bgcolor: "action.hover",
+                    },
+
+                    "& .MuiListItemIcon-root": {
+                        minWidth: 34,
+                        color: "inherit",
+                        "& .MuiSvgIcon-root": {
+                            fontSize: 19,
+                        },
+                    },
+
+                    "& .MuiListItemText-primary": {
+                        fontSize: "0.84rem",
+                        fontWeight: isActiveGroup ? 700 : 600,
+                        lineHeight: 1.5,
+                    },
+
+                    "& .MuiSvgIcon-root": {
+                        fontSize: 19,
+                    },
                 }}
             >
-                <ListItemIcon sx={{ minWidth: 40 }}>
+                <ListItemIcon>
                     {icon}
                 </ListItemIcon>
 
                 <ListItemText primary={label} />
 
                 {open ? (
-                    <ExpandLessRoundedIcon fontSize="small" />
+                    <ExpandLessRoundedIcon />
                 ) : (
-                    <ExpandMoreRoundedIcon fontSize="small" />
+                    <ExpandMoreRoundedIcon />
                 )}
             </ListItemButton>
 
             <Collapse in={open} timeout="auto" unmountOnExit>
-                <List disablePadding>
+                <List
+                    disablePadding
+                    sx={{
+                        ml: 2.1,
+                        pl: 1,
+                        borderLeft: 1,
+                        borderColor: "divider",
+                    }}
+                >
                     {items.map((item) => (
                         <AdminNavItem
                             key={item.to}
                             {...item}
                             label={item.label}
                             sx={{
-                                pl: 4,
+                                minHeight: 34,
+                                pl: 1.5,
+                                py: 0.35,
+                                mb: 0.2,
+
+                                "& .MuiListItemIcon-root": {
+                                    minWidth: 30,
+                                    "& .MuiSvgIcon-root": {
+                                        fontSize: 17,
+                                    },
+                                },
+
+                                "& .MuiListItemText-primary": {
+                                    fontSize: "0.78rem",
+                                    fontWeight: 500,
+                                },
                             }}
                         />
                     ))}

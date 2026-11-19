@@ -1,49 +1,26 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   AppBar,
-  Avatar,
-  Badge,
   Box,
   IconButton,
   InputBase,
-  Menu,
-  MenuItem,
   Toolbar,
-  Tooltip,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import { useTheme, alpha } from "@mui/material/styles";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { navItemsByRole } from "../../app/navConfig";
-import { palettes } from "../../theme/palettes";
-import { useThemeSettings } from "../../theme/ThemeSettingsContext";
-import RoleSwitch from "./RoleSwitch";
 import { useRole } from "../../context/RoleContext";
-import { useAuth } from "../../context/AuthContext";
-import { useLogout } from "../../hooks/auth/useLogout";
-import LanguageSwitcher from "../common/LanguageSwitcher";
+import HeaderActions from "../common/header/HeaderActions";
 
 export default function Header({ onOpenDrawer }) {
   const theme = useTheme();
   const isLg = useMediaQuery(theme.breakpoints.up("lg"));
   const { pathname } = useLocation();
-
-  const { settings, toggleMode, setPaletteKey } = useThemeSettings();
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-
-  const {
-    mutateAsync: logoutRequest,
-    isPending: isLoggingOut,
-  } = useLogout();
 
   const { activeRole, setActiveRole } = useRole();
 
@@ -53,26 +30,6 @@ export default function Header({ onOpenDrawer }) {
     return items.find((x) => x.path === first)?.label ?? "Dashboard";
   }, [pathname, activeRole]);
 
-  const [anchorPalette, setAnchorPalette] = useState(null);
-  const [anchorUser, setAnchorUser] = useState(null);
-
-  const openPalette = (e) => setAnchorPalette(e.currentTarget);
-  const closePalette = () => setAnchorPalette(null);
-
-  const openUser = (e) => setAnchorUser(e.currentTarget);
-  const closeUser = () => setAnchorUser(null);
-  const handleLogout = async () => {
-    closeUser();
-
-    try {
-      await logoutRequest();
-    } catch (error) {
-      console.error("Logout request failed:", error);
-    } finally {
-      logout();
-      navigate("/auth/login", { replace: true });
-    }
-  };
   return (
     <AppBar
       position="fixed"
@@ -124,79 +81,7 @@ export default function Header({ onOpenDrawer }) {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <LanguageSwitcher />
-
-        <Tooltip title={settings.mode === "dark" ? "Switch to light" : "Switch to dark"}>
-          <IconButton onClick={toggleMode} sx={{ color: "text.primary" }}>
-            {settings.mode === "dark" ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Palette">
-          <IconButton onClick={openPalette} sx={{ color: "text.primary" }}>
-            <PaletteOutlinedIcon />
-          </IconButton>
-        </Tooltip>
-
-        <Menu anchorEl={anchorPalette} open={!!anchorPalette} onClose={closePalette}>
-          {Object.entries(palettes).map(([key, p]) => (
-            <MenuItem
-              key={key}
-              selected={settings.paletteKey === key}
-              onClick={() => {
-                setPaletteKey(key);
-                closePalette();
-              }}
-              sx={{ gap: 1.2 }}
-            >
-              <Box
-                sx={{
-                  width: 14,
-                  height: 14,
-                  borderRadius: 999,
-                  bgcolor: p.primary,
-                  border: `1px solid ${theme.palette.surface.border}`,
-                }}
-              />
-              {p.name}
-            </MenuItem>
-          ))}
-        </Menu>
-
-        <RoleSwitch
-          value={activeRole}
-          onChange={(role) => {
-            setActiveRole(role);
-            closePalette();
-            closeUser();
-            navigate(role === "employer" ? "/my-projects" : "/projects");
-          }}
-        />
-
-        <Tooltip title="Notifications">
-          <IconButton sx={{ color: "text.primary" }}>
-            <Badge badgeContent={2} color="primary">
-              <NotificationsNoneIcon />
-            </Badge>
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Account">
-          <IconButton onClick={openUser} sx={{ p: 0.5 }}>
-            <Avatar sx={{ width: 34, height: 34 }}>A</Avatar>
-          </IconButton>
-        </Tooltip>
-
-        <Menu anchorEl={anchorUser} open={!!anchorUser} onClose={closeUser}>
-          <MenuItem onClick={closeUser}>Profile</MenuItem>
-          <MenuItem onClick={closeUser}>Settings</MenuItem>
-          <MenuItem
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-          >
-            {isLoggingOut ? "Logging out..." : "Logout"}
-          </MenuItem>
-        </Menu>
+        <HeaderActions showRoleSwitch />
       </Toolbar>
     </AppBar>
   );

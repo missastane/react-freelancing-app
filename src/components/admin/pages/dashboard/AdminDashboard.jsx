@@ -60,7 +60,8 @@ export default function AdminDashboard() {
       />
 
       {/* ROW 1 */}
-      <Grid container spacing={2.5} alignItems="stretch">
+      <Grid container sx={12} spacing={2.5} alignItems="stretch">
+        
         <Grid item xs={12} lg={8} sx={{ display: "flex" }}>
           <SectionCard title="Site Overview" sx={{ width: "100%" }}>
             <Grid container spacing={2}>
