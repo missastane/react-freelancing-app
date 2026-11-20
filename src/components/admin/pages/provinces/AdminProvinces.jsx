@@ -71,7 +71,7 @@ export default function AdminProvinces() {
         search,
     });
 
-    const provinces = data?.data?.data ?? [];
+    const provinces = data?.data ?? [];
     const total = data?.total ?? 0;
 
     const handleDeleteProvince = async (province) => {

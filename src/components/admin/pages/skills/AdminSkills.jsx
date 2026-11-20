@@ -104,7 +104,7 @@ export default function AdminSkills() {
   });
 
   // Extract paginated response
-  const skills = data?.data?.data ?? [];
+  const skills = data?.data?? [];
   const total = data?.total ?? 0;
 
   const columns = [

@@ -81,7 +81,7 @@ export default function AdminCitiesDialog({
         search,
     });
 
-    const cities = data?.data?.data ?? [];
+    const cities = data?.data ?? [];
     const total = data?.total ?? 0;
 
 

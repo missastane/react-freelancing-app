@@ -74,7 +74,7 @@ export default function AdminRoles() {
     });
 
     // Extract paginated response
-    const roles = data?.data?.data ?? [];
+    const roles = data?.data ?? [];
     const total = data?.total ?? 0;
 
     const handleDeleteRole = async (role) => {

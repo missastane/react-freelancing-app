@@ -100,7 +100,7 @@ export default function AdminPermissions() {
         }
     };
     // Extract paginated response
-    const permissions = data?.data?.data ?? [];
+    const permissions = data?.data ?? [];
     const total = data?.total ?? 0;
 
     const columns = [

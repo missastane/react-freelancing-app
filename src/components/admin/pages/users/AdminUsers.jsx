@@ -103,7 +103,7 @@ export default function AdminUsers() {
     });
 
     // Extract paginated response
-    const admins = data?.data?.data ?? [];
+    const admins = data?.data ?? [];
     const total = data?.total ?? 0;
 
 
