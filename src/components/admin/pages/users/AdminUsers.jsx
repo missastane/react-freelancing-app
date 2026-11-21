@@ -104,7 +104,7 @@ export default function AdminUsers() {
 
     // Extract paginated response
     const admins = data?.data ?? [];
-    const total = data?.total ?? 0;
+    const total = data?.meta?.total ?? 0;
 
 
 

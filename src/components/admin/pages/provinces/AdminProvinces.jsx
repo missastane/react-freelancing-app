@@ -72,7 +72,7 @@ export default function AdminProvinces() {
     });
 
     const provinces = data?.data ?? [];
-    const total = data?.total ?? 0;
+    const total = data?.meta?.total ?? 0;
 
     const handleDeleteProvince = async (province) => {
         const confirmed = await confirm({
