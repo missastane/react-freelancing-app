@@ -32,7 +32,14 @@
         "passwordRequired": "Password is required.",
         "passwordMismatch": "Passwords do not match.",
         "emailRequired": "Email address is required.",
-        "emailInvalid": "Please enter a valid email address."
+        "emailInvalid": "Please enter a valid email address.",
+        "required": "This field is required",
+        "min": "Must be at least {{min}} characters",
+        "max": "Must be no more than {{max}} characters",
+        "numeric": "Must be a numeric value",
+        "integer": "Must be an integer",
+        "invalidFormat": "Invalid format",
+        "range": "Must be between {{min}} and {{max}}"
     },
     "auth": {
         "layout": {
@@ -120,6 +127,8 @@
             "skills": "Skills",
             "localeManagement": "Location Management",
             "provinces": "Provinces",
+            "financialManagement": "Financial Management",
+            "subscriptions": "Subscriptions",
             "projects": "Projects",
             "tickets": "Tickets",
             "content": "Content",
@@ -480,6 +489,92 @@
             "validation": {
                 "nameRequired": "City name is required.",
                 "nameInvalid": "City name contains invalid characters."
+            }
+        },
+        "subscriptions": {
+            "title": "Subscription Management",
+            "subtitle": "Manage subscription plans and their limitations",
+            "add": "Add Subscription",
+            "searchPlaceholder": "Search subscriptions...",
+            "empty": "No subscriptions found",
+            "loadError": "Failed to load subscriptions",
+            "table": {
+                "id": "ID",
+                "actions": "Actions"
+            },
+            "actions": {
+                "show": "View details",
+                "edit": "Edit",
+                "delete": "Delete"
+            },
+            "create": {
+                "title": "Add Subscription",
+                "subtitle": "Enter subscription plan information and its features",
+                "submit": "Create Subscription",
+                "creating": "Creating...",
+                "error": "Failed to create subscription",
+                "basicInfo": "Basic Subscription Information",
+                "basicInfoDescription": "Set the subscription name, price, duration, and commission rate",
+                "monthlyLimits": "Monthly Limits",
+                "monthlyLimitsDescription": "Define the monthly usage limits for this subscription",
+                "features": "Subscription Features",
+                "featuresDescription": "Define the capabilities and benefits included in this plan",
+                "addFeature": "Add Feature",
+                "removeFeature": "Remove Feature",
+                "featureNumber": "Feature #{{number}}",
+                "noFeatures": "No features have been added to this subscription yet"
+            },
+            "fields": {
+                "name": "Subscription Name",
+                "amount": "Subscription Price",
+                "durationDays": "Duration (Days)",
+                "commissionRate": "Commission Rate (%)",
+                "maxTargetPerMonth": "Maximum Projects or Proposals per Month",
+                "maxNotificationPerMonth": "Maximum Notifications per Month",
+                "maxEmailPerMonth": "Maximum Emails per Month",
+                "maxSmsPerMonth": "Maximum SMS Messages per Month",
+                "maxViewDetailsPerMonth": "Maximum Detail Views per Month"
+            },
+            "featureFields": {
+                "key": "Feature System Key",
+                "persianKey": "Feature Persian Title",
+                "value": "Feature Value",
+                "valueType": "Value Type",
+                "isLimited": "This feature has a usage limit"
+            },
+            "validation": {
+                "featureKeyRequired": "Feature system key is required",
+                "featurePersianKeyRequired": "Feature Persian title is required",
+                "featureValueRequired": "Feature value is required",
+                "featureValueTypeRequired": "Feature value type is required"
+            },
+            "confirm": {
+                "deleteTitle": "Delete Subscription",
+                "deleteMessage": "Are you sure you want to delete the subscription \"{{name}}\"?",
+                "deleteDescription": "This action cannot be undone."
+            },
+            "details": {
+                "title": "Subscription Details",
+                "subtitle": "View subscription plan information, limits, and features",
+                "basicInfo": "Basic Information",
+                "monthlyLimits": "Monthly Limits",
+                "perMonth": "Per Month",
+                "days": "Days",
+                "features": "Subscription Features",
+                "noFeatures": "No features have been added to this subscription",
+                "limited": "Limited",
+                "unlimited": "Unlimited",
+                "valueType": "Value Type",
+                "createdAt": "Created At",
+                "updatedAt": "Last Updated",
+                "loadError": "Failed to load subscription details"
+            },
+            "update": {
+                "title": "Edit Subscription",
+                "subtitle": "Update subscription name",
+                "updating": "Updating...",
+                "loadError": "Failed to load subscription information",
+                "error": "Failed to update subscription"
             }
         }
     }

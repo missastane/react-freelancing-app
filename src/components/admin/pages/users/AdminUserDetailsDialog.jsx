@@ -47,8 +47,8 @@ export default function AdminUserDetailsDialog({ open, adminId, onClose }) {
     } = useAdminUser(open ? adminId : null);
 
     // Supports both a direct JsonResource response and an API envelope.
-    const admin = data?.data?.data ?? data?.data ?? data;
-    console.log(admin)
+    const admin = data?.data ?? data;
+
     const formatDate = (value) => {
         if (!value) return "—";
 

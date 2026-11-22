@@ -17,6 +17,7 @@ import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 import PublicIcon from "@mui/icons-material/Public";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
 import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
 const drawerWidth = 260;
 
@@ -74,6 +75,18 @@ export default function AdminSidebar() {
                     label: t("admin.sidebar.provinces"),
                     to: "/admin/provinces",
                     icon: <PublicIcon />,
+                },
+            ],
+        },
+        {
+            type: "group",
+            labelKey: "admin.sidebar.financialManagement",
+            icon: <AccountBalanceWalletIcon />,
+            items: [
+                {
+                    label: t("admin.sidebar.subscriptions"),
+                    to: "/admin/subscriptions",
+                    icon: <AccountBalanceWalletIcon />,
                 },
             ],
         },

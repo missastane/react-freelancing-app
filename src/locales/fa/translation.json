@@ -32,7 +32,14 @@
     "passwordRequired": "وارد کردن رمز عبور الزامی است.",
     "passwordMismatch": "رمز عبور و تکرار آن یکسان نیستند.",
     "emailRequired": "وارد کردن آدرس ایمیل الزامی است.",
-    "emailInvalid": "لطفاً یک آدرس ایمیل معتبر وارد کنید."
+    "emailInvalid": "لطفاً یک آدرس ایمیل معتبر وارد کنید.",
+    "required": "این فیلد الزامی است",
+    "min": "مقدار واردشده باید حداقل {{min}} کاراکتر باشد",
+    "max": "مقدار واردشده نباید بیشتر از {{max}} کاراکتر باشد",
+    "numeric": "مقدار باید عددی باشد",
+    "integer": "مقدار باید عدد صحیح باشد",
+    "invalidFormat": "فرمت واردشده معتبر نیست",
+    "range": "مقدار باید بین {{min}} و {{max}} باشد"
   },
   "auth": {
     "layout": {
@@ -120,6 +127,8 @@
       "skills": "مهارت‌ها",
       "localeManagement": "مدیریت مناطق",
       "provinces": "استان‌ها",
+      "financialManagement": "مدیریت مالی",
+      "subscriptions": "اشتراک‌ها",
       "projects": "پروژه‌ها",
       "tickets": "تیکت‌ها",
       "content": "مدیریت محتوا",
@@ -480,6 +489,92 @@
       "validation": {
         "nameRequired": "وارد کردن نام شهر الزامی است.",
         "nameInvalid": "نام شهر شامل کاراکترهای غیرمجاز است."
+      }
+    },
+    "subscriptions": {
+      "title": "مدیریت اشتراک‌ها",
+      "subtitle": "مدیریت پلن‌های اشتراک و محدودیت‌های آن‌ها",
+      "add": "افزودن اشتراک",
+      "searchPlaceholder": "جستجوی اشتراک...",
+      "empty": "اشتراکی یافت نشد",
+      "loadError": "خطا در دریافت اطلاعات اشتراک‌ها",
+      "table": {
+        "id": "شناسه",
+        "actions": "عملیات"
+      },
+      "actions": {
+        "show": "نمایش جزئیات",
+        "edit": "ویرایش",
+        "delete": "حذف"
+      },
+      "create": {
+        "title": "افزودن اشتراک",
+        "subtitle": "اطلاعات پلن اشتراک و ویژگی‌های آن را وارد کنید",
+        "submit": "ثبت اشتراک",
+        "creating": "در حال ثبت...",
+        "error": "خطا در ثبت اشتراک",
+        "basicInfo": "اطلاعات اصلی اشتراک",
+        "basicInfoDescription": "نام، مبلغ، مدت اعتبار و درصد کمیسیون اشتراک را مشخص کنید",
+        "monthlyLimits": "محدودیت‌های ماهانه",
+        "monthlyLimitsDescription": "سقف استفاده از امکانات اشتراک در هر ماه را تعیین کنید",
+        "features": "ویژگی‌های اشتراک",
+        "featuresDescription": "قابلیت‌ها و امکاناتی که در این پلن ارائه می‌شوند را تعریف کنید",
+        "addFeature": "افزودن ویژگی",
+        "removeFeature": "حذف ویژگی",
+        "featureNumber": "ویژگی شماره {{number}}",
+        "noFeatures": "هنوز ویژگی‌ای برای این اشتراک تعریف نشده است"
+      },
+      "fields": {
+        "name": "نام اشتراک",
+        "amount": "مبلغ اشتراک",
+        "durationDays": "مدت اعتبار (روز)",
+        "commissionRate": "درصد کمیسیون سایت",
+        "maxTargetPerMonth": "حداکثر پروژه یا پیشنهاد در ماه",
+        "maxNotificationPerMonth": "حداکثر اعلان در ماه",
+        "maxEmailPerMonth": "حداکثر ایمیل در ماه",
+        "maxSmsPerMonth": "حداکثر پیامک در ماه",
+        "maxViewDetailsPerMonth": "حداکثر مشاهده جزئیات در ماه"
+      },
+      "featureFields": {
+        "key": "شناسه سیستمی ویژگی",
+        "persianKey": "عنوان فارسی ویژگی",
+        "value": "مقدار ویژگی",
+        "valueType": "نوع مقدار",
+        "isLimited": "این ویژگی محدودیت دارد"
+      },
+      "validation": {
+        "featureKeyRequired": "شناسه سیستمی ویژگی الزامی است",
+        "featurePersianKeyRequired": "عنوان فارسی ویژگی الزامی است",
+        "featureValueRequired": "مقدار ویژگی الزامی است",
+        "featureValueTypeRequired": "نوع مقدار ویژگی الزامی است"
+      },
+      "confirm": {
+        "deleteTitle": "حذف اشتراک",
+        "deleteMessage": "آیا از حذف اشتراک «{{name}}» مطمئن هستید؟",
+        "deleteDescription": "این عملیات قابل بازگشت نیست."
+      },
+      "details": {
+        "title": "جزئیات اشتراک",
+        "subtitle": "مشاهده اطلاعات، محدودیت‌ها و ویژگی‌های پلن اشتراک",
+        "basicInfo": "اطلاعات اصلی اشتراک",
+        "monthlyLimits": "محدودیت‌های ماهانه",
+        "perMonth": "در ماه",
+        "days": "روز",
+        "features": "ویژگی‌های اشتراک",
+        "noFeatures": "برای این اشتراک ویژگی‌ای ثبت نشده است",
+        "limited": "دارای محدودیت",
+        "unlimited": "بدون محدودیت",
+        "valueType": "نوع مقدار",
+        "createdAt": "تاریخ ایجاد",
+        "updatedAt": "آخرین بروزرسانی",
+        "loadError": "خطا در دریافت جزئیات اشتراک"
+      },
+      "update": {
+        "title": "ویرایش اشتراک",
+        "subtitle": "تغییر نام اشتراک",
+        "updating": "در حال ویرایش...",
+        "loadError": "خطا در دریافت اطلاعات اشتراک",
+        "error": "ویرایش اشتراک با خطا مواجه شد"
       }
     }
   }
