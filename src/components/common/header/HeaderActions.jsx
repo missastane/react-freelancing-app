@@ -167,8 +167,23 @@ export default function HeaderActions({ showRoleSwitch = false }) {
                 open={!!anchorUser}
                 onClose={closeUser}
             >
-                <MenuItem onClick={closeUser}>Profile</MenuItem>
-                <MenuItem onClick={closeUser}>Settings</MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        closeUser();
+                        navigate("/profile");
+                    }}
+                >
+                    Profile
+                </MenuItem>
+
+                <MenuItem
+                    onClick={() => {
+                        closeUser();
+                        navigate("/settings");
+                    }}
+                >
+                    Settings
+                </MenuItem>
                 <MenuItem
                     onClick={handleLogout}
                     disabled={isLoggingOut}

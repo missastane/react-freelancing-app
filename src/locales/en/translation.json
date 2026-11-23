@@ -24,7 +24,8 @@
         "retry": "Retry",
         "cancel": "cancel",
         "save": "Save",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "edit": "Edit"
     },
     "validation": {
         "passwordMin": "Password must be at least 8 characters.",
@@ -48,6 +49,48 @@
             "feature2": "Proposals, chat, and file sharing",
             "feature3": "Build a standout freelancer profile",
             "footer": "UI inspired by modern SaaS dashboards"
+        },
+        "emailVerification": {
+            "subtitle": "Email verification",
+            "goToLogin": "Go to Login",
+            "footer": "Thank you for joining our platform.",
+            "states": {
+                "success": {
+                    "title": "Email Verified!",
+                    "message": "Your email address has been successfully verified. You can now sign in to your account."
+                },
+                "alreadyVerified": {
+                    "title": "Already Verified",
+                    "message": "Your email address has already been verified. You can sign in to your account."
+                },
+                "failed": {
+                    "title": "Verification Failed",
+                    "message": "This verification link is invalid or has expired. Please request a new verification email."
+                }
+            }
+        },
+        "emailChangeVerification": {
+            "subtitle": "Email change verification",
+            "backToAccount": "Back to Account",
+            "footer": "You can manage your account information from your settings.",
+            "states": {
+                "success": {
+                    "title": "Email Changed Successfully!",
+                    "message": "Your email address has been successfully changed and verified."
+                },
+                "expired": {
+                    "title": "Link Expired",
+                    "message": "This email change verification link has expired. Please request another email change from your account settings."
+                },
+                "emailTaken": {
+                    "title": "Email Already Taken",
+                    "message": "This email address is already associated with another account. Please choose a different email address."
+                },
+                "failed": {
+                    "title": "Verification Failed",
+                    "message": "This email change verification link is invalid or has already been used."
+                }
+            }
         },
         "login": {
             "pageTitle": "Sign in",
@@ -112,6 +155,115 @@
             "retrying": "Retrying...",
             "tryAgain": "Try again",
             "goToLogin": "Go to login"
+        }
+    },
+    "profile": {
+        "emailChange": {
+            "title": "Change Email Address",
+            "subtitle": "Enter your new email address and current password to continue.",
+            "submit": "Send Verification Link",
+            "submitting": "Sending...",
+            "fields": {
+                "email": "New Email Address",
+                "currentPassword": "Current Password"
+            },
+            "validation": {
+                "emailRequired": "Please enter your new email address.",
+                "emailInvalid": "Please enter a valid email address.",
+                "passwordRequired": "Please enter your current password."
+            }
+        },
+        "mobileChange": {
+            "title": "Change Mobile Number",
+            "subtitle": "Enter your new mobile number.",
+            "otpSubtitle": "Enter the verification code sent to {{mobile}}.",
+            "submit": "Send Verification Code",
+            "submitting": "Sending...",
+            "confirm": "Verify Mobile Number",
+            "verifying": "Verifying...",
+            "timer": "Time remaining: {{time}}",
+            "expired": "The verification code has expired.",
+            "resend": "Resend Code",
+            "fields": {
+                "mobile": "New Mobile Number",
+                "otp": "Six-digit Verification Code"
+            },
+            "validation": {
+                "mobileRequired": "Mobile number is required.",
+                "mobileInvalid": "Invalid mobile number.",
+                "otpRequired": "Verification code is required.",
+                "otpInvalid": "Verification code must contain exactly 6 digits."
+            }
+        }
+    },
+    "settings": {
+        "layout": {
+            "title": "Settings",
+            "subtitle": "Manage account preferences, security, and privacy.",
+            "preferences": "Preferences",
+            "preferencesDescription": "Choose a section to update.",
+            "menu": {
+                "account": "Account",
+                "security": "Security",
+                "notifications": "Notifications",
+                "privacy": "Privacy",
+                "connections": "Connected accounts",
+                "activity": "Activity log"
+            }
+        },
+        "account": {
+            "overview": {
+                "title": "My Account",
+                "subtitle": "Manage your account information and security."
+            },
+            "personalInfo": {
+                "title": "Personal Information",
+                "user": "User",
+                "username": "Username",
+                "firstName": "First name",
+                "lastName": "Last name",
+                "nationalCode": "National code",
+                "birthDate": "Birth date",
+                "gender": {
+                    "label": "Gender",
+                    "male": "Male",
+                    "female": "Female"
+                }
+            },
+            "contactInfo": {
+                "title": "Contact Information",
+                "email": "Email address",
+                "mobile": "Mobile number",
+                "verified": "Verified",
+                "notVerified": "Not verified"
+            },
+            "aboutMe": {
+                "title": "About Me",
+                "empty": "No information provided yet."
+            },
+            "identity": {
+                "title": "Identity",
+                "subtitle": "These details are used for login, recovery, and security alerts.",
+                "email": "Email address",
+                "phone": "Phone number",
+                "verified": "Verified",
+                "unverified": "Unverified",
+                "unverifiedHint": "Unverified contact details can reduce account recovery options. Consider verifying them."
+            },
+            "page": {
+                "title": "Account",
+                "freelancerSubtitle": "Manage your login identity and account settings.",
+                "employerSubtitle": "Manage your account identity and access settings.",
+                "freelancerView": "Freelancer View",
+                "employerView": "Employer View"
+            },
+            "personalInformation": {
+                "title": "Personal information",
+                "subtitle": "View and manage your personal account information.",
+                "overview": "Personal information overview",
+                "description": "View your name, national code, birth date and other personal details.",
+                "viewDetails": "View details"
+            }
         }
     },
     "admin": {

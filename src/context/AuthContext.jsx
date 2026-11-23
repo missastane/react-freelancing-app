@@ -8,7 +8,7 @@ import React, {
     useCallback,
 } from "react";
 
-import { useProfile } from "../hooks/auth/useProfile";
+import { useMe } from "../hooks/auth/useMe";
 import {
     setAccessToken,
     getAccessToken,
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     // Prevent duplicate bootstrap refresh requests.
     const bootstrapAttemptedRef = useRef(false);
 
-    const profileQuery = useProfile(Boolean(token));
+    const meQuery = useMe(Boolean(token));
 
     const isAuthenticated = Boolean(token);
 
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
     // Start authentication after receiving the access token.
     const startAuth = (accessToken) => {
         queryClient.removeQueries({
-            queryKey: ["auth", "profile"],
+            queryKey: ["auth", "me"],
             exact: true,
         });
 
@@ -120,32 +120,32 @@ export const AuthProvider = ({ children }) => {
         setIsInitializing(true);
     };
 
-    // Handle profile request result.
+    // Handle authenticated user request result.
     useEffect(() => {
         if (!token) {
             return;
         }
 
-        if (profileQuery.isSuccess) {
-            setUser(profileQuery.data?.data ?? null);
+        if (meQuery.isSuccess) {
+            setUser(meQuery.data?.data ?? null);
 
             if (shouldShowWelcomeMessage) {
-                setLoginMessage(profileQuery.data?.message ?? null);
+                setLoginMessage(meQuery.data?.message ?? null);
                 setShouldShowWelcomeMessage(false);
             }
 
             setIsInitializing(false);
         }
 
-        if (profileQuery.isError) {
+        if (meQuery.isError) {
             setIsInitializing(false);
 
-            const status = profileQuery.error?.response?.status;
+            const status = meQuery.error?.response?.status;
 
             // A 401 means the current session is no longer valid.
             if (status === 401) {
                 queryClient.removeQueries({
-                    queryKey: ["auth", "profile"],
+                    queryKey: ["auth", "me"],
                     exact: true,
                 });
 
@@ -161,10 +161,10 @@ export const AuthProvider = ({ children }) => {
     }, [
         token,
         shouldShowWelcomeMessage,
-        profileQuery.isSuccess,
-        profileQuery.isError,
-        profileQuery.data,
-        profileQuery.error,
+        meQuery.isSuccess,
+        meQuery.isError,
+        meQuery.data,
+        meQuery.error,
     ]);
 
     // Listen for authentication events from Axios.
@@ -178,7 +178,7 @@ export const AuthProvider = ({ children }) => {
 
         const handleSessionExpired = (event) => {
             queryClient.removeQueries({
-                queryKey: ["auth", "profile"],
+                queryKey: ["auth", "me"],
                 exact: true,
             });
 
@@ -218,7 +218,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         queryClient.removeQueries({
-            queryKey: ["auth", "profile"],
+            queryKey: ["auth", "me"],
             exact: true,
         });
 
@@ -244,13 +244,13 @@ export const AuthProvider = ({ children }) => {
         bootstrapError,
         retryBootstrap,
 
-        authError: token && profileQuery.isError
-            ? profileQuery.error?.response?.data?.message ||
+        authError: token && meQuery.isError
+            ? meQuery.error?.response?.data?.message ||
             "Unable to load your profile. Please try again."
             : null,
 
-        retryProfile: profileQuery.refetch,
-        isProfileFetching: profileQuery.isFetching,
+        retryProfile: meQuery.refetch,
+        isProfileFetching: meQuery.isFetching,
     };
 
     return (

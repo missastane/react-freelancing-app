@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useSearchParams, Link as RouterLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import {
   Alert,
@@ -17,28 +18,29 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AuthLayout from "./AuthLayout";
 
 export default function EmailVerifiedPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
   const status = searchParams.get("status");
 
   const verificationStates = {
     success: {
-      title: "Email Verified!",
-      message: "Your email address has been successfully verified. You can now sign in to your account.",
+      title: t("auth.emailVerification.states.success.title"),
+      message: t("auth.emailVerification.states.success.message"),
       severity: "success",
       icon: <CheckCircleOutlineIcon sx={{ fontSize: 64, color: "success.main" }} />,
     },
 
     already_verified: {
-      title: "Already Verified",
-      message: "Your email address has already been verified. You can sign in to your account.",
+      title: t("auth.emailVerification.states.alreadyVerified.title"),
+      message: t("auth.emailVerification.states.alreadyVerified.message"),
       severity: "info",
       icon: <InfoOutlinedIcon sx={{ fontSize: 64, color: "info.main" }} />,
     },
 
     failed: {
-      title: "Verification Failed",
-      message: "This verification link is invalid or has expired. Please request a new verification email.",
+      title: t("auth.emailVerification.states.failed.title"),
+      message: t("auth.emailVerification.states.failed.message"),
       severity: "error",
       icon: <ErrorOutlineIcon sx={{ fontSize: 64, color: "error.main" }} />,
     },
@@ -50,17 +52,14 @@ export default function EmailVerifiedPage() {
   return (
     <AuthLayout
       title={currentState.title}
-      subtitle="Email verification"
+      subtitle={t("auth.emailVerification.subtitle")}
     >
       <Stack spacing={3} alignItems="center">
         <Box sx={{ py: 2 }}>
           {currentState.icon}
         </Box>
 
-        <Alert
-          severity={currentState.severity}
-          sx={{ width: "100%" }}
-        >
+        <Alert severity={currentState.severity} sx={{ width: "100%" }}>
           {currentState.message}
         </Alert>
 
@@ -72,7 +71,7 @@ export default function EmailVerifiedPage() {
           fullWidth
           sx={{ py: 1.2 }}
         >
-          Go to Login
+          {t("auth.emailVerification.goToLogin")}
         </Button>
 
         <Typography
@@ -80,7 +79,7 @@ export default function EmailVerifiedPage() {
           color="text.secondary"
           textAlign="center"
         >
-          Thank you for joining our platform.
+          {t("auth.emailVerification.footer")}
         </Typography>
       </Stack>
     </AuthLayout>

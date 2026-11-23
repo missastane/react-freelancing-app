@@ -5,7 +5,7 @@ import ProfileLayout from "./ProfileLayut";
 import FreelancerProfile from "../freelancer/FreelancerProfile";
 import EmployerProfile from "../employer/EmployerProfile";
 
-export default function ProfilePage() {
+export default function ProfessionalProfilePage() {
   const { activeRole } = useRole(); // "freelancer" | "employer"
 
   return (

@@ -13,8 +13,7 @@ import PaymentsPage from "../components/finance/employer/PaymentsPage";
 import EarningsPage from "../components/finance/freelancer/EarningsPage";
 import ContractsPage from "../components/contracts/ContractsPage";
 import ContractWorkspacePage from "../components/contracts/ContractWorkSpacePage";
-import ProfilePage from "../components/profile/shared/ProfilePage";
-import AccountSettings from "../components/setting/shared/AccountSettings";
+import AccountSettings from "../components/setting/Account/AccountSettings";
 import SecuritySettings from "../components/setting/shared/SecuritySettings";
 import NotificationsSettings from "../components/setting/shared/NotificationsSettings";
 import SettingsLayout from "../components/setting/shared/SettingsLayout";
@@ -41,6 +40,9 @@ import AdminPermissions from "../components/admin/pages/permissions/AdminPermiss
 import AdminDepartments from "../components/admin/pages/departments/AdminDepartments";
 import AdminProvinces from "../components/admin/pages/provinces/AdminProvinces";
 import AdminSubscriptions from "../components/admin/pages/subscriptions/AdminSubscriptions";
+import ProfessionalProfilePage from "../components/profile/shared/ProfessionalProfilePage";
+import AccountOverview from "../components/setting/Account/AccountOverview/AccountOverview";
+import EmailChangeVerifiedPage from "../components/auth/EmailChangeVerifiedPage";
 
 const Placeholder = ({ title }) => (
   <div style={{ padding: 20 }}>{title}</div>
@@ -59,6 +61,10 @@ export const Router = createBrowserRouter([
       {
         path: "verify-email",
         element: <VerifyEmailPage />,
+      },
+      {
+        path: "email-change-verified",
+        element: <EmailChangeVerifiedPage />,
       },
       {
         path: "forgot-password",
@@ -108,7 +114,7 @@ export const Router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: "dashboard", element: <RoleBasedDashboard /> },
-          { path: "profile", element: <ProfilePage /> },
+          { path: "profile", element: <ProfessionalProfilePage /> },
 
           // freelancer
           { path: "projects", element: <ProjectsPage /> },
@@ -131,7 +137,13 @@ export const Router = createBrowserRouter([
             element: <SettingsLayout />,
             children: [
               { index: true, element: <Navigate to="account" replace /> },
-              { path: "account", element: <AccountSettings /> },
+              {
+                path: "account",
+                children: [
+                  { index: true, element: <AccountSettings /> },
+                  { path: "overview", element: <AccountOverview /> },
+                ],
+              },
               { path: "security", element: <SecuritySettings /> },
               { path: "notifications", element: <NotificationsSettings /> },
               { path: "privacy", element: <PrivacySettings /> },
