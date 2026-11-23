@@ -44,7 +44,17 @@ export const logout = async () => {
     return response.data;
 };
 
+export const getMe = async () => {
+    const response = await api.get(`${authPrefix}/me`);
+    return response.data;
+};
+
 export const getProfile = async () => {
-    const response = await api.get(`/profile`);
+    const response = await api.get(`/admin/profile`);
+    return response.data;
+};
+
+export const getCustomerProfile = async () => {
+    const response = await api.get("/profile");
     return response.data;
 };
