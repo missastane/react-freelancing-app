@@ -1,149 +1,126 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import {
-    Box,
-    Button,
-    Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Button, Chip, Stack, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+
+import { useTranslation } from "react-i18next";
 
 import AccountSection from "./AccountSection";
 import AccountRow from "./AccountRow";
+import AccountDeletionDialog from "./AccountDeletionDialog";
+
+import { useAuth } from "../../../context/AuthContext";
+import { useCancelAccountDeletion } from "../../../hooks/profile/useAccountDeletion";
+import { useConfirmDialog } from "../../../hooks/useConfirmDialog";
+import { useNotification } from "../../../hooks/useNotification";
+
+import { formatLocalizedDate } from "../../../utils/date";
 
 export default function DeleteAccountSection() {
-    const theme = useTheme();
-    const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
-    const [deleteDialog, setDeleteDialog] = useState({
-        open: false,
-        confirmText: "",
-    });
+    const { user } = useAuth();
+    const { confirm } = useConfirmDialog();
+    const { showNotification } = useNotification();
 
-    const surfaceHint = {
-        borderRadius: 2,
-        border: `1px solid ${
-            theme.palette.surface?.borderTint ?? theme.palette.divider
-        }`,
-        backgroundColor: theme.palette.surface?.soft ?? "transparent",
-        p: 1.25,
-    };
+    const [dialogOpen, setDialogOpen] = useState(false);
 
-    const canDelete =
-        deleteDialog.confirmText.trim().toLowerCase() === "delete";
+    const cancelMutation = useCancelAccountDeletion();
 
-    const handleClose = () => {
-        setDeleteDialog({
-            open: false,
-            confirmText: "",
+    const deletionRequest = user?.account_deletion_request;
+
+    const handleCancelRequest = async () => {
+        const confirmed = await confirm({
+            title: t("settings.account.accountDeletion.confirm.cancelTitle"),
+            message: t("settings.account.accountDeletion.confirm.cancelMessage"),
+            description: t("settings.account.accountDeletion.confirm.cancelDescription"),
+            confirmText: t("settings.account.accountDeletion.confirm.cancelAction"),
+            cancelText: t("common.cancel"),
+            confirmColor: "error",
+            icon: <Delete />,
         });
-    };
 
-    const confirmDelete = () => {
-        if (!canDelete) return;
+        if (!confirmed) return;
 
-        handleClose();
+        try {
+            const response = await cancelMutation.mutateAsync();
 
-        // UI-only: replace this with the account deletion request flow later.
-        navigate("/dashboard");
+            showNotification(response.message, "success");
+        } catch (error) {
+            showNotification(
+                error?.response?.data?.message || t("common.generalError"),
+                "error"
+            );
+        }
     };
 
     return (
         <>
             <AccountSection
-                title="Delete account"
-                subtitle="Permanently delete your account and related data."
-                right={<Chip size="small" label="Danger zone" />}
-            >
-                <Stack spacing={1}>
-                    <AccountRow
-                        title="Delete permanently"
-                        desc="This action cannot be undone."
-                        action={
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() =>
-                                    setDeleteDialog({
-                                        open: true,
-                                        confirmText: "",
-                                    })
-                                }
-                            >
-                                Delete account
-                            </Button>
+                title={t("settings.account.accountDeletion.section.title")}
+                subtitle={t("settings.account.accountDeletion.section.subtitle")}
+                right={
+                    <Chip
+                        size="small"
+                        color={deletionRequest ? "warning" : "default"}
+                        label={
+                            deletionRequest
+                                ? t("settings.account.accountDeletion.section.pending")
+                                : t("settings.account.accountDeletion.section.badge")
                         }
                     />
+                }
+            >
+                <Stack spacing={2}>
+                    {deletionRequest ? (
+                        <>
+                            <AccountRow
+                                title={t("settings.account.accountDeletion.section.pendingTitle")}
+                                desc={t("settings.account.accountDeletion.section.pendingDescription")}
+                                action={
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        onClick={handleCancelRequest}
+                                        disabled={cancelMutation.isPending}
+                                    >
+                                        {t("settings.account.accountDeletion.section.cancelButton")}
+                                    </Button>
+                                }
+                            />
 
-                    <Box sx={{ ...surfaceHint, mt: 1 }}>
-                        <Typography variant="body2" color="text.secondary">
-                            If you’re unsure, consider <b>deactivating</b> instead.
-                        </Typography>
-                    </Box>
+                            <Typography variant="body2" color="text.secondary">
+                                {t("settings.account.accountDeletion.section.scheduledFor", {
+                                    date: formatLocalizedDate(
+                                        deletionRequest.scheduled_for,
+                                        i18n.language
+                                    ),
+                                })}
+                            </Typography>
+                        </>
+                    ) : (
+                        <AccountRow
+                            title={t("settings.account.accountDeletion.section.rowTitle")}
+                            desc={t("settings.account.accountDeletion.section.rowDescription")}
+                            action={
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => setDialogOpen(true)}
+                                >
+                                    {t("settings.account.accountDeletion.section.button")}
+                                </Button>
+                            }
+                        />
+                    )}
                 </Stack>
             </AccountSection>
 
-            <Dialog
-                open={deleteDialog.open}
-                onClose={handleClose}
-                fullWidth
-                maxWidth="xs"
-            >
-                <DialogTitle>
-                    Delete account permanently?
-                </DialogTitle>
-
-                <DialogContent>
-                    <Stack spacing={1.25} sx={{ pt: 1 }}>
-                        <Typography variant="body2" color="text.secondary">
-                            This will permanently delete your account and
-                            related data. This action cannot be undone.
-                        </Typography>
-
-                        <Box sx={surfaceHint}>
-                            <Typography variant="body2" color="text.secondary">
-                                Type <b>DELETE</b> to confirm.
-                            </Typography>
-                        </Box>
-
-                        <TextField
-                            value={deleteDialog.confirmText}
-                            onChange={(event) =>
-                                setDeleteDialog((previous) => ({
-                                    ...previous,
-                                    confirmText: event.target.value,
-                                }))
-                            }
-                            placeholder="Type DELETE"
-                            fullWidth
-                            size="small"
-                        />
-                    </Stack>
-                </DialogContent>
-
-                <DialogActions sx={{ px: 3, pb: 2.5 }}>
-                    <Button variant="outlined" onClick={handleClose}>
-                        Cancel
-                    </Button>
-
-                    <Button
-                        color="error"
-                        variant="contained"
-                        disabled={!canDelete}
-                        onClick={confirmDelete}
-                    >
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <AccountDeletionDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+            />
         </>
     );
 }

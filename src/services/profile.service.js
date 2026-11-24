@@ -35,3 +35,21 @@ export const confirmMobileChange = async ({ token, otp }) => {
 
     return response.data;
 };
+
+
+export const requestAccountDeletion = async (data) => {
+    const response = await api.post(
+        `${profilePrefix}/account-deletion-requests`,
+        data
+    );
+
+    return response.data;
+};
+
+export const cancelAccountDeletion = async () => {
+    const response = await api.patch(
+        `${profilePrefix}/account-deletion-requests/cancel`
+    );
+
+    return response.data;
+};

@@ -263,6 +263,45 @@
                 "overview": "Personal information overview",
                 "description": "View your name, national code, birth date and other personal details.",
                 "viewDetails": "View details"
+            },
+            "accountDeletion": {
+                "section": {
+                    "title": "Delete account",
+                    "subtitle": "Request permanent deletion of your account.",
+                    "badge": "Danger zone",
+                    "rowTitle": "Delete my account",
+                    "rowDescription": "You will have 7 days to cancel your deletion request.",
+                    "button": "Request deletion",
+                    "pending": "Pending",
+                    "pendingTitle": "Deletion request pending",
+                    "pendingDescription": "Your account is scheduled for deletion. You can cancel this request before the scheduled date.",
+                    "cancelButton": "Cancel request",
+                    "scheduledFor": "Scheduled deletion date: {{date}}"
+                },
+                "dialog": {
+                    "title": "Request account deletion",
+                    "subtitle": "Please confirm your identity before submitting your request.",
+                    "warning": "Your account will not be deleted immediately. You can cancel this request within 7 days.",
+                    "gracePeriod": "After the 7-day cancellation period, your account deletion request will be processed if all deletion conditions are still satisfied.",
+                    "fields": {
+                        "password": "Current password",
+                        "reason": "Reason for deletion (optional)",
+                        "reasonPlaceholder": "Tell us why you want to delete your account...",
+                        "reasonHelper": "Maximum 1000 characters."
+                    },
+                    "submit": "Submit deletion request",
+                    "submitting": "Submitting..."
+                },
+                "confirm": {
+                    "cancelTitle": "Cancel account deletion?",
+                    "cancelMessage": "Are you sure you want to cancel your account deletion request?",
+                    "cancelDescription": "Your account will remain active and you will be able to continue using its features.",
+                    "cancelAction": "Yes, cancel request"
+                },
+                "validation": {
+                    "passwordRequired": "Please enter your current password.",
+                    "reasonMaxLength": "The reason must not exceed 1000 characters."
+                }
             }
         }
     },
