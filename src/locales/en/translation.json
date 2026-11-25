@@ -25,7 +25,13 @@
         "cancel": "cancel",
         "save": "Save",
         "refresh": "Refresh",
-        "edit": "Edit"
+        "edit": "Edit",
+        "next": "Next",
+        "back": "Back",
+        "verifying": "Verifying...",
+        "verify": "Verify",
+        "done": "Done",
+        "copy": "Copy"
     },
     "validation": {
         "passwordMin": "Password must be at least 8 characters.",
@@ -301,6 +307,59 @@
                 "validation": {
                     "passwordRequired": "Please enter your current password.",
                     "reasonMaxLength": "The reason must not exceed 1000 characters."
+                }
+            }
+        },
+        "security": {
+            "title": "Security",
+            "subtitle": "Protect your account with two-factor authentication, session controls, and security alerts.",
+            "riskyCount": "{{count}} risky",
+            "two_factor": {
+                "title": "Two-factor authentication (2FA)",
+                "subtitle": "Require a verification code when signing in on a new device.",
+                "enabled": "2FA is enabled",
+                "disabled": "2FA is disabled",
+                "enabled_description": "Your account requires a verification code on new devices.",
+                "disabled_description": "Enable 2FA to greatly reduce account takeover risk.",
+                "manage": "Manage",
+                "enable": "Enable 2FA",
+                "recovery_codes": "Recovery codes",
+                "recovery_codes_description": "Use these codes if you lose access to your authenticator.",
+                "regenerate": "Regenerate",
+                "copy": "Copy",
+                "recovery_codes_warning": "Keep recovery codes somewhere safe. Anyone with them can access your account.",
+                "enabledDescription": "Your account requires a verification code on new devices.",
+                "disabledDescription": "Enable 2FA to greatly reduce account takeover risk.",
+                "recoveryCodesHint": "Your two-factor authentication is active. Recovery codes are provided only once during setup. Keep them somewhere safe.",
+                "startError": "Could not start two-factor authentication setup. Please try again.",
+                "confirmError": "Could not verify the authentication code. Please try again.",
+                "disable": "Disable two-factor authentication",
+                "disabling": "Disabling...",
+                "disableError": "Could not disable two-factor authentication. Please try again.",
+                "disableDialog": {
+                    "title": "Disable two-factor authentication",
+                    "subtitle": "Confirm your identity before disabling this security feature.",
+                    "password": "Current password",
+                    "code": "Authentication or recovery code",
+                    "codeHint": "Enter the 6-digit code from your authenticator app or one of your recovery codes."
+                },
+                "steps": {
+                    "authenticator": "Connect authenticator",
+                    "verify": "Verify code",
+                    "recovery": "Recovery codes"
+                },
+                "setup": {
+                    "title": "Set up two-factor authentication",
+                    "subtitle": "Add an extra layer of security to your account.",
+                    "step": "Step {{current}} of {{total}}",
+                    "scanInstructions": "Open an authenticator app such as Google Authenticator or Microsoft Authenticator, then scan the QR code below.",
+                    "qrPlaceholder": "QR code will appear here",
+                    "manualKey": "Or enter this setup key manually:",
+                    "verifyInstructions": "Enter the 6-digit code displayed in your authenticator app to verify the setup.",
+                    "verificationCode": "Verification code",
+                    "codeHint": "The code refreshes every 30 seconds. Make sure you enter the current code.",
+                    "recoveryInstructions": "Two-factor authentication is now enabled. Save these recovery codes somewhere safe. You can use each code once if you lose access to your authenticator app.",
+                    "recoveryWarning": "These codes will only be shown once. Store them securely before closing this dialog."
                 }
             }
         }

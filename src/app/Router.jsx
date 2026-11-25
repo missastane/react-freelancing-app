@@ -14,7 +14,7 @@ import EarningsPage from "../components/finance/freelancer/EarningsPage";
 import ContractsPage from "../components/contracts/ContractsPage";
 import ContractWorkspacePage from "../components/contracts/ContractWorkSpacePage";
 import AccountSettings from "../components/setting/Account/AccountSettings";
-import SecuritySettings from "../components/setting/shared/SecuritySettings";
+import SecuritySettings from "../components/setting/Security/SecuritySettings";
 import NotificationsSettings from "../components/setting/shared/NotificationsSettings";
 import SettingsLayout from "../components/setting/shared/SettingsLayout";
 import ActivityLogSettings from "../components/setting/shared/ActivityLogSettings";
