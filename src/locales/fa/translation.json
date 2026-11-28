@@ -46,7 +46,10 @@
     "numeric": "مقدار باید عددی باشد",
     "integer": "مقدار باید عدد صحیح باشد",
     "invalidFormat": "فرمت واردشده معتبر نیست",
-    "range": "مقدار باید بین {{min}} و {{max}} باشد"
+    "range": "مقدار باید بین {{min}} و {{max}} باشد",
+    "twoFactorCodeRequired": "وارد کردن کد تأیید الزامی است.",
+    "authenticatorCodeInvalid": "کد احراز هویت باید دقیقاً ۶ رقم باشد.",
+    "recoveryCodeInvalid": "کد بازیابی باید یک کد ۱۰ کاراکتری هگزادسیمال باشد."
   },
   "auth": {
     "layout": {
@@ -108,7 +111,21 @@
       "googleSignIn": "ورود با گوگل",
       "noAccount": "حساب کاربری ندارید؟",
       "createAccount": "ایجاد حساب کاربری",
-      "generalError": "مشکلی پیش آمده است. لطفاً دوباره تلاش کنید."
+      "generalError": "مشکلی پیش آمده است. لطفاً دوباره تلاش کنید.",
+      "twoFactor": {
+        "title": "تأیید هویت دومرحله‌ای",
+        "subtitle": "برای تکمیل ورود، کد تأیید دومرحله‌ای خود را وارد کنید.",
+        "authenticator": "کد Authenticator",
+        "recoveryCode": "کد بازیابی",
+        "authenticatorCode": "کد شش‌رقمی",
+        "authenticatorDescription": "کد شش‌رقمی نمایش‌داده‌شده در برنامه احراز هویت خود را وارد کنید.",
+        "recoveryDescription": "یکی از کدهای بازیابی استفاده‌نشده خود را وارد کنید.",
+        "verify": "تأیید و ورود",
+        "verifying": "در حال تأیید...",
+        "backToLogin": "بازگشت به ورود",
+        "generalError": "تأیید هویت انجام نشد. لطفاً دوباره تلاش کنید."
+      },
+      "unexpectedResponse": "پاسخ نامعتبر از سرور دریافت شد. لطفاً دوباره تلاش کنید."
     },
     "register": {
       "pageTitle": "ایجاد حساب کاربری",

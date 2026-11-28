@@ -7,6 +7,15 @@ export const login = async (credentials) => {
     return response.data;
 };
 
+export const verifyTwoFactorLogin = async (credentials) => {
+    const response = await api.post(
+        `${authPrefix}/two-factor/verify-login`,
+        credentials
+    );
+
+    return response.data;
+};
+
 export const register = async (credentials) => {
     const response = await api.post(`${authPrefix}/register`, credentials);
     return response.data;

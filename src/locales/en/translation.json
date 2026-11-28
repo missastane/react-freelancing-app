@@ -46,7 +46,10 @@
         "numeric": "Must be a numeric value",
         "integer": "Must be an integer",
         "invalidFormat": "Invalid format",
-        "range": "Must be between {{min}} and {{max}}"
+        "range": "Must be between {{min}} and {{max}}",
+        "twoFactorCodeRequired": "Verification code is required.",
+        "authenticatorCodeInvalid": "The authenticator code must contain exactly 6 digits.",
+        "recoveryCodeInvalid": "The recovery code must be exactly 10 hexadecimal characters."
     },
     "auth": {
         "layout": {
@@ -108,7 +111,21 @@
             "googleSignIn": "Continue with Google",
             "noAccount": "Don't have an account?",
             "createAccount": "Create one",
-            "generalError": "Something went wrong. Please try again."
+            "generalError": "Something went wrong. Please try again.",
+            "twoFactor": {
+                "title": "Two-Factor Authentication",
+                "subtitle": "Enter your two-factor authentication code to complete signing in.",
+                "authenticator": "Authenticator Code",
+                "recoveryCode": "Recovery Code",
+                "authenticatorCode": "6-digit code",
+                "authenticatorDescription": "Enter the 6-digit code displayed in your authenticator app.",
+                "recoveryDescription": "Enter one of your unused recovery codes.",
+                "verify": "Verify and Sign In",
+                "verifying": "Verifying...",
+                "backToLogin": "Back to Login",
+                "generalError": "Verification failed. Please try again."
+            },
+            "unexpectedResponse": "An unexpected response was received from the server. Please try again."
         },
         "register": {
             "pageTitle": "Create account",
