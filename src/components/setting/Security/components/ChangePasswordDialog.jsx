@@ -1,97 +1,256 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
+
 import {
+    Alert,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
+    CircularProgress,
+    IconButton,
+    InputAdornment,
     Stack,
     TextField,
     Typography,
 } from "@mui/material";
+
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import LockResetRoundedIcon from "@mui/icons-material/LockResetRounded";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+
+import BaseDialog from "../../../common/BaseDialog";
 import SecurityHintBox from "../shared/SecurityHintBox";
 
-const ChangePasswordDialog = () => {
-    const [pwd, setPwd] = React.useState({
-        open: false,
-        current: "",
-        next: "",
-        confirm: "",
-        show: false,
+import { changePasswordSchema } from "../../../../schemas/profile/change-password.schema";
+import { useChangeProfilePassword } from "../../../../hooks/profile/useChangeProfilePassword";
+import { useNotification } from "../../../../hooks/useNotification";
+
+const defaultValues = {
+    current_password: "",
+    new_password: "",
+    new_password_confirmation: "",
+};
+
+export default function ChangePasswordDialog({
+    open,
+    onClose,
+}) {
+    const { t } = useTranslation();
+    const { showNotification } = useNotification();
+
+    const [showPasswords, setShowPasswords] = useState({
+        current: false,
+        new: false,
+        confirm: false,
     });
 
-    const savePassword = () => {
-        // UI-only validation
-        if (!pwd.current.trim()) return;
-        if (pwd.next.trim().length < 8) return;
-        if (pwd.next !== pwd.confirm) return;
+    const {
+        mutateAsync,
+        isPending,
+        reset: resetMutation,
+    } = useChangeProfilePassword();
 
-        setPwd({ open: false, current: "", next: "", confirm: "", show: false });
+    const {
+        register,
+        handleSubmit,
+        reset,
+        setError,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(changePasswordSchema(t)),
+        defaultValues,
+    });
+
+    useEffect(() => {
+        if (open) {
+            reset(defaultValues);
+            resetMutation();
+
+            setShowPasswords({
+                current: false,
+                new: false,
+                confirm: false,
+            });
+        }
+    }, [open, reset, resetMutation]);
+
+    const handleClose = () => {
+        if (isPending) return;
+
+        reset(defaultValues);
+        resetMutation();
+        onClose();
     };
 
+    const onSubmit = async (values) => {
+        resetMutation();
+
+        try {
+            const response = await mutateAsync(values);
+
+            showNotification(
+                response.message || t("profile.changePassword.success"),
+                "success"
+            );
+
+            reset(defaultValues);
+            onClose();
+
+        } catch (err) {
+            const validationErrors = err?.response?.data?.errors;
+            const serverMessage = err?.response?.data?.message;
+
+            if (validationErrors) {
+                Object.entries(validationErrors).forEach(
+                    ([field, messages]) => {
+                        setError(field, {
+                            type: "server",
+                            message: messages?.[0],
+                        });
+                    }
+                );
+            }
+
+            showNotification(
+                serverMessage || t("profile.changePassword.error"),
+                "error"
+            );
+        }
+    };
+
+    const togglePasswordVisibility = (field) => {
+        setShowPasswords((prev) => ({
+            ...prev,
+            [field]: !prev[field],
+        }));
+    };
+
+    const passwordAdornment = (field) => (
+        <InputAdornment position="end">
+            <IconButton
+                edge="end"
+                onClick={() => togglePasswordVisibility(field)}
+                onMouseDown={(event) => event.preventDefault()}
+                aria-label={t(
+                    showPasswords[field]
+                        ? "profile.changePassword.hidePassword"
+                        : "profile.changePassword.showPassword"
+                )}
+            >
+                {showPasswords[field] ? (
+                    <VisibilityOffRoundedIcon />
+                ) : (
+                    <VisibilityRoundedIcon />
+                )}
+            </IconButton>
+        </InputAdornment>
+    );
+
     return (
-        <Dialog open={pwd.open} onClose={() => setPwd((s) => ({ ...s, open: false }))} fullWidth maxWidth="xs">
-            <DialogTitle>Change password</DialogTitle>
-            <DialogContent>
-                <Stack spacing={1.25} sx={{ pt: 1 }}>
-                    <TextField
-                        label="Current password"
-                        type="password"
-                        size="small"
-                        fullWidth
-                        value={pwd.current}
-                        onChange={(e) => setPwd((s) => ({ ...s, current: e.target.value }))}
-                    />
-                    <TextField
-                        label="New password"
-                        type="password"
-                        size="small"
-                        fullWidth
-                        value={pwd.next}
-                        onChange={(e) => setPwd((s) => ({ ...s, next: e.target.value }))}
-                    />
-                    <TextField
-                        label="Confirm new password"
-                        type="password"
-                        size="small"
-                        fullWidth
-                        value={pwd.confirm}
-                        onChange={(e) => setPwd((s) => ({ ...s, confirm: e.target.value }))}
-                    />
+        <BaseDialog
+            open={open}
+            onClose={handleClose}
+            title={t("profile.changePassword.title")}
+            subtitle={t("profile.changePassword.subtitle")}
+            icon={<LockResetRoundedIcon />}
+            maxWidth="xs"
+            showCloseButton
+            closeButtonDisabled={isPending}
+            contentSx={{
+                pt: 2,
+                pb: 3,
+            }}
+            actions={
+                <>
+                    <Button
+                        onClick={handleClose}
+                        color="inherit"
+                        disabled={isPending}
+                    >
+                        {t("common.cancel")}
+                    </Button>
 
-                    <SecurityHintBox>
-                        <Typography variant="body2" color="text.secondary">
-                            Use at least 8 characters. Mix letters, numbers, and symbols.
-                        </Typography>
-                    </SecurityHintBox>
+                    <Button
+                        type="submit"
+                        form="change-password-form"
+                        variant="contained"
+                        disabled={isPending}
+                        startIcon={
+                            isPending ? (
+                                <CircularProgress
+                                    size={18}
+                                    color="inherit"
+                                />
+                            ) : null
+                        }
+                    >
+                        {isPending
+                            ? t("profile.changePassword.submitting")
+                            : t("profile.changePassword.submit")}
+                    </Button>
+                </>
+            }
+            actionsSx={{
+                px: 3,
+                py: 2,
+            }}
+        >
+            <Stack
+                component="form"
+                id="change-password-form"
+                onSubmit={handleSubmit(onSubmit)}
+                spacing={2.5}
+            >
+                <TextField
+                    label={t("profile.changePassword.fields.current")}
+                    type={showPasswords.current ? "text" : "password"}
+                    fullWidth
+                    autoFocus
+                    {...register("current_password")}
+                    error={!!errors.current_password}
+                    helperText={errors.current_password?.message}
+                    slotProps={{
+                        input: {
+                            endAdornment: passwordAdornment("current"),
+                        },
+                    }}
+                />
 
-                    {pwd.next && pwd.next.length > 0 && pwd.next.length < 8 ? (
-                        <Typography variant="body2" color="warning.main">
-                            Password is too short (min 8 chars).
-                        </Typography>
-                    ) : null}
+                <TextField
+                    label={t("profile.changePassword.fields.new")}
+                    type={showPasswords.new ? "text" : "password"}
+                    fullWidth
+                    {...register("new_password")}
+                    error={!!errors.new_password}
+                    helperText={errors.new_password?.message}
+                    slotProps={{
+                        input: {
+                            endAdornment: passwordAdornment("new"),
+                        },
+                    }}
+                />
 
-                    {pwd.confirm && pwd.next !== pwd.confirm ? (
-                        <Typography variant="body2" color="warning.main">
-                            Passwords don’t match.
-                        </Typography>
-                    ) : null}
-                </Stack>
-            </DialogContent>
-            <DialogActions sx={{ px: 3, pb: 2.5 }}>
-                <Button variant="outlined" onClick={() => setPwd({ open: false, current: "", next: "", confirm: "", show: false })}>
-                    Cancel
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={savePassword}
-                    disabled={!pwd.current.trim() || pwd.next.trim().length < 8 || pwd.next !== pwd.confirm}
-                >
-                    Save
-                </Button>
-            </DialogActions>
-        </Dialog>
+                <TextField
+                    label={t("profile.changePassword.fields.confirm")}
+                    type={showPasswords.confirm ? "text" : "password"}
+                    fullWidth
+                    {...register("new_password_confirmation")}
+                    error={!!errors.new_password_confirmation}
+                    helperText={errors.new_password_confirmation?.message}
+                    slotProps={{
+                        input: {
+                            endAdornment: passwordAdornment("confirm"),
+                        },
+                    }}
+                />
 
-    )
+                <SecurityHintBox>
+                    <Typography variant="body2" color="text.secondary">
+                        {t("profile.changePassword.hint")}
+                    </Typography>
+                </SecurityHintBox>
+            </Stack>
+        </BaseDialog>
+    );
 }
-export default ChangePasswordDialog

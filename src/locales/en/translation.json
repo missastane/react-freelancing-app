@@ -217,6 +217,34 @@
                 "otpRequired": "Verification code is required.",
                 "otpInvalid": "Verification code must contain exactly 6 digits."
             }
+        },
+        "changePassword": {
+            "title": "Change password",
+            "subtitle": "Update your password to keep your account secure.",
+            "fields": {
+                "current": "Current password",
+                "new": "New password",
+                "confirm": "Confirm new password"
+            },
+            "hint": "Use at least 8 characters, including uppercase and lowercase letters, numbers, and symbols.",
+            "submit": "Update password",
+            "submitting": "Updating...",
+            "success": "Your password has been changed successfully.",
+            "error": "Unable to change your password. Please try again.",
+            "showPassword": "Show password",
+            "hidePassword": "Hide password",
+            "validation": {
+                "currentRequired": "Current password is required.",
+                "currentMin": "Current password must contain at least 8 characters.",
+                "newRequired": "New password is required.",
+                "min": "Password must contain at least 8 characters.",
+                "lowercase": "Password must contain at least one lowercase letter.",
+                "uppercase": "Password must contain at least one uppercase letter.",
+                "number": "Password must contain at least one number.",
+                "symbol": "Password must contain at least one symbol.",
+                "confirmRequired": "Please confirm your new password.",
+                "mismatch": "Passwords do not match."
+            }
         }
     },
     "settings": {
@@ -378,6 +406,16 @@
                     "recoveryInstructions": "Two-factor authentication is now enabled. Save these recovery codes somewhere safe. You can use each code once if you lose access to your authenticator app.",
                     "recoveryWarning": "These codes will only be shown once. Store them securely before closing this dialog."
                 }
+            },
+            "password": {
+                "title": "Password",
+                "subtitle": "Manage your account password and keep it secure.",
+                "changeTitle": "Change password",
+                "changeDescription": "Update your current password to keep your account secure.",
+                "changeButton": "Change password",
+                "resetTitle": "Password reset",
+                "resetDescription": "If you forget your password, you can reset it from the login page.",
+                "available": "Available"
             }
         }
     },

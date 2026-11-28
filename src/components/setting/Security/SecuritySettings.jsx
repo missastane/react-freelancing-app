@@ -42,14 +42,7 @@ export default function SecuritySettings() {
     ],
   });
 
-  // --- UI-only: Change password dialog
-  const [pwd, setPwd] = React.useState({
-    open: false,
-    current: "",
-    next: "",
-    confirm: "",
-    show: false,
-  });
+  const [changePasswordOpen, setChangePasswordOpen] = React.useState(false);
 
   // --- UI-only: sessions & trusted devices
   const [sessions, setSessions] = React.useState([
@@ -156,15 +149,6 @@ export default function SecuritySettings() {
 
   const removeTrusted = (id) => setTrusted((prev) => prev.filter((t) => t.id !== id));
 
-  const savePassword = () => {
-    // UI-only validation
-    if (!pwd.current.trim()) return;
-    if (pwd.next.trim().length < 8) return;
-    if (pwd.next !== pwd.confirm) return;
-
-    setPwd({ open: false, current: "", next: "", confirm: "", show: false });
-  };
-
   const sessionCount = sessions.length;
 
   return (
@@ -183,9 +167,7 @@ export default function SecuritySettings() {
 
         {/* Password */}
         <PasswordSection
-          onChangePassword={() =>
-            setPwd((s) => ({ ...s, open: true }))
-          }
+          onChangePassword={() => setChangePasswordOpen(true)}
         />
 
         {/* Login alerts */}
@@ -224,9 +206,8 @@ export default function SecuritySettings() {
 
       {/* Change password dialog */}
       <ChangePasswordDialog
-        pwd={pwd}
-        setPwd={setPwd}
-        onSave={savePassword}
+        open={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
       />
 
       {/* Sign out confirm dialog */}

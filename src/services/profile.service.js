@@ -53,3 +53,12 @@ export const cancelAccountDeletion = async () => {
 
     return response.data;
 };
+
+export const changeProfilePassword = async (data) => {
+    const response = await api.patch(
+        `${profilePrefix}/change-password`,
+        data
+    );
+
+    return response.data;
+};
